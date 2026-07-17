@@ -3,6 +3,9 @@ export default function HeroSection() {
     <section className="hero">
       <div className="hero-overlay"></div>
       <div className="hero-content animate-fade-in">
+        <div className="trust-badge">
+          <span className="star">🏆</span> 4 Años Vistiendo Campeones
+        </div>
         <h1 className="hero-title">
           EL UNIFORME DE <br />
           <span className="text-primary">LOS QUE GANAN.</span>
@@ -78,6 +81,21 @@ export default function HeroSection() {
           text-transform: uppercase;
           letter-spacing: -1px;
           color: #fff;
+        }
+        .trust-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: rgba(212, 255, 0, 0.1);
+          border: 1px solid var(--brand-primary);
+          color: var(--brand-primary);
+          padding: 0.5rem 1rem;
+          border-radius: 2rem;
+          font-weight: 700;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 2rem;
         }
         .text-primary {
           color: var(--brand-primary);
