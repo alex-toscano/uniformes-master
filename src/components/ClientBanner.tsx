@@ -1,14 +1,13 @@
 import React from 'react';
 
-const clients = [
-  "Club Deportivo Atlas",
-  "Academia Los Halcones",
-  "FC Millonarios Escuela",
-  "Independiente del Valle",
-  "Club Formativo La Cantera",
-  "Liga Deportiva Municipal",
-  "Selección Departamental Sub-17",
-  "Escuela de Fútbol Real",
+const benefits = [
+  "ENVÍOS A TODA COLOMBIA",
+  "CALIDAD PREMIUM",
+  "FABRICACIÓN DESDE 6 UNIDADES",
+  "DISEÑOS 100% PERSONALIZADOS",
+  "TELAS ANTITRANSPIRANTES",
+  "COSTURAS REFORZADAS",
+  "ATENCIÓN PERSONALIZADA"
 ];
 
 export default function ClientBanner() {
@@ -16,9 +15,9 @@ export default function ClientBanner() {
     <div className="client-banner">
       <div className="marquee-container">
         <div className="marquee-content">
-          {[...clients, ...clients].map((client, index) => (
+          {[...benefits, ...benefits, ...benefits].map((benefit, index) => (
             <span key={index} className="client-name">
-              {client}
+              {benefit}
               <span className="separator" aria-hidden="true">—</span>
             </span>
           ))}
@@ -56,13 +55,14 @@ export default function ClientBanner() {
         }
         .marquee-content {
           display: flex;
-          animation: marquee 35s linear infinite;
+          animation: marquee 40s linear infinite;
         }
         .client-name {
           font-weight: 800;
-          font-size: 0.8rem;
+          font-size: 0.9rem;
           text-transform: uppercase;
           letter-spacing: 2px;
+          color: #000;
           display: flex;
           align-items: center;
           padding: 0 2rem;

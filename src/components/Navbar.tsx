@@ -16,7 +16,7 @@ export default function Navbar() {
       <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
         <div className="navbar-container">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <a href="/" aria-label="Uniformes Master Home">
+          <a href="/" aria-label="Uniformes Master Home" className="brand-logo-wrapper">
             <img src="/logo.png" alt="Uniformes Master" className="brand-logo" />
           </a>
 
@@ -87,14 +87,17 @@ export default function Navbar() {
           justify-content: space-between;
           align-items: center;
         }
+        .brand-logo-wrapper {
+          height: 65px;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+        }
         .brand-logo {
-          height: 80px;
+          height: 120px; /* Altura ajustada para no recortar demasiado */
           width: auto;
           object-fit: contain;
-          filter: invert(1);
           mix-blend-mode: screen;
-          transform: scale(1.8);
-          transform-origin: left center;
         }
         .navbar-links {
           display: flex;

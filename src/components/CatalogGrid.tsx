@@ -27,7 +27,7 @@ export default function CatalogGrid() {
   const [leadData, setLeadData] = useState({
     nombre: '',
     escuela: '',
-    cantidad: '10 a 20'
+    cantidad: '6 a 20'
   });
 
   const imgRef = useRef<HTMLImageElement>(null);
@@ -91,7 +91,7 @@ export default function CatalogGrid() {
       // Cerrar modal
       setSelectedUniform(null);
       setShowLeadForm(false);
-      setLeadData({ nombre: '', escuela: '', cantidad: '10 a 20' });
+      setLeadData({ nombre: '', escuela: '', cantidad: '6 a 20' });
     }
   };
 
@@ -239,7 +239,7 @@ export default function CatalogGrid() {
                         value={leadData.cantidad}
                         onChange={(e) => setLeadData({...leadData, cantidad: e.target.value})}
                       >
-                        <option value="10 a 20">10 a 20 uniformes</option>
+                        <option value="6 a 20">6 a 20 uniformes</option>
                         <option value="20 a 50">20 a 50 uniformes</option>
                         <option value="Más de 50">Más de 50 uniformes</option>
                       </select>
@@ -268,7 +268,7 @@ export default function CatalogGrid() {
                   <div className="ecommerce-guarantee">
                     <div className="guarantee-item">✓ Envíos a toda Colombia</div>
                     <div className="guarantee-item">✓ Calidad Premium Garantizada</div>
-                    <div className="guarantee-item">✓ Fabricación desde 10 unidades</div>
+                    <div className="guarantee-item">✓ Fabricación desde 6 unidades</div>
                   </div>
 
                   <button 

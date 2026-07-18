@@ -54,9 +54,9 @@ export default function Footer() {
                   +57 301 281 5448
                 </a>
               </li>
-              <li><span>Envíos a toda Colombia</span></li>
-              <li><span>Entrega en 7-15 días hábiles</span></li>
-              <li><span>Desde 10 unidades</span></li>
+              <li><span>Diseños personalizados</span></li>
+              <li><span>Desde 6 unidades</span></li>
+              <li><span>Telas Premium</span></li>
             </ul>
           </div>
 
@@ -93,7 +93,6 @@ export default function Footer() {
           width: auto;
           object-fit: contain;
           margin-bottom: 1.5rem;
-          filter: invert(1);
           mix-blend-mode: screen;
           transform: scale(1.6);
           transform-origin: left center;

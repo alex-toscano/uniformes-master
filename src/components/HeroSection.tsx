@@ -1,28 +1,29 @@
 export default function HeroSection() {
   return (
     <section className="hero">
+      <div className="hero-bg-anim"></div>
       <div className="hero-overlay"></div>
 
-      <div className="hero-content animate-fade-in">
+      <div className="hero-content">
         {/* Slogan */}
-        <div className="slogan-block">
+        <div className="slogan-block animate-up delay-1">
           <div className="slogan-line"></div>
           <p className="slogan-text">4 AÑOS VISTIENDO CAMPEONES</p>
           <div className="slogan-line"></div>
         </div>
 
         {/* Título Principal */}
-        <h1 className="hero-title">
+        <h1 className="hero-title animate-up delay-2">
           EL UNIFORME DE<br />
           <span className="text-primary">LOS QUE GANAN.</span>
         </h1>
 
-        <p className="hero-subtitle">
-          Diseño personalizado, telas de alto rendimiento y la identidad visual que tu equipo merece. Fabricamos desde 10 unidades con entrega a toda Colombia.
+        <p className="hero-subtitle animate-up delay-3">
+          Diseño personalizado, telas de alto rendimiento y la identidad visual que tu equipo merece. Fabricamos desde 6 unidades con entrega a toda Colombia.
         </p>
 
         {/* Stats de confianza */}
-        <div className="hero-stats">
+        <div className="hero-stats animate-up delay-4">
           <div className="stat">
             <span className="stat-number">+4</span>
             <span className="stat-label">Años de experiencia</span>
@@ -40,9 +41,9 @@ export default function HeroSection() {
         </div>
 
         {/* CTAs */}
-        <div className="hero-cta">
+        <div className="hero-cta animate-up delay-5">
           <a
-            href="#catalogo"
+            href="/catalogo"
             className="btn-hero-primary"
           >
             Ver Catálogo
@@ -64,7 +65,7 @@ export default function HeroSection() {
         <div className="hero-guarantees">
           <span className="guarantee-item">Entrega en 7-15 días</span>
           <span className="guarantee-dot">·</span>
-          <span className="guarantee-item">Desde 10 unidades</span>
+          <span className="guarantee-item">Desde 6 unidades</span>
           <span className="guarantee-dot">·</span>
           <span className="guarantee-item">Envío a todo Colombia</span>
         </div>
@@ -78,11 +79,17 @@ export default function HeroSection() {
           align-items: center;
           padding: 10rem 5vw 6rem;
           background-color: #050505;
+          overflow: hidden;
+        }
+        .hero-bg-anim {
+          position: absolute;
+          inset: -10%;
           background-image: url('/hero-bg.png');
           background-size: cover;
           background-position: center top;
           background-repeat: no-repeat;
-          overflow: hidden;
+          z-index: 0;
+          animation: scaleBg 15s ease-out forwards;
         }
         .hero-overlay {
           position: absolute;
@@ -234,6 +241,25 @@ export default function HeroSection() {
           color: var(--brand-primary);
           font-size: 1rem;
         }
+        /* Animations */
+        @keyframes scaleBg {
+          from { transform: scale(1.1); }
+          to { transform: scale(1); }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-up {
+          opacity: 0;
+          animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        .delay-5 { animation-delay: 1.0s; }
+
         @media (max-width: 768px) {
           .hero {
             padding: 8rem 1.5rem 4rem;
