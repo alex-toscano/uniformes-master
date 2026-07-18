@@ -107,15 +107,6 @@ export default function CatalogGrid() {
   return (
     <section id="catalogo" className="catalog">
       <div className="catalog-container">
-        <div className="catalog-header">
-          <h2 className="title">
-            MÁS QUE UNIFORMES, <br />
-            <span className="text-primary">IDENTIDAD DEPORTIVA.</span>
-          </h2>
-          <p className="subtitle">
-            Descubre nuestras colecciones elementales. (Nota: Las imágenes actuales son marcadores de posición temporales hasta que subas los PNGs sin fondo).
-          </p>
-        </div>
 
         <div className="tabs-container">
           {CATEGORIES.map(cat => (
@@ -138,7 +129,6 @@ export default function CatalogGrid() {
               onClick={() => setSelectedUniform(uniform)}
             >
               <div className="card-image-wrapper">
-                <span className="badge">NUEVO</span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
                   src={uniform.image} 
@@ -146,19 +136,23 @@ export default function CatalogGrid() {
                   className="card-img"
                   loading="lazy"
                 />
+                <div className="card-overlay">
+                  <span className="card-overlay-text">Ver detalles</span>
+                </div>
               </div>
               <div className="card-content">
-                <span className="sku">{uniform.sku}</span>
+                <div className="card-meta">
+                  <span className="sku">{uniform.sku}</span>
+                  <span className="card-category">{uniform.category}</span>
+                </div>
                 <h3 className="name">{uniform.name}</h3>
-                <a 
-                  href={`https://wa.me/573012815448?text=Hola%20Uniformes%20Master,%20quiero%20cotizar%20el%20uniforme%20con%20SKU:%20${uniform.sku}%20(${uniform.name})`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <button 
                   className="btn-cotizar"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => { e.stopPropagation(); setSelectedUniform(uniform); }}
                 >
-                  Cotizar este SKU
-                </a>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  Cotizar
+                </button>
               </div>
             </div>
           ))}
@@ -292,98 +286,118 @@ export default function CatalogGrid() {
 
       <style>{`
         .catalog {
-          padding: 6rem 2rem;
-          background-color: var(--background);
+          padding: 4rem 5vw 7rem;
+          background: #050505;
+          position: relative;
         }
         .catalog-container {
-          max-width: 1200px;
+          max-width: 1600px;
           margin: 0 auto;
         }
         .catalog-header {
           text-align: center;
           margin-bottom: 4rem;
         }
-        .title {
-          font-size: clamp(2rem, 5vw, 3.5rem);
-          font-weight: 900;
-          line-height: 1.1;
-          margin-bottom: 1rem;
+        /* Slogan en catalog */
+        .slogan-block {
+          display: inline-flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+        }
+        .slogan-line-cat {
+          width: 30px;
+          height: 1px;
+          background: var(--brand-primary);
+        }
+        .slogan-label {
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 0.35em;
+          color: var(--brand-primary);
           text-transform: uppercase;
         }
-        .text-primary {
-          color: var(--brand-primary);
+        .title {
+          font-size: clamp(2.2rem, 5vw, 3.5rem);
+          font-weight: 900;
+          line-height: 1.05;
+          margin-bottom: 1rem;
+          text-transform: uppercase;
+          letter-spacing: -1px;
+          color: #fff;
         }
+        .text-primary { color: var(--brand-primary); }
         .subtitle {
-          color: #d1d5db;
-          max-width: 600px;
+          color: rgba(255,255,255,0.4);
+          max-width: 560px;
           margin: 0 auto;
-          font-size: 1.1rem;
+          font-size: 1rem;
+          line-height: 1.7;
         }
-        
         .tabs-container {
           display: flex;
           justify-content: center;
           flex-wrap: wrap;
-          gap: 1rem;
+          gap: 0.5rem;
           margin-bottom: 4rem;
-        }
-        
-        .tab-btn {
-          padding: 0.75rem 1.5rem;
-          border-radius: 30px;
-          border: 1px solid var(--border);
           background: rgba(255,255,255,0.02);
-          color: #fff;
-          font-weight: 600;
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 8px;
+          padding: 0.5rem;
+          width: fit-content;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .tab-btn {
+          padding: 0.6rem 1.3rem;
+          border-radius: 6px;
+          border: none;
+          background: transparent;
+          color: rgba(255,255,255,0.4);
+          font-weight: 700;
           text-transform: uppercase;
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-          transition: all 0.3s ease;
+          font-size: 0.78rem;
+          letter-spacing: 1.5px;
+          transition: all 0.25s ease;
         }
         .tab-btn:hover {
+          color: #fff;
           background: rgba(255,255,255,0.05);
-          border-color: rgba(255,255,255,0.2);
         }
         .tab-btn.active {
           background: var(--brand-primary);
           color: #000;
-          border-color: var(--brand-primary);
-          box-shadow: 0 0 15px rgba(212, 255, 0, 0.4);
+          box-shadow: 0 2px 12px rgba(212,255,0,0.3);
         }
-
+        /* Grid */
         .grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 2.5rem;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 1.5rem;
         }
         .card {
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 8px;
           overflow: hidden;
-          transition: var(--transition);
+          transition: all 0.35s ease;
           position: relative;
-        }
-        
-        /* Eliminamos el ::before de la card entera */
-        .card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-          border-color: var(--brand-primary);
           cursor: pointer;
         }
-
+        .card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(212,255,0,0.25);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,255,0,0.08);
+        }
         .card-image-wrapper {
           position: relative;
           aspect-ratio: 4/5;
           overflow: hidden;
-          background: #0a0a0a; /* Fondo más oscuro para resaltar el neón */
+          background: #0a0a0a;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        
-        /* Efecto 3D de resplandor ADENTRO del contenedor de la imagen */
         .card-image-wrapper::before {
           content: '';
           position: absolute;
@@ -396,71 +410,106 @@ export default function CatalogGrid() {
           pointer-events: none;
           z-index: 1;
         }
-        
-        .card:hover .card-image-wrapper::before {
-          opacity: 1; /* Brillo más intenso al hacer hover */
-        }
-
-        .badge {
-          position: absolute;
-          top: 1rem;
-          right: 1rem;
-          background: var(--brand-primary);
-          color: #000;
-          font-size: 0.75rem;
-          font-weight: 800;
-          padding: 0.25rem 0.75rem;
-          border-radius: 1rem;
-          z-index: 3;
-        }
+        .card:hover .card-image-wrapper::before { opacity: 0.7; }
         .card-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
           transition: transform 0.5s ease;
           position: relative;
-          z-index: 2; /* Por encima del resplandor */
-          /* Drop shadow extra en la prenda para dar más volumen 3D */
-          filter: drop-shadow(0px 15px 15px rgba(0,0,0,0.6));
-        }
-        .card:hover .card-img {
-          transform: scale(1.1);
-        }
-        .card-content {
-          padding: 1.5rem;
-          text-align: center;
-          position: relative;
           z-index: 2;
-          background: var(--surface); /* Para tapar el resplandor en la zona de texto */
+          filter: drop-shadow(0px 15px 20px rgba(0,0,0,0.7));
+        }
+        .card:hover .card-img { transform: scale(1.07); }
+        /* Overlay en hover */
+        .card-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0,0,0,0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          z-index: 3;
+        }
+        .card:hover .card-overlay { opacity: 1; }
+        .card-overlay-text {
+          font-size: 0.8rem;
+          font-weight: 800;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #fff;
+          border: 1px solid rgba(255,255,255,0.4);
+          padding: 0.6rem 1.4rem;
+          border-radius: 4px;
+          backdrop-filter: blur(4px);
+        }
+        /* Card content */
+        .card-content {
+          padding: 1.25rem 1.5rem;
+          background: rgba(255,255,255,0.01);
+          border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .card-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.4rem;
         }
         .sku {
-          display: block;
           color: var(--brand-primary);
-          font-size: 0.85rem;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+        .card-category {
+          font-size: 0.68rem;
           font-weight: 700;
-          margin-bottom: 0.5rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: rgba(255,255,255,0.2);
         }
         .name {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin-bottom: 1.5rem;
+          font-size: 1rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
           color: #fff;
+          line-height: 1.3;
         }
         .btn-cotizar {
-          display: inline-block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
           width: 100%;
-          padding: 0.75rem;
+          padding: 0.65rem;
           background: transparent;
-          color: #fff;
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          font-weight: 600;
-          transition: var(--transition);
+          color: rgba(255,255,255,0.5);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 4px;
+          font-weight: 700;
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          transition: all 0.3s;
+          cursor: pointer;
+          font-family: inherit;
         }
         .card:hover .btn-cotizar {
           background: var(--brand-primary);
           color: #000;
           border-color: var(--brand-primary);
+        }
+        @media (max-width: 768px) {
+          .catalog { padding: 3rem 1.5rem 5rem; }
+          .grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+          .tabs-container { width: 100%; }
+          .tab-btn { font-size: 0.7rem; padding: 0.5rem 0.9rem; }
+        }
+        @media (max-width: 480px) {
+          .grid { grid-template-columns: 1fr; }
         }
 
         /* E-COMMERCE UI STYLES */

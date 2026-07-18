@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import ClientBanner from '@/components/ClientBanner';
-import CatalogGrid from '@/components/CatalogGrid';
+import CatalogPreview from '@/components/CatalogPreview';
 import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
@@ -13,7 +13,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <ClientBanner />
-        <CatalogGrid />
+        <CatalogPreview />
         <Testimonials />
       </main>
       <Footer />

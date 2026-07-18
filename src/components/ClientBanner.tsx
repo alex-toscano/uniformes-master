@@ -3,12 +3,12 @@ import React from 'react';
 const clients = [
   "Club Deportivo Atlas",
   "Academia Los Halcones",
-  "Real Madrid City Campus",
-  "FC Juventus Academy",
-  "Escuela de Fútbol Millonarios",
-  "Independiente del Valle Juvenil",
-  "Boca Juniors Escuela",
-  "Club Formativo La Cantera"
+  "FC Millonarios Escuela",
+  "Independiente del Valle",
+  "Club Formativo La Cantera",
+  "Liga Deportiva Municipal",
+  "Selección Departamental Sub-17",
+  "Escuela de Fútbol Real",
 ];
 
 export default function ClientBanner() {
@@ -16,11 +16,10 @@ export default function ClientBanner() {
     <div className="client-banner">
       <div className="marquee-container">
         <div className="marquee-content">
-          {/* Duplicamos la lista para crear el efecto infinito */}
           {[...clients, ...clients].map((client, index) => (
             <span key={index} className="client-name">
               {client}
-              <span className="separator">•</span>
+              <span className="separator" aria-hidden="true">—</span>
             </span>
           ))}
         </div>
@@ -28,12 +27,27 @@ export default function ClientBanner() {
       <style>{`
         .client-banner {
           background-color: var(--brand-primary);
-          color: var(--background);
-          padding: 1rem 0;
+          color: #000;
+          padding: 0.9rem 0;
           overflow: hidden;
           position: relative;
-          border-top: 2px solid var(--background);
-          border-bottom: 2px solid var(--background);
+        }
+        .client-banner::before,
+        .client-banner::after {
+          content: '';
+          position: absolute;
+          top: 0; bottom: 0;
+          width: 80px;
+          z-index: 2;
+          pointer-events: none;
+        }
+        .client-banner::before {
+          left: 0;
+          background: linear-gradient(to right, var(--brand-primary), transparent);
+        }
+        .client-banner::after {
+          right: 0;
+          background: linear-gradient(to left, var(--brand-primary), transparent);
         }
         .marquee-container {
           display: flex;
@@ -42,19 +56,20 @@ export default function ClientBanner() {
         }
         .marquee-content {
           display: flex;
-          animation: marquee 30s linear infinite;
+          animation: marquee 35s linear infinite;
         }
         .client-name {
-          font-weight: 900;
-          font-size: 1.5rem;
+          font-weight: 800;
+          font-size: 0.8rem;
           text-transform: uppercase;
+          letter-spacing: 2px;
           display: flex;
           align-items: center;
           padding: 0 2rem;
         }
         .separator {
-          margin-left: 4rem;
-          color: rgba(0,0,0,0.3);
+          margin-left: 2rem;
+          opacity: 0.3;
         }
       `}</style>
     </div>

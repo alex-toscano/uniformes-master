@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Uniformes Master | Professional Play",
-  description: "Diseñamos el uniforme de tus sueños. Fabricantes desde 10 unidades 100% personalizados.",
+  title: "Uniformes Master | 4 Años Vistiendo Campeones",
+  description: "Fabricantes de uniformes deportivos premium en Colombia. Diseño personalizado desde 10 unidades. Envíos a todo el país.",
 };
 
 export default function RootLayout({
