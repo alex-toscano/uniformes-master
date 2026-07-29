@@ -180,9 +180,9 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     if (skuReference) text += `Diseño SKU: ${skuReference}\n`
     text += `Total prendas: ${items.length}\n\n`
     
-    text += `*DETALLE DEL PEDIDO:*\n`
+    text += `*DETALLE DEL PEDIDO:*\n\n`
     items.forEach((item, idx) => {
-      text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type} - $${item.price.toLocaleString('es-CO')}\n`
+      text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type} - $${item.price.toLocaleString('es-CO')}\n\n`
     })
     
     text += `\n*VALOR TOTAL:* $${getTotalPrice().toLocaleString('es-CO')}\n`
