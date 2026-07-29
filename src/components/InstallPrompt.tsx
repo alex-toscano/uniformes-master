@@ -46,7 +46,10 @@ export default function InstallPrompt() {
   return (
     <div className="install-banner">
       <div className="install-content">
-        <div className="install-icon">📱</div>
+        <div className="install-icon">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/icon-192x192.png" alt="ERP Master" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+        </div>
         <div className="install-text">
           <strong>Instala el ERP en tu teléfono</strong>
           <p>Para un acceso rápido como una App Nativa.</p>
