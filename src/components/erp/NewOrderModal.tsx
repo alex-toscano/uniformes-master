@@ -129,6 +129,31 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     document.getElementById('fast_name_input')?.focus()
   }
 
+  const handleAutoGenerate = () => {
+    const qtyStr = window.prompt('¿Cuántos números consecutivos quieres generar?', '10')
+    if (!qtyStr) return
+    const count = parseInt(qtyStr)
+    if (isNaN(count) || count <= 0) return
+
+    const startNum = lastConsecutive !== null ? lastConsecutive + 1 : (parseInt(newItem.number) || 1)
+    
+    const generated: OrderItem[] = []
+    for(let i=0; i<count; i++) {
+      const price = calculatePrice(newItem.size, newItem.type)
+      generated.push({
+        id: Math.random().toString(),
+        player_name: '',
+        player_number: String(startNum + i),
+        size: newItem.size,
+        product_type: newItem.type,
+        price
+      })
+    }
+    
+    setItems(prev => [...prev, ...generated])
+    setLastConsecutive(startNum + count - 1)
+  }
+
   const removeItem = (id: string) => {
     setItems(items.filter(i => i.id !== id))
   }
@@ -319,7 +344,8 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                     <option>Medias</option>
                     <option>Pantaloneta</option>
                   </select>
-                  <button type="submit" className="btn-add">+</button>
+                  <button type="submit" className="btn-add" title="Agregar uno manual">+</button>
+                  <button type="button" onClick={handleAutoGenerate} className="btn-secondary" style={{ padding: '0 1rem', fontSize: '0.85rem' }} title="Autocompletar varios consecutivos">⚡ Generar</button>
                 </form>
 
                 <div className="roster-table-container">

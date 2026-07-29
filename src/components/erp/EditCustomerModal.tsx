@@ -16,11 +16,13 @@ export default function EditCustomerModal({ customer, onClose, onUpdated }: { cu
   const supabase = createClient()
   const [saving, setSaving] = useState(false)
   
+  const initialPhones = customer.phone ? customer.phone.split(',').map(p => p.trim()).filter(Boolean) : ['']
+  const [phoneList, setPhoneList] = useState<string[]>(initialPhones.length > 0 ? initialPhones : [''])
+
   const [formData, setFormData] = useState({
     name: customer.name || '',
     school_or_club: customer.school_or_club || '',
     city: customer.city || '',
-    phone: customer.phone || '',
     address: customer.address || ''
   })
 
@@ -28,9 +30,12 @@ export default function EditCustomerModal({ customer, onClose, onUpdated }: { cu
     e.preventDefault()
     setSaving(true)
     
+    const finalPhone = phoneList.filter(Boolean).join(', ')
+    const dataToSave = { ...formData, phone: finalPhone }
+
     const { error } = await supabase
       .from('customers')
-      .update(formData)
+      .update(dataToSave)
       .eq('id', customer.id)
       
     setSaving(false)
@@ -89,13 +94,38 @@ export default function EditCustomerModal({ customer, onClose, onUpdated }: { cu
           </div>
 
           <div className="form-group">
-            <label>Teléfonos (Separados por coma)</label>
-            <textarea 
-              rows={3}
-              placeholder="Ej: 3001234567, 3109876543 (Asistente)"
-              value={formData.phone}
-              onChange={e => setFormData({...formData, phone: e.target.value})}
-            />
+            <label>Teléfonos</label>
+            {phoneList.map((p, idx) => (
+              <div key={idx} style={{ display: 'flex', gap: '0.5rem' }}>
+                <input 
+                  type="text" 
+                  value={p}
+                  placeholder="Número de teléfono"
+                  onChange={e => {
+                    const newList = [...phoneList];
+                    newList[idx] = e.target.value;
+                    setPhoneList(newList);
+                  }}
+                  style={{ flex: 1 }}
+                />
+                {phoneList.length > 1 && (
+                  <button 
+                    type="button" 
+                    className="btn-secondary" 
+                    style={{ padding: '0.8rem 1rem' }}
+                    onClick={() => setPhoneList(phoneList.filter((_, i) => i !== idx))}
+                  >✕</button>
+                )}
+              </div>
+            ))}
+            <button 
+              type="button" 
+              className="btn-secondary" 
+              onClick={() => setPhoneList([...phoneList, ''])} 
+              style={{ alignSelf: 'flex-start', marginTop: '0.5rem' }}
+            >
+              + Agregar Teléfono
+            </button>
           </div>
 
           <div className="modal-footer">
