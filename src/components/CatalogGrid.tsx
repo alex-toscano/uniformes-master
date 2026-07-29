@@ -26,7 +26,7 @@ export default function CatalogGrid() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [leadData, setLeadData] = useState({
     nombre: '',
-    escuela: '',
+    ciudad: '',
     cantidad: '6 a 20'
   });
 
@@ -84,14 +84,14 @@ export default function CatalogGrid() {
       setIsSubmitting(false);
       
       // Abrir WhatsApp
-      const mensaje = `Hola, mi nombre es ${leadData.nombre} del equipo/escuela ${leadData.escuela}. Me interesa cotizar ${leadData.cantidad} uniformes del modelo SKU: ${selectedUniform.sku} (${selectedUniform.name}).`;
+      const mensaje = `Hola, mi nombre es ${leadData.nombre} desde la ciudad de ${leadData.ciudad}. Me interesa cotizar ${leadData.cantidad} uniformes del modelo SKU: ${selectedUniform.sku} (${selectedUniform.name}).`;
       const urlWa = `https://wa.me/573012815448?text=${encodeURIComponent(mensaje)}`;
       window.open(urlWa, '_blank');
       
       // Cerrar modal
       setSelectedUniform(null);
       setShowLeadForm(false);
-      setLeadData({ nombre: '', escuela: '', cantidad: '6 a 20' });
+      setLeadData({ nombre: '', ciudad: '', cantidad: '6 a 20' });
     }
   };
 
@@ -223,13 +223,13 @@ export default function CatalogGrid() {
                     </div>
                     
                     <div className="form-group">
-                      <label>Nombre del Equipo o Escuela</label>
+                      <label>Ciudad</label>
                       <input 
                         type="text" 
                         required 
-                        placeholder="Ej: Club Los Leones"
-                        value={leadData.escuela}
-                        onChange={(e) => setLeadData({...leadData, escuela: e.target.value})}
+                        placeholder="Ej: Bogotá"
+                        value={leadData.ciudad}
+                        onChange={(e) => setLeadData({...leadData, ciudad: e.target.value})}
                       />
                     </div>
                     
