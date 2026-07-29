@@ -180,7 +180,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     if (skuReference) text += `Diseño SKU: ${skuReference}\n`
     text += `Total prendas: ${items.length}\n\n`
     
-    text += `*NÓMINA:*\n`
+    text += `*DETALLE DEL PEDIDO:*\n`
     items.forEach((item, idx) => {
       text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type} - $${item.price.toLocaleString('es-CO')}\n`
     })
@@ -266,7 +266,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
           <div className="steps-indicator">
             <span className={step >= 1 ? 'active' : ''}>1. Cliente</span>
             <span className={step >= 2 ? 'active' : ''}>2. Diseño</span>
-            <span className={step >= 3 ? 'active' : ''}>3. Nómina & Pagos</span>
+            <span className={step >= 3 ? 'active' : ''}>3. Detalle de Pedido</span>
           </div>
           <button onClick={onClose} className="btn-close">×</button>
         </div>
@@ -332,7 +332,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
               <div className="step-actions">
                 <button className="btn-secondary" onClick={() => setStep(1)}>⬅ Volver</button>
                 <button className="btn-next" disabled={!skuReference} onClick={() => setStep(3)}>
-                  Cargar Nómina ➔
+                  Cargar Pedido ➔
                 </button>
               </div>
             </div>
@@ -342,7 +342,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
           {step === 3 && (
             <div className="step-content split-layout">
               <div className="roster-section">
-                <h3>Ingreso Rápido de Nómina</h3>
+                <h3>Ingreso Rápido de Pedido</h3>
                 {lastConsecutive !== null && (
                   <div className="info-alert">
                     💡 Historial: El último número pedido por este cliente fue el <strong>{lastConsecutive}</strong>.
