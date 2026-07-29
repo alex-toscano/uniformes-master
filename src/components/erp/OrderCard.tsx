@@ -142,13 +142,13 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
           transform: translateY(-2px);
         }
         .order-card.warning { border-color: rgba(250,204,21,0.5); }
-        .order-card.danger { border-color: #ff5555; animation: pulse 2s infinite; }
+        .order-card.danger { border-color: #ff5555; animation: pulse 1.5s infinite; }
         .order-card.overdue { border-color: #991b1b; background: rgba(153,27,27,0.1); }
         
         @keyframes pulse {
-          0% { box-shadow: 0 0 0 0 rgba(255,85,85,0.4); }
-          70% { box-shadow: 0 0 0 6px rgba(255,85,85,0); }
-          100% { box-shadow: 0 0 0 0 rgba(255,85,85,0); }
+          0% { box-shadow: 0 0 0 0 rgba(255,85,85,0.4); background: rgba(255,255,255,0.03); }
+          50% { box-shadow: 0 0 0 8px rgba(255,85,85,0); background: rgba(255,85,85,0.15); border-color: #ff1111; }
+          100% { box-shadow: 0 0 0 0 rgba(255,85,85,0); background: rgba(255,255,255,0.03); }
         }
         .card-header {
           display: flex;
@@ -170,8 +170,13 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
         .delivery-badge { font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
         .delivery-badge.normal { background: rgba(255,255,255,0.1); color: white; }
         .delivery-badge.warning { background: rgba(250,204,21,0.2); color: #facc15; }
-        .delivery-badge.danger { background: rgba(255,85,85,0.2); color: #ff5555; }
+        .delivery-badge.danger { background: #ff5555; color: white; animation: badgePulse 1s infinite alternate; }
         .delivery-badge.overdue { background: #991b1b; color: white; }
+        
+        @keyframes badgePulse {
+          from { transform: scale(1); opacity: 1; }
+          to { transform: scale(1.05); opacity: 0.8; }
+        }
         .school-name {
           font-size: 1.1rem;
           font-weight: 700;
