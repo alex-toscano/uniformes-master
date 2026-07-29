@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import PricingModal from '@/components/erp/PricingModal'
 
 type Customer = {
   id: string
@@ -19,6 +20,8 @@ export default function CRMPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const supabase = createClient()
+  
+  const [pricingCustomer, setPricingCustomer] = useState<{id: string, name: string} | null>(null)
 
   useEffect(() => {
     fetchCustomers()
@@ -100,7 +103,12 @@ export default function CRMPage() {
                   <span className="order-badge">{c.orders.length}</span>
                 </td>
                 <td>
-                  <button className="btn-edit-prices">Configurar Precios</button>
+                  <button 
+                    className="btn-edit-prices"
+                    onClick={() => setPricingCustomer({ id: c.id, name: c.name })}
+                  >
+                    Configurar Precios
+                  </button>
                 </td>
               </tr>
             ))}
@@ -112,6 +120,14 @@ export default function CRMPage() {
           </tbody>
         </table>
       </div>
+
+      {pricingCustomer && (
+        <PricingModal 
+          customerId={pricingCustomer.id}
+          customerName={pricingCustomer.name}
+          onClose={() => setPricingCustomer(null)}
+        />
+      )}
 
       <style>{`
         .crm-container {
