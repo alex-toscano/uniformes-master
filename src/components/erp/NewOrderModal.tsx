@@ -394,6 +394,10 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
           width: 100%; padding: 1rem; border-radius: 8px; background: rgba(255,255,255,0.05);
           border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 1.1rem; outline: none;
         }
+        .big-select option {
+          background: #111;
+          color: white;
+        }
         .big-input.uppercase { text-transform: uppercase; }
         .big-select:focus, .big-input:focus { border-color: var(--brand-primary); }
         
