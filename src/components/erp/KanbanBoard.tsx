@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import OrderCard, { Order } from './OrderCard'
+import OrderDetailsModal from './OrderDetailsModal'
 
 const COLUMNS = [
   { id: 'cotizacion', label: 'Cotización' },
@@ -17,6 +18,7 @@ const COLUMNS = [
 export default function KanbanBoard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const supabase = createClient()
 
   const fetchOrders = async () => {
@@ -74,13 +76,25 @@ export default function KanbanBoard() {
               </div>
               <div className="col-cards">
                 {colOrders.map(order => (
-                  <OrderCard key={order.id} order={order} onUpdateStatus={updateOrderStatus} />
+                  <OrderCard 
+                    key={order.id} 
+                    order={order} 
+                    onUpdateStatus={updateOrderStatus} 
+                    onViewDetails={setSelectedOrderId}
+                  />
                 ))}
               </div>
             </div>
           )
         })}
       </div>
+
+      {selectedOrderId && (
+        <OrderDetailsModal 
+          orderId={selectedOrderId} 
+          onClose={() => setSelectedOrderId(null)} 
+        />
+      )}
 
       <style>{`
         .kanban-container {

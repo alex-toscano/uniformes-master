@@ -13,7 +13,7 @@ export type Order = {
   created_at: string
 }
 
-export default function OrderCard({ order, onUpdateStatus }: { order: Order, onUpdateStatus: (id: string, newStatus: string) => void }) {
+export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { order: Order, onUpdateStatus: (id: string, newStatus: string) => void, onViewDetails?: (id: string) => void }) {
   const nextStatusMap: Record<string, string> = {
     'cotizacion': 'diseño',
     'diseño': 'aprobacion_cliente',
@@ -50,11 +50,19 @@ export default function OrderCard({ order, onUpdateStatus }: { order: Order, onU
         </div>
       </div>
 
-      {order.status !== 'entregado' && (
-        <button onClick={handleNextPhase} className="btn-next-phase">
-          Mover a siguiente fase ➔
-        </button>
-      )}
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        {onViewDetails && (
+          <button onClick={() => onViewDetails(order.id)} className="btn-view-details">
+            👁️ Ver Detalle
+          </button>
+        )}
+        
+        {order.status !== 'entregado' && (
+          <button onClick={handleNextPhase} className="btn-next-phase" style={{ flex: 1 }}>
+            Siguiente ➔
+          </button>
+        )}
+      </div>
 
       <style>{`
         .order-card {
@@ -128,6 +136,19 @@ export default function OrderCard({ order, onUpdateStatus }: { order: Order, onU
           background: var(--brand-primary);
           color: black;
           border-color: var(--brand-primary);
+        }
+        .btn-view-details {
+          background: rgba(255,255,255,0.05);
+          color: white;
+          border: 1px solid rgba(255,255,255,0.1);
+          padding: 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        .btn-view-details:hover {
+          background: rgba(255,255,255,0.1);
         }
       `}</style>
     </div>
