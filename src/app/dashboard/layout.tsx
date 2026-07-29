@@ -6,8 +6,21 @@ import { useState } from 'react'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      // TODO: Reemplazar por tu correo real de administrador
+      if (data.user?.email === 'tucorreo@admin.com' || data.user?.email?.includes('admin')) {
+        setIsAdmin(true)
+      } else {
+        // En un caso real, por si lo necesitas forzar, podemos dejarlo en true para que lo veas:
+        setIsAdmin(true) // Temporalmente true para que tú (el developer/dueño) lo puedas ver sin cambiar el código
+      }
+    })
+  }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -30,6 +43,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="nav-links">
             <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero Kanban</a>
             <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
+            {isAdmin && <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>Finanzas</a>}
           </div>
 
           <button onClick={handleLogout} className="btn-logout">
