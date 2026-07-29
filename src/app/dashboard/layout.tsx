@@ -18,6 +18,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="nav-brand">
           <span className="font-black text-xl text-white">ERP <span className="text-[var(--brand-primary)]">MASTER</span></span>
         </div>
+        
+        <div className="nav-links">
+          <a href="/dashboard/vendedor" className="nav-link">Tablero Kanban</a>
+          <a href="/dashboard/clientes" className="nav-link">CRM Clientes</a>
+        </div>
+
         <button onClick={handleLogout} className="btn-logout">
           Cerrar Sesión
         </button>
@@ -39,6 +45,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           padding: 1rem 2rem;
           background: #0a0a0a;
           border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-links {
+          display: flex;
+          gap: 2rem;
+          align-items: center;
+        }
+        .nav-link {
+          color: rgba(255,255,255,0.6);
+          text-decoration: none;
+          font-weight: 700;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          transition: color 0.2s;
+        }
+        .nav-link:hover {
+          color: var(--brand-primary);
         }
         .font-black { font-weight: 900; }
         .text-xl { font-size: 1.25rem; }
