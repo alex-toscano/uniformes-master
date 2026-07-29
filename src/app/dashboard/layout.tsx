@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         
         <div className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
           <div className="nav-links">
-            <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero Kanban</a>
+            <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero</a>
             <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
             {isAdmin && <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>Finanzas</a>}
           </div>
