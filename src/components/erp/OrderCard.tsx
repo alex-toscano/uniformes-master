@@ -92,7 +92,7 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
     <div className={`order-card ${deliveryStatus ? deliveryStatus.class : ''}`}>
       <div className="card-header">
         <span className="sku">{order.sku_reference}</span>
-        <div style={{display: 'flex', gap: '0.5rem'}}>
+        <div className="header-badges">
           {deliveryStatus && (
             <span className={`delivery-badge ${deliveryStatus.class}`}>
               📅 {deliveryStatus.text}
@@ -153,13 +153,24 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
         .card-header {
           display: flex;
           justify-content: space-between;
+          align-items: flex-start;
+          gap: 0.5rem;
           margin-bottom: 0.5rem;
+        }
+        .header-badges {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.3rem;
+          flex-shrink: 0;
         }
         .sku {
           font-size: 0.75rem;
           font-weight: 800;
           color: var(--brand-primary);
           letter-spacing: 1px;
+          word-break: break-word;
+          flex: 1;
         }
         .qty {
           font-size: 0.75rem;
