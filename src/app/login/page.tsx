@@ -36,7 +36,6 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <InstallPrompt />
         <div className="login-header">
           <h2>ERP <span className="text-primary">MASTER</span></h2>
           <p>Acceso exclusivo para personal autorizado</p>
@@ -71,6 +70,10 @@ export default function LoginPage() {
             {loading ? 'Verificando...' : 'Iniciar Sesión'}
           </button>
         </form>
+
+        <div style={{ marginTop: '2rem' }}>
+          <InstallPrompt />
+        </div>
       </div>
 
       <style>{`
