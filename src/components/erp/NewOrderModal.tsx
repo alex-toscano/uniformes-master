@@ -129,13 +129,22 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     document.getElementById('fast_name_input')?.focus()
   }
 
+  const getNextConsecutive = () => {
+    const dbMax = lastConsecutive !== null ? lastConsecutive : 0
+    const itemsMax = items.length > 0 
+      ? Math.max(0, ...items.map(i => parseInt(i.player_number)).filter(n => !isNaN(n)))
+      : 0
+    const maxOverall = Math.max(dbMax, itemsMax)
+    return maxOverall === 0 ? (parseInt(newItem.number) || 1) : maxOverall + 1
+  }
+
   const handleAutoGenerate = () => {
     const qtyStr = window.prompt('¿Cuántos números consecutivos quieres generar?', '10')
     if (!qtyStr) return
     const count = parseInt(qtyStr)
     if (isNaN(count) || count <= 0) return
 
-    const startNum = lastConsecutive !== null ? lastConsecutive + 1 : (parseInt(newItem.number) || 1)
+    const startNum = getNextConsecutive()
     
     const generated: OrderItem[] = []
     for(let i=0; i<count; i++) {
@@ -151,11 +160,15 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     }
     
     setItems(prev => [...prev, ...generated])
-    setLastConsecutive(startNum + count - 1)
+    setNewItem(prev => ({ ...prev, number: String(startNum + count) }))
   }
 
   const removeItem = (id: string) => {
     setItems(items.filter(i => i.id !== id))
+  }
+
+  const updateItem = (id: string, field: keyof OrderItem, value: string) => {
+    setItems(items.map(i => i.id === id ? { ...i, [field]: value } : i))
   }
 
   const handleCopyForWhatsApp = () => {
@@ -387,9 +400,38 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                     <tbody>
                       {items.map(item => (
                         <tr key={item.id}>
-                          <td>{item.player_name}</td>
-                          <td>{item.player_number}</td>
-                          <td>{item.size}</td>
+                          <td>
+                            <input 
+                              type="text" 
+                              value={item.player_name} 
+                              onChange={e => updateItem(item.id, 'player_name', e.target.value)}
+                              className="inline-edit"
+                              placeholder="Escribe nombre..."
+                            />
+                          </td>
+                          <td>
+                            <input 
+                              type="text" 
+                              value={item.player_number} 
+                              onChange={e => updateItem(item.id, 'player_number', e.target.value)}
+                              className="inline-edit number"
+                            />
+                          </td>
+                          <td>
+                            <select 
+                              value={item.size} 
+                              onChange={e => {
+                                const newSize = e.target.value;
+                                const newPrice = calculatePrice(newSize, item.product_type);
+                                setItems(items.map(i => i.id === item.id ? { ...i, size: newSize, price: newPrice } : i));
+                              }}
+                              className="inline-edit"
+                            >
+                              <optgroup label="Infantil"><option>4</option><option>6</option><option>8</option><option>10</option></optgroup>
+                              <optgroup label="Juvenil"><option>12</option><option>14</option><option>16</option></optgroup>
+                              <optgroup label="Adulto"><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></optgroup>
+                            </select>
+                          </td>
                           <td>{item.product_type}</td>
                           <td className="text-primary">${item.price.toLocaleString('es-CO')}</td>
                           <td><button onClick={() => removeItem(item.id)} className="btn-remove">×</button></td>
@@ -516,6 +558,12 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
         .roster-table td { padding: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); color: white; font-size: 0.9rem; }
         .btn-remove { background: none; border: none; color: #ff5555; font-size: 1.2rem; cursor: pointer; }
         .empty-msg { text-align: center; color: rgba(255,255,255,0.3); margin-top: 2rem; }
+        
+        .inline-edit { background: transparent; border: 1px dashed rgba(255,255,255,0.2); color: white; padding: 0.3rem; width: 100%; border-radius: 4px; transition: border 0.2s; }
+        .inline-edit:focus { border-color: var(--brand-primary); outline: none; background: rgba(255,255,255,0.05); border-style: solid; }
+        .inline-edit.number { width: 50px; text-align: center; }
+        select.inline-edit { padding: 0.2rem; }
+        select.inline-edit option { background: #111; color: white; }
         
         /* FINANCE */
         .finance-card { background: #111; padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 1rem; }
