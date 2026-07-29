@@ -112,8 +112,8 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   const catalogImage = uniformData?.image || null
 
   const handleSubmitFinal = async () => {
-    if (items.length < 6) {
-      setError('Debes agregar al menos 6 items para procesar un pedido.')
+    if (items.length === 0) {
+      setError('Debes agregar al menos 1 item para procesar un pedido.')
       return
     }
 
