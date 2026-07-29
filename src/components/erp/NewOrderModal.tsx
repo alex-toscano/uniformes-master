@@ -22,6 +22,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   // Catálogo y Pedido General
   const [skuReference, setSkuReference] = useState('')
   const [advancePayment, setAdvancePayment] = useState(0)
+  const [deliveryDate, setDeliveryDate] = useState('')
   
   // Lista de Jugadores (Roster)
   const [items, setItems] = useState<OrderItem[]>([])
@@ -232,6 +233,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
       quantity: items.length,
       total_price: getTotalPrice(),
       advance_payment: advancePayment,
+      delivery_date: deliveryDate || null,
       created_by: user?.id
     }]).select().single()
 
@@ -467,6 +469,16 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                   <div className="f-row balance">
                     <span>Saldo Pendiente:</span>
                     <strong className="text-red">${(getTotalPrice() - advancePayment).toLocaleString('es-CO')}</strong>
+                  </div>
+                  <div className="f-row" style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
+                    <label style={{ color: '#facc15', fontWeight: 'bold' }}>📅 Fecha de Entrega Prometida:</label>
+                    <input 
+                      type="date" 
+                      required
+                      value={deliveryDate} 
+                      onChange={e => setDeliveryDate(e.target.value)}
+                      style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(250,204,21,0.5)', padding: '0.5rem', color: 'white', borderRadius: '4px', outline: 'none' }}
+                    />
                   </div>
                 </div>
 

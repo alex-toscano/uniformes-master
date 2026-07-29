@@ -11,6 +11,7 @@ export type Order = {
   status: string
   created_by: string
   created_at: string
+  delivery_date?: string
 }
 
 export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { order: Order, onUpdateStatus: (id: string, newStatus: string) => void, onViewDetails?: (id: string) => void }) {
@@ -30,11 +31,39 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
     }
   }
 
+  const getDeliveryStatus = () => {
+    if (!order.delivery_date || order.status === 'entregado') return null
+    
+    // Para asegurar cálculo correcto sin importar zona horaria, usamos la fecha UTC recibida
+    const today = new Date()
+    today.setHours(0,0,0,0)
+    // delivery_date asume formato YYYY-MM-DD
+    const [year, month, day] = order.delivery_date.split('-').map(Number)
+    const delivery = new Date(year, month - 1, day)
+    
+    const diffTime = delivery.getTime() - today.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays < 0) return { class: 'overdue', text: `Vencido hace ${Math.abs(diffDays)}d` }
+    if (diffDays <= 2) return { class: 'danger', text: `¡Faltan ${diffDays}d!` }
+    if (diffDays <= 7) return { class: 'warning', text: `${diffDays} días` }
+    return { class: 'normal', text: `${diffDays} días` }
+  }
+
+  const deliveryStatus = getDeliveryStatus()
+
   return (
-    <div className="order-card">
+    <div className={`order-card ${deliveryStatus ? deliveryStatus.class : ''}`}>
       <div className="card-header">
         <span className="sku">{order.sku_reference}</span>
-        <span className="qty">{order.quantity} un.</span>
+        <div style={{display: 'flex', gap: '0.5rem'}}>
+          {deliveryStatus && (
+            <span className={`delivery-badge ${deliveryStatus.class}`}>
+              📅 {deliveryStatus.text}
+            </span>
+          )}
+          <span className="qty">{order.quantity} un.</span>
+        </div>
       </div>
       <h3 className="school-name">{order.customers?.school_or_club || 'Sin Club'}</h3>
       <p className="client-name">{order.customers?.name} • {order.customers?.city}</p>
@@ -70,11 +99,20 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
           border: 1px solid rgba(255,255,255,0.08);
           border-radius: 8px;
           padding: 1rem;
-          transition: border-color 0.2s, transform 0.2s;
+          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
         }
         .order-card:hover {
           border-color: rgba(212,255,0,0.3);
           transform: translateY(-2px);
+        }
+        .order-card.warning { border-color: rgba(250,204,21,0.5); }
+        .order-card.danger { border-color: #ff5555; animation: pulse 2s infinite; }
+        .order-card.overdue { border-color: #991b1b; background: rgba(153,27,27,0.1); }
+        
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(255,85,85,0.4); }
+          70% { box-shadow: 0 0 0 6px rgba(255,85,85,0); }
+          100% { box-shadow: 0 0 0 0 rgba(255,85,85,0); }
         }
         .card-header {
           display: flex;
@@ -93,6 +131,11 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
           padding: 0.2rem 0.5rem;
           border-radius: 4px;
         }
+        .delivery-badge { font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
+        .delivery-badge.normal { background: rgba(255,255,255,0.1); color: white; }
+        .delivery-badge.warning { background: rgba(250,204,21,0.2); color: #facc15; }
+        .delivery-badge.danger { background: rgba(255,85,85,0.2); color: #ff5555; }
+        .delivery-badge.overdue { background: #991b1b; color: white; }
         .school-name {
           font-size: 1.1rem;
           font-weight: 700;

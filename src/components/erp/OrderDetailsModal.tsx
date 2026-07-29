@@ -196,6 +196,12 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
                   <span className="label">SKU / Diseño</span>
                   <strong className="text-primary">{order?.sku_reference}</strong>
                 </div>
+                {order?.delivery_date && (
+                  <div className="summary-block">
+                    <span className="label">📅 Entrega Pactada</span>
+                    <strong style={{ color: '#facc15', fontSize: '1.1rem' }}>{order.delivery_date}</strong>
+                  </div>
+                )}
                 <div className="summary-block highlight">
                   <span className="label">Finanzas</span>
                   <span>Total: <strong>${order?.total_price.toLocaleString('es-CO')}</strong></span>
