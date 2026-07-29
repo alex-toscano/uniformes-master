@@ -31,23 +31,59 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
     }
   }
 
+  // Días festivos en Colombia 2026 (Aproximados/Oficiales)
+  const COLOMBIA_HOLIDAYS = [
+    '2026-01-01', '2026-01-12', '2026-03-23', '2026-04-02', '2026-04-03', '2026-05-01', 
+    '2026-05-18', '2026-06-08', '2026-06-15', '2026-06-29', '2026-07-20', '2026-08-07', 
+    '2026-08-17', '2026-10-12', '2026-11-02', '2026-11-16', '2026-12-08', '2026-12-25',
+    // 2025 restantes por si acaso
+    '2025-08-07', '2025-08-18', '2025-10-13', '2025-11-03', '2025-11-17', '2025-12-08', '2025-12-25'
+  ]
+
+  const getBusinessDaysDiff = (start: Date, end: Date) => {
+    let count = 0
+    let curDate = new Date(start.getTime())
+    const sign = end >= start ? 1 : -1
+    
+    const limit = new Date(end.getTime())
+    
+    if (sign === 1) {
+      while (curDate < limit) {
+        curDate.setDate(curDate.getDate() + 1)
+        const day = curDate.getDay()
+        const dateStr = curDate.toISOString().split('T')[0]
+        if (day !== 0 && day !== 6 && !COLOMBIA_HOLIDAYS.includes(dateStr)) {
+          count++
+        }
+      }
+    } else {
+      while (curDate > limit) {
+        curDate.setDate(curDate.getDate() - 1)
+        const day = curDate.getDay()
+        const dateStr = curDate.toISOString().split('T')[0]
+        if (day !== 0 && day !== 6 && !COLOMBIA_HOLIDAYS.includes(dateStr)) {
+          count--
+        }
+      }
+    }
+    return count
+  }
+
   const getDeliveryStatus = () => {
     if (!order.delivery_date || order.status === 'entregado') return null
     
-    // Para asegurar cálculo correcto sin importar zona horaria, usamos la fecha UTC recibida
     const today = new Date()
     today.setHours(0,0,0,0)
-    // delivery_date asume formato YYYY-MM-DD
+    
     const [year, month, day] = order.delivery_date.split('-').map(Number)
     const delivery = new Date(year, month - 1, day)
     
-    const diffTime = delivery.getTime() - today.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    const diffDays = getBusinessDaysDiff(today, delivery)
     
-    if (diffDays < 0) return { class: 'overdue', text: `Vencido hace ${Math.abs(diffDays)}d` }
-    if (diffDays <= 2) return { class: 'danger', text: `¡Faltan ${diffDays}d!` }
-    if (diffDays <= 7) return { class: 'warning', text: `${diffDays} días` }
-    return { class: 'normal', text: `${diffDays} días` }
+    if (diffDays < 0) return { class: 'overdue', text: `Vencido hace ${Math.abs(diffDays)}d hábiles` }
+    if (diffDays <= 2) return { class: 'danger', text: `¡Faltan ${diffDays}d hábiles!` }
+    if (diffDays <= 5) return { class: 'warning', text: `${diffDays} días hábiles` }
+    return { class: 'normal', text: `${diffDays} días hábiles` }
   }
 
   const deliveryStatus = getDeliveryStatus()
