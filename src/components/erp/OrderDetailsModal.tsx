@@ -130,12 +130,32 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
     }
   }
 
+  const handleDeleteOrder = async () => {
+    if (!confirm('🚨 ATENCIÓN: ¿Estás seguro de que deseas eliminar TODO el pedido? Esta acción es irreversible.')) return
+    
+    setLoading(true)
+    // Borrar ítems hijos primero por seguridad
+    await supabase.from('order_items').delete().eq('order_id', orderId)
+    // Borrar maestro
+    const { error } = await supabase.from('orders').delete().eq('id', orderId)
+    
+    if (!error) {
+      onClose()
+    } else {
+      alert('Error eliminando el pedido')
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="modal-overlay">
       <div className="modal-content advanced-modal">
         <div className="modal-header">
           <h2>Detalle de Pedido</h2>
-          <button onClick={onClose} className="btn-close">×</button>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            {!loading && <button onClick={handleDeleteOrder} className="btn-remove" style={{ border: '1px solid #ff5555' }}>🗑️ Eliminar Pedido</button>}
+            <button onClick={onClose} className="btn-close">×</button>
+          </div>
         </div>
 
         <div className="modal-body">
