@@ -67,7 +67,7 @@ export default function CatalogGrid() {
         .insert([
           {
             nombre: leadData.nombre,
-            escuela: leadData.escuela,
+            escuela: leadData.ciudad,
             cantidad_estimada: leadData.cantidad,
             sku_interes: selectedUniform.sku,
             fecha: new Date().toISOString()
@@ -393,32 +393,18 @@ export default function CatalogGrid() {
           position: relative;
           aspect-ratio: 4/5;
           overflow: hidden;
-          background: #0a0a0a;
+          background: transparent;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .card-image-wrapper::before {
-          content: '';
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          width: 150%; height: 150%;
-          background: radial-gradient(circle at center, var(--glow-color) 0%, transparent 60%);
-          opacity: 0;
-          transition: opacity 0.5s ease;
-          pointer-events: none;
-          z-index: 1;
-        }
-        .card:hover .card-image-wrapper::before { opacity: 0.7; }
         .card-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           transition: transform 0.5s ease;
           position: relative;
           z-index: 2;
-          filter: drop-shadow(0px 15px 20px rgba(0,0,0,0.7));
         }
         .card:hover .card-img { transform: scale(1.07); }
         /* Overlay en hover */
@@ -558,7 +544,7 @@ export default function CatalogGrid() {
         .ecommerce-image-container {
           flex: 1;
           position: relative;
-          background: #0a0a0a;
+          background: transparent;
           overflow: hidden; /* Importante para que el zoom no se salga */
           display: flex;
           align-items: center;
@@ -575,10 +561,9 @@ export default function CatalogGrid() {
           transition: transform 0.1s ease-out; /* Suaviza el movimiento del mouse */
         }
         .ecommerce-img {
-          width: 80%;
-          max-height: 80vh;
-          object-fit: contain;
-          filter: drop-shadow(0px 20px 40px rgba(0,0,0,0.8));
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
         .zoom-hint {
           position: absolute;

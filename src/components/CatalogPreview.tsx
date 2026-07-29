@@ -141,32 +141,18 @@ export default function CatalogPreview() {
           position: relative;
           aspect-ratio: 4/5;
           overflow: hidden;
-          background: #0a0a0a;
+          background: transparent;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .preview-img-wrap::before {
-          content: '';
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          width: 140%; height: 140%;
-          background: radial-gradient(circle, var(--glow) 0%, transparent 65%);
-          opacity: 0;
-          transition: opacity 0.5s;
-          pointer-events: none;
-          z-index: 1;
-        }
-        .preview-card:hover .preview-img-wrap::before { opacity: 0.7; }
         .preview-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           position: relative;
           z-index: 2;
           transition: transform 0.5s ease;
-          filter: drop-shadow(0 15px 20px rgba(0,0,0,0.7));
         }
         .preview-card:hover .preview-img { transform: scale(1.06); }
         .preview-overlay {
