@@ -1,0 +1,21 @@
+{
+  "name": "Uniformes Master ERP",
+  "short_name": "ERP Master",
+  "description": "Sistema de gestión y trazabilidad operativa.",
+  "start_url": "/dashboard/vendedor",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#d4ff00",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

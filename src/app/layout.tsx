@@ -8,18 +8,34 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Uniformes Master | 4 Años Vistiendo Campeones",
-  description: "Fabricantes de uniformes deportivos premium en Colombia. Diseño personalizado desde 6 unidades. Envíos a todo el país.",
+  title: "Uniformes Master - Panel",
+  description: "Panel de administración y control",
+  manifest: "/manifest.json",
+  themeColor: "#d4ff00",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="es" className={inter.variable}>
-      <body>{children}</body>
+      <body className={inter.className}>
+        {/* Service Worker Registration for PWA */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

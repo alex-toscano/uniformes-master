@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import InstallPrompt from '@/components/InstallPrompt'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -35,6 +36,7 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-box">
+        <InstallPrompt />
         <div className="login-header">
           <h2>ERP <span className="text-primary">MASTER</span></h2>
           <p>Acceso exclusivo para personal autorizado</p>
