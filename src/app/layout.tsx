@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   title: "Uniformes Master - Panel",
   description: "Panel de administración y control",
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ERP Master",
+  },
   themeColor: "#d4ff00",
 };
 
