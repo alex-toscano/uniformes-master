@@ -2,8 +2,10 @@
 
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -15,18 +17,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="dashboard-layout">
       <nav className="dashboard-nav">
-        <div className="nav-brand">
-          <span className="font-black text-xl text-white">ERP <span className="text-[var(--brand-primary)]">MASTER</span></span>
+        <div className="nav-mobile-header">
+          <div className="nav-brand">
+            <span className="font-black text-xl text-white">ERP <span className="text-[var(--brand-primary)]">MASTER</span></span>
+          </div>
+          <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? '✕' : '☰'}
+          </button>
         </div>
         
-        <div className="nav-links">
-          <a href="/dashboard/vendedor" className="nav-link">Tablero Kanban</a>
-          <a href="/dashboard/clientes" className="nav-link">CRM Clientes</a>
-        </div>
+        <div className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
+          <div className="nav-links">
+            <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero Kanban</a>
+            <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
+          </div>
 
-        <button onClick={handleLogout} className="btn-logout">
-          Cerrar Sesión
-        </button>
+          <button onClick={handleLogout} className="btn-logout">
+            Cerrar Sesión
+          </button>
+        </div>
       </nav>
       <main className="dashboard-content">
         {children}
@@ -87,6 +96,69 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         .btn-logout:hover {
           background: rgba(255, 68, 68, 0.1);
           border-color: #ff4444;
+        }
+
+        .hamburger {
+          display: none;
+          background: transparent;
+          border: none;
+          color: white;
+          font-size: 1.5rem;
+          cursor: pointer;
+        }
+
+        .nav-menu {
+          display: flex;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .nav-mobile-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+        }
+
+        @media (max-width: 768px) {
+          .hamburger {
+            display: block;
+          }
+          .dashboard-nav {
+            flex-direction: column;
+            padding: 1rem;
+          }
+          .nav-menu {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            margin-top: 1rem;
+          }
+          .nav-menu.open {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+          }
+          .nav-links {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+          }
+          .nav-link {
+            display: block;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            text-align: center;
+          }
+          .btn-logout {
+            width: 100%;
+          }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>
