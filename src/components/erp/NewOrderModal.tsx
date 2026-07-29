@@ -158,6 +158,30 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     setItems(items.filter(i => i.id !== id))
   }
 
+  const handleCopyForWhatsApp = () => {
+    let text = `*COTIZACIÓN DE PEDIDO*\n\n`
+    const c = customers.find(cust => cust.id === selectedCustomerId)
+    if (c || isCreatingCustomer) {
+      text += `Cliente: ${c ? (c.school_or_club || c.name) : (newCustomer.club || newCustomer.name)}\n`
+    }
+    if (skuReference) text += `Diseño SKU: ${skuReference}\n`
+    text += `Total prendas: ${items.length}\n\n`
+    
+    text += `*NÓMINA:*\n`
+    items.forEach((item, idx) => {
+      text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type} - $${item.price.toLocaleString('es-CO')}\n`
+    })
+    
+    text += `\n*VALOR TOTAL:* $${getTotalPrice().toLocaleString('es-CO')}\n`
+    if (advancePayment > 0) {
+      text += `Abono: $${advancePayment.toLocaleString('es-CO')}\n`
+      text += `Saldo Pendiente: $${(getTotalPrice() - advancePayment).toLocaleString('es-CO')}\n`
+    }
+    
+    navigator.clipboard.writeText(text)
+    alert('✅ Cotización copiada al portapapeles. ¡Abre WhatsApp y pégala!')
+  }
+
   const getTotalPrice = () => items.reduce((acc, curr) => acc + curr.price, 0)
 
   // Encontrar imagen del SKU en el catálogo
@@ -405,6 +429,9 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                 </div>
 
                 <div className="step-actions vertical">
+                  <button className="btn-secondary" onClick={handleCopyForWhatsApp} style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                    <span style={{ color: '#25D366' }}>💬</span> Copiar para WhatsApp
+                  </button>
                   <button className="btn-secondary" onClick={() => setStep(2)}>⬅ Volver a Diseño</button>
                   <button className="btn-submit" disabled={loading} onClick={handleSubmitFinal}>
                     {loading ? 'Procesando Pedido...' : 'Guardar Pedido Definitivo'}
