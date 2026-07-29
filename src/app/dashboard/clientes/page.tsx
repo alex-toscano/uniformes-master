@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import PricingModal from '@/components/erp/PricingModal'
+import EditCustomerModal from '@/components/erp/EditCustomerModal'
 
 type Customer = {
   id: string
@@ -22,6 +23,7 @@ export default function CRMPage() {
   const supabase = createClient()
   
   const [pricingCustomer, setPricingCustomer] = useState<{id: string, name: string} | null>(null)
+  const [editCustomer, setEditCustomer] = useState<Customer | null>(null)
 
   useEffect(() => {
     fetchCustomers()
@@ -103,12 +105,20 @@ export default function CRMPage() {
                   <span className="order-badge">{c.orders.length}</span>
                 </td>
                 <td>
-                  <button 
-                    className="btn-edit-prices"
-                    onClick={() => setPricingCustomer({ id: c.id, name: c.name })}
-                  >
-                    Configurar Precios
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button 
+                      className="btn-edit-prices"
+                      onClick={() => setPricingCustomer({ id: c.id, name: c.name })}
+                    >
+                      Configurar Precios
+                    </button>
+                    <button 
+                      className="btn-edit-prices"
+                      onClick={() => setEditCustomer(c)}
+                    >
+                      Editar Perfil
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -126,6 +136,14 @@ export default function CRMPage() {
           customerId={pricingCustomer.id}
           customerName={pricingCustomer.name}
           onClose={() => setPricingCustomer(null)}
+        />
+      )}
+
+      {editCustomer && (
+        <EditCustomerModal
+          customer={editCustomer}
+          onClose={() => setEditCustomer(null)}
+          onUpdated={fetchCustomers}
         />
       )}
 

@@ -25,6 +25,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   
   // Lista de Jugadores (Roster)
   const [items, setItems] = useState<OrderItem[]>([])
+  const [lastConsecutive, setLastConsecutive] = useState<number | null>(null)
   
   // Formularios temporales
   const [newItem, setNewItem] = useState({ name: '', number: '', size: 'M', type: 'Uniforme' })
@@ -45,11 +46,35 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     if (data) setCustomPricing(data)
   }
 
+  const fetchConsecutives = async (customerId: string) => {
+    const { data: orders } = await supabase.from('orders').select('id').eq('customer_id', customerId)
+    if (!orders || orders.length === 0) {
+      setLastConsecutive(null)
+      return
+    }
+    const orderIds = orders.map(o => o.id)
+    
+    const { data: pastItems } = await supabase.from('order_items').select('player_number').in('order_id', orderIds)
+    if (pastItems && pastItems.length > 0) {
+      const nums = pastItems.map(i => parseInt(i.player_number)).filter(n => !isNaN(n))
+      if (nums.length > 0) {
+        const max = Math.max(...nums)
+        setLastConsecutive(max)
+        setNewItem(prev => ({ ...prev, number: String(max + 1) }))
+      } else {
+        setLastConsecutive(null)
+      }
+    } else {
+      setLastConsecutive(null)
+    }
+  }
+
   const handleCustomerSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value
     setSelectedCustomerId(id)
     if (id && id !== 'new') {
       loadCustomerPricing(id)
+      fetchConsecutives(id)
       setIsCreatingCustomer(false)
     } else if (id === 'new') {
       setIsCreatingCustomer(true)
@@ -94,8 +119,11 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
       price
     }])
     
+    // Auto-incrementar el número para el siguiente si es numérico
+    const nextNum = parseInt(newItem.number) ? String(parseInt(newItem.number) + 1) : ''
+    
     // Resetear formulario rápido
-    setNewItem({ name: '', number: '', size: newItem.size, type: newItem.type })
+    setNewItem({ name: '', number: nextNum, size: newItem.size, type: newItem.type })
     
     // Enfocar automáticamente el input de nombre para cargar rápido (como en excel)
     document.getElementById('fast_name_input')?.focus()
@@ -253,6 +281,11 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
             <div className="step-content split-layout">
               <div className="roster-section">
                 <h3>Ingreso Rápido de Nómina</h3>
+                {lastConsecutive !== null && (
+                  <div className="info-alert">
+                    💡 Historial: El último número pedido por este cliente fue el <strong>{lastConsecutive}</strong>.
+                  </div>
+                )}
                 <form onSubmit={handleAddItem} className="fast-form">
                   <input 
                     id="fast_name_input"
@@ -442,6 +475,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
         .btn-submit { background: var(--brand-primary); color: black; font-weight: 800; padding: 1rem; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 1rem; }
         .btn-submit:disabled { opacity: 0.5; }
         .error-alert { background: rgba(255,50,50,0.1); color: #ff5555; padding: 1rem; border-radius: 6px; border: 1px solid rgba(255,50,50,0.2); margin-bottom: 1rem; }
+        .info-alert { background: rgba(212, 255, 0, 0.05); color: #d4ff00; padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(212, 255, 0, 0.2); margin-bottom: 1rem; font-size: 0.85rem; }
         
         @media (max-width: 768px) {
           .step-content.split-layout { grid-template-columns: 1fr; }
