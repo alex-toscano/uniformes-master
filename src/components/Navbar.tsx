@@ -24,6 +24,7 @@ export default function Navbar() {
             <a href="/" className="nav-item">Inicio</a>
             <a href="/catalogo" className="nav-item">Catálogo</a>
             <a href="#testimonios" className="nav-item">Clientes</a>
+            <a href="#faq" className="nav-item">FAQ</a>
             <a href="#contacto" className="nav-item">Contacto</a>
             <a
               href="https://wa.me/573012815448"
@@ -50,6 +51,7 @@ export default function Navbar() {
           <div className="mobile-menu">
             <a href="/catalogo" className="mobile-item" onClick={() => setMenuOpen(false)}>Catálogo</a>
             <a href="#testimonios" className="mobile-item" onClick={() => setMenuOpen(false)}>Clientes</a>
+            <a href="#faq" className="mobile-item" onClick={() => setMenuOpen(false)}>FAQ</a>
             <a href="#contacto" className="mobile-item" onClick={() => setMenuOpen(false)}>Contacto</a>
             <a
               href="https://wa.me/573012815448"
