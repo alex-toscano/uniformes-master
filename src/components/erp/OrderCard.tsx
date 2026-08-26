@@ -12,6 +12,8 @@ export type Order = {
   created_by: string
   created_at: string
   delivery_date?: string
+  observations?: string
+  fabric_meters?: number
 }
 
 export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { order: Order, onUpdateStatus: (id: string, newStatus: string) => void, onViewDetails?: (id: string) => void }) {
