@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 type Pricing = { product_type: string; size_category: string; price: number }
 
@@ -195,9 +197,6 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
   const handleDownloadPDF = async () => {
     if (!order) return
     
-    const { default: jsPDF } = await import('jspdf')
-    const { default: autoTable } = await import('jspdf-autotable')
-    
     const doc = new jsPDF()
 
     // --- ENCABEZADO SUPERIOR ---
@@ -230,14 +229,16 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
     // Texto Encabezado Izquierdo
     doc.setTextColor(255, 255, 255)
     doc.setFont("helvetica", "bold")
-    doc.setFontSize(18)
-    doc.text('Uniformes Master', 45, 18)
+    doc.setFontSize(16)
+    doc.text('Uniformes Master', 45, 14)
     
     doc.setFont("helvetica", "normal")
-    doc.setFontSize(9)
+    doc.setFontSize(8)
     doc.setTextColor(209, 213, 219) // #d1d5db
-    doc.text('Sede Principal • Colombia', 45, 25)
-    doc.text(`Orden: #${order.sku_reference || order.id.slice(0,6).toUpperCase()}`, 45, 31)
+    doc.text('Bogotá • Colombia', 45, 20)
+    doc.text('Calle 61 A Sur #97b-12', 45, 25)
+    doc.text('Tel: 301 281 5448', 45, 30)
+    doc.text(`Orden: #${order.sku_reference || order.id.slice(0,6).toUpperCase()}`, 45, 35)
     
     // Texto Encabezado Derecho
     doc.setTextColor(255, 255, 255)
