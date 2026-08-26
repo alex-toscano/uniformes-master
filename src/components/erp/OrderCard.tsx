@@ -126,7 +126,23 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div className="mobile-status-selector">
+          <select 
+            value={order.status}
+            onChange={(e) => onUpdateStatus(order.id, e.target.value)}
+            className="status-dropdown"
+          >
+            <option value="cotizacion">Cotización</option>
+            <option value="diseño">Diseño</option>
+            <option value="aprobacion_cliente">Aprobación Cliente</option>
+            <option value="produccion">Producción</option>
+            <option value="confeccion_y_duplicado">Confección y Duplicado</option>
+            <option value="control_calidad">Control Calidad</option>
+            <option value="entregado">Entregado</option>
+          </select>
+        </div>
+        
         {onViewDetails && (
           <button onClick={() => onViewDetails(order.id)} className="btn-view-details" style={{ width: '100%' }}>
             👁️ Ver Detalle Completo
@@ -249,6 +265,30 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
         }
         .btn-view-details:hover {
           background: rgba(255,255,255,0.1);
+        }
+        
+        .status-dropdown {
+          width: 100%;
+          background: rgba(255,255,255,0.05);
+          color: rgba(255,255,255,0.8);
+          border: 1px solid rgba(255,255,255,0.1);
+          padding: 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          cursor: pointer;
+          outline: none;
+          appearance: none;
+          text-align: center;
+        }
+        .status-dropdown:hover {
+          background: rgba(255,255,255,0.1);
+        }
+        
+        /* Ocultar en escritorio para forzar el uso de Drag & Drop, mostrar en móviles */
+        @media (min-width: 769px) {
+          .mobile-status-selector {
+            display: none;
+          }
         }
       `}</style>
     </div>
