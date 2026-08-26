@@ -200,6 +200,16 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
     
     const doc = new jsPDF()
 
+    // --- ENCABEZADO SUPERIOR ---
+    // Rectángulo Azul Oscuro (Izquierda)
+    doc.setFillColor(15, 23, 42) // #0f172a
+    doc.rect(0, 0, 140, 40, 'F')
+    
+    // Rectángulo Verde Brillante (Derecha)
+    doc.setFillColor(34, 197, 94) // #22c55e
+    doc.rect(140, 0, 70, 40, 'F')
+
+    // Logo (Intentar cargar de /logo.png)
     try {
       const response = await fetch('/logo.png')
       const blob = await response.blob()
@@ -208,7 +218,7 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
       await new Promise(resolve => {
         reader.onloadend = () => {
           if (reader.result) {
-            doc.addImage(reader.result as string, 'PNG', 14, 15, 30, 30)
+            doc.addImage(reader.result as string, 'PNG', 10, 5, 30, 30)
           }
           resolve(true)
         }
@@ -217,22 +227,62 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
       console.log('No logo found, skipping.')
     }
 
-    doc.setFontSize(22)
-    doc.text('ORDEN DE PEDIDO', 105, 25, { align: 'center' })
+    // Texto Encabezado Izquierdo
+    doc.setTextColor(255, 255, 255)
+    doc.setFont("helvetica", "bold")
+    doc.setFontSize(18)
+    doc.text('Uniformes Master', 45, 18)
     
-    doc.setFontSize(10)
-    doc.text('Uniformes Master', 105, 33, { align: 'center' })
-    doc.text('Teléfono: 3012815448', 105, 38, { align: 'center' })
-    doc.text('Dirección: Calle 61 a sur #97b-12', 105, 43, { align: 'center' })
-
+    doc.setFont("helvetica", "normal")
+    doc.setFontSize(9)
+    doc.setTextColor(209, 213, 219) // #d1d5db
+    doc.text('Sede Principal • Colombia', 45, 25)
+    doc.text(`Orden: #${order.sku_reference || order.id.slice(0,6).toUpperCase()}`, 45, 31)
+    
+    // Texto Encabezado Derecho
+    doc.setTextColor(255, 255, 255)
+    doc.setFont("helvetica", "bold")
     doc.setFontSize(12)
-    doc.text(`Cliente: ${order.customers?.name?.toUpperCase()}`, 14, 60)
-    if (order.customers?.school_or_club) {
-      doc.text(`Escuela / Club: ${order.customers?.school_or_club.toUpperCase()}`, 14, 67)
-    }
-    doc.text(`Diseño SKU: ${order.sku_reference || 'EXTERNO'}`, 14, 74)
-    doc.text(`Total prendas: ${items.length}`, 14, 81)
+    doc.text('ORDEN DE PEDIDO', 175, 20, { align: 'center' })
+    doc.setFont("helvetica", "normal")
+    doc.setFontSize(9)
+    const today = new Date().toLocaleDateString('es-CO')
+    doc.text(`Fecha: ${today}`, 175, 26, { align: 'center' })
 
+
+    // --- INFORMACIÓN DEL CLIENTE ---
+    doc.setTextColor(0, 0, 0)
+    doc.setFont("helvetica", "bold")
+    doc.setFontSize(10)
+    doc.text('INFORMACIÓN DEL CLIENTE', 15, 55)
+    
+    // Línea naranja decorativa
+    doc.setDrawColor(249, 115, 22) // #f97316
+    doc.setLineWidth(0.8)
+    doc.line(15, 57, 65, 57)
+
+    // Caja Gris Clara
+    doc.setFillColor(243, 244, 246) // #f3f4f6
+    doc.roundedRect(15, 65, 180, 25, 3, 3, 'F')
+
+    // Textos de la Caja Gris
+    doc.setFontSize(7)
+    doc.setTextColor(107, 114, 128) // #6b7280
+    doc.setFont("helvetica", "normal")
+    doc.text('NOMBRE COMPLETO:', 20, 72)
+    doc.text('ESCUELA / CLUB:', 20, 84)
+    doc.text('DISEÑO SKU:', 110, 72)
+    doc.text('FECHA EMISIÓN:', 110, 84)
+
+    doc.setFontSize(9)
+    doc.setTextColor(0, 0, 0)
+    doc.setFont("helvetica", "bold")
+    doc.text(`${order.customers?.name?.toUpperCase()}`, 20, 77)
+    doc.text(`${order.customers?.school_or_club?.toUpperCase() || 'N/A'}`, 20, 88)
+    doc.text(`${order.sku_reference || 'EXTERNO'}`, 110, 77)
+    doc.text(`${today}`, 110, 88)
+
+    // --- TABLA DE ITEMS ---
     const tableData = items.map((item, idx) => [
       (idx + 1).toString(),
       `#${item.player_number}`,
@@ -243,22 +293,66 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
     ])
 
     autoTable(doc, {
-      startY: 90,
-      head: [['N°', 'Número', 'Nombre', 'Talla', 'Tipo', 'Precio']],
+      startY: 105,
+      head: [['N°', 'NÚMERO', 'NOMBRE', 'TALLA', 'TIPO', 'PRECIO']],
       body: tableData,
-      theme: 'grid',
-      headStyles: { fillColor: [212, 255, 0], textColor: [0, 0, 0] } // Volt Green color for header
+      theme: 'plain',
+      headStyles: { 
+        fillColor: [15, 23, 42], // #0f172a
+        textColor: [255, 255, 255], 
+        fontStyle: 'bold',
+        fontSize: 8,
+        cellPadding: 4
+      },
+      bodyStyles: {
+        fontSize: 9,
+        textColor: [0, 0, 0],
+        cellPadding: 4
+      },
+      alternateRowStyles: {
+        fillColor: [249, 250, 251] // #f9fafb
+      },
+      styles: {
+        lineColor: [229, 231, 235], // #e5e7eb
+        lineWidth: { bottom: 0.1 }
+      }
     })
 
+    // --- TOTALES ---
     // @ts-ignore
-    const finalY = doc.lastAutoTable.finalY || 90
+    const finalY = doc.lastAutoTable.finalY || 105
     
-    doc.setFontSize(14)
+    // Caja verde claro de totales
+    doc.setFillColor(240, 253, 244) // #f0fdf4
+    doc.rect(135, finalY + 5, 60, 15, 'F')
+    
+    doc.setFontSize(10)
     doc.setFont("helvetica", "bold")
-    doc.text(`VALOR TOTAL: $${order.total_price.toLocaleString('es-CO')}`, 14, finalY + 15)
+    doc.setTextColor(22, 101, 52) // #166534
+    doc.text('VALOR TOTAL:', 140, finalY + 15)
+    
+    doc.setFontSize(11)
+    doc.text(`$${order.total_price.toLocaleString('es-CO')}`, 190, finalY + 15, { align: 'right' })
+
+    // --- PIE DE PÁGINA (FIRMAS) ---
+    const footerY = 255
+    doc.setDrawColor(209, 213, 219)
+    doc.setLineWidth(0.5)
+    doc.line(135, footerY, 195, footerY) // Línea de firma
+
+    doc.setFontSize(7)
+    doc.setTextColor(107, 114, 128)
+    doc.setFont("helvetica", "normal")
+    doc.text('FIRMA AUTORIZADA', 165, footerY + 5, { align: 'center' })
+    doc.text('ADMINISTRACIÓN UNIFORMES MASTER', 165, footerY + 10, { align: 'center' })
+
+    // Texto legal final
+    doc.setFontSize(7)
+    doc.text('Este recibo es un comprobante oficial de pedido generado digitalmente.', 105, 285, { align: 'center' })
+    doc.text('UNIFORMES MASTER - Plataforma Oficial', 105, 290, { align: 'center' })
 
     // Save PDF
-    doc.save(`Orden_Pedido_${order.customers?.name || 'Cliente'}.pdf`)
+    doc.save(`Orden_${order.customers?.name || 'Cliente'}.pdf`)
   }
 
   return (
