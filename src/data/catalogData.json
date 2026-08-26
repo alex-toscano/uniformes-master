@@ -1,0 +1,1244 @@
+[
+  {
+    "id": "um-0",
+    "sku": "SKU-TORMENTA-A413",
+    "name": "AMARILLO DORMUNT",
+    "category": "tormenta",
+    "glow": "rgba(212, 196, 5, 0.7)",
+    "image": "/catalog/colecciones/amarillo_dormunt_jpeg.png",
+    "description": "Diseño AMARILLO DORMUNT de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-1",
+    "sku": "SKU-AGUA-8C01",
+    "name": "AZUL NEGRO T",
+    "category": "agua",
+    "glow": "rgba(60, 124, 180, 0.7)",
+    "image": "/catalog/colecciones/azul_negro_t_jpeg.png",
+    "description": "Diseño AZUL NEGRO T de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-2",
+    "sku": "SKU-ETER-5F74",
+    "name": "BLESS B",
+    "category": "agua",
+    "glow": "rgba(94, 188, 196, 0.7)",
+    "image": "/catalog/colecciones/bless_b_jpeg.png",
+    "description": "Diseño BLESS B de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-3",
+    "sku": "SKU-ETER-AA4D",
+    "name": "BLESS N",
+    "category": "fuego",
+    "glow": "rgba(181, 63, 127, 0.7)",
+    "image": "/catalog/colecciones/bless_n_jpeg.png",
+    "description": "Diseño BLESS N de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-4",
+    "sku": "SKU-FUEGO-81DD",
+    "name": "CUADROS NEGRO NARANJA",
+    "category": "fuego",
+    "glow": "rgba(205, 99, 52, 0.7)",
+    "image": "/catalog/colecciones/cuadros_negro_naranja_jpeg.png",
+    "description": "Diseño CUADROS NEGRO NARANJA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-5",
+    "sku": "SKU-AGUA-D2B3",
+    "name": "FE AZUL",
+    "category": "agua",
+    "glow": "rgba(11, 173, 235, 0.7)",
+    "image": "/catalog/colecciones/FE AZUL.jpeg",
+    "description": "Diseño FE AZUL de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-6",
+    "sku": "SKU-FUEGO-6EED",
+    "name": "FUCCIA LEON",
+    "category": "fuego",
+    "glow": "rgba(217, 30, 133, 0.7)",
+    "image": "/catalog/colecciones/fuccia_leon_jpeg.png",
+    "description": "Diseño FUCCIA LEON de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-7",
+    "sku": "SKU-ETER-BA6E",
+    "name": "intercolonias",
+    "category": "tormenta",
+    "glow": "rgba(211, 189, 40, 0.7)",
+    "image": "/catalog/colecciones/intercolonias_jpeg.png",
+    "description": "Diseño intercolonias de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-8",
+    "sku": "SKU-AGUA-147A",
+    "name": "ONDULADO BLANCO AZUL",
+    "category": "agua",
+    "glow": "rgba(49, 105, 202, 0.7)",
+    "image": "/catalog/colecciones/ondulado_blanco_azul_jpeg.png",
+    "description": "Diseño ONDULADO BLANCO AZUL de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-9",
+    "sku": "SKU-FUEGO-109E",
+    "name": "ROJO BLANCO sfe",
+    "category": "fuego",
+    "glow": "rgba(188, 4, 10, 0.7)",
+    "image": "/catalog/colecciones/rojo_blanco_sfe_jpeg.png",
+    "description": "Diseño ROJO BLANCO sfe de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-10",
+    "sku": "SKU-ETER-3A12",
+    "name": "VASCO",
+    "category": "tierra",
+    "glow": "rgba(199, 237, 26, 0.7)",
+    "image": "/catalog/colecciones/vasco_png.png",
+    "description": "Diseño VASCO de la colección TIERRA. Texturas sólidas y colores firmes. Este uniforme de la colección Tierra garantiza resistencia extrema ante tirones y roces, manteniendo la elegancia táctica de tu equipo."
+  },
+  {
+    "id": "um-11",
+    "sku": "SKU-FUEGO-BDD6",
+    "name": "ZIG ZAG negro fuccia",
+    "category": "agua",
+    "glow": "rgba(64, 143, 191, 0.7)",
+    "image": "/catalog/colecciones/zig_zag_negro_fuccia_jpeg.png",
+    "description": "Diseño ZIG ZAG negro fuccia de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-12",
+    "sku": "SKU-AGUA-8FDD",
+    "name": "AZUL CHELSEA",
+    "category": "agua",
+    "glow": "rgba(4, 36, 156, 0.7)",
+    "image": "/catalog/colecciones/azul_chelsea_jpeg.png",
+    "description": "Diseño AZUL CHELSEA de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-13",
+    "sku": "SKU-ETER-2782",
+    "name": "COL",
+    "category": "tormenta",
+    "glow": "rgba(212, 172, 4, 0.7)",
+    "image": "/catalog/colecciones/col_jpeg.png",
+    "description": "Diseño COL de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-14",
+    "sku": "SKU-ETER-7425",
+    "name": "DEGRADE PUNTOS MORADO",
+    "category": "agua",
+    "glow": "rgba(147, 69, 142, 0.7)",
+    "image": "/catalog/colecciones/degrade_puntos_morado_jpeg.png",
+    "description": "Diseño DEGRADE PUNTOS MORADO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-15",
+    "sku": "SKU-ETER-3B8B",
+    "name": "goku",
+    "category": "fuego",
+    "glow": "rgba(217, 40, 45, 0.7)",
+    "image": "/catalog/colecciones/goku_jpeg.png",
+    "description": "Diseño goku de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-16",
+    "sku": "SKU-ETER-6BEE",
+    "name": "GORILA",
+    "category": "tormenta",
+    "glow": "rgba(183, 139, 64, 0.7)",
+    "image": "/catalog/colecciones/gorila_jpeg.png",
+    "description": "Diseño GORILA de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-17",
+    "sku": "SKU-ETER-F12B",
+    "name": "LA CANTERA",
+    "category": "fuego",
+    "glow": "rgba(245, 4, 4, 0.7)",
+    "image": "/catalog/colecciones/LA CANTERA.jpeg",
+    "description": "Diseño LA CANTERA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-18",
+    "sku": "SKU-FUEGO-1130",
+    "name": "MANCHAS FUCCIA",
+    "category": "fuego",
+    "glow": "rgba(208, 63, 143, 0.7)",
+    "image": "/catalog/colecciones/manchas_fuccia_jpeg.png",
+    "description": "Diseño MANCHAS FUCCIA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-19",
+    "sku": "SKU-ETER-CCE1",
+    "name": "NAPOLI",
+    "category": "fuego",
+    "glow": "rgba(188, 4, 4, 0.7)",
+    "image": "/catalog/colecciones/napoli_jpeg.png",
+    "description": "Diseño NAPOLI de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-20",
+    "sku": "SKU-ETER-D06D",
+    "name": "PATO",
+    "category": "tormenta",
+    "glow": "rgba(170, 139, 51, 0.7)",
+    "image": "/catalog/colecciones/pato_jpeg.png",
+    "description": "Diseño PATO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-21",
+    "sku": "SKU-ETER-3289",
+    "name": "PAYASO FUCSIA",
+    "category": "fuego",
+    "glow": "rgba(186, 12, 102, 0.7)",
+    "image": "/catalog/colecciones/payaso_fucsia_jpeg.png",
+    "description": "Diseño PAYASO FUCSIA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-22",
+    "sku": "SKU-ETER-D1A0",
+    "name": "RAYO NEGRO",
+    "category": "agua",
+    "glow": "rgba(64, 64, 191, 0.7)",
+    "image": "/catalog/colecciones/rayo_negro_jpeg.png",
+    "description": "Diseño RAYO NEGRO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-23",
+    "sku": "SKU-TIERRA-60A5",
+    "name": "VERDE PUNTOS",
+    "category": "agua",
+    "glow": "rgba(79, 168, 176, 0.7)",
+    "image": "/catalog/colecciones/verde_puntos_jpeg.png",
+    "description": "Diseño VERDE PUNTOS de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-24",
+    "sku": "SKU-FUEGO-2CC0",
+    "name": "VINOT",
+    "category": "tormenta",
+    "glow": "rgba(210, 186, 17, 0.7)",
+    "image": "/catalog/colecciones/vinot_jpeg.png",
+    "description": "Diseño VINOT de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-25",
+    "sku": "SKU-AGUA-ACE4",
+    "name": "AGUAMARINA AZUL",
+    "category": "agua",
+    "glow": "rgba(78, 172, 185, 0.7)",
+    "image": "/catalog/colecciones/aguamarina_azul_jpeg.png",
+    "description": "Diseño AGUAMARINA AZUL de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-26",
+    "sku": "SKU-ETER-2DF1",
+    "name": "AGUAMARINA NEGRO",
+    "category": "agua",
+    "glow": "rgba(27, 149, 159, 0.7)",
+    "image": "/catalog/colecciones/aguamarina_negro_jpeg.png",
+    "description": "Diseño AGUAMARINA NEGRO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-27",
+    "sku": "SKU-AGUA-63C2",
+    "name": "DRAGON AZUL",
+    "category": "agua",
+    "glow": "rgba(24, 69, 140, 0.7)",
+    "image": "/catalog/colecciones/dragon_azul_jpeg.png",
+    "description": "Diseño DRAGON AZUL de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-28",
+    "sku": "SKU-ETER-CE27",
+    "name": "DRAGON NEGRO",
+    "category": "agua",
+    "glow": "rgba(78, 168, 177, 0.7)",
+    "image": "/catalog/colecciones/dragon_negro_jpeg.png",
+    "description": "Diseño DRAGON NEGRO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-29",
+    "sku": "SKU-ETER-007D",
+    "name": "FANTASMA",
+    "category": "fuego",
+    "glow": "rgba(155, 34, 81, 0.7)",
+    "image": "/catalog/colecciones/fantasma_jpeg.png",
+    "description": "Diseño FANTASMA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-30",
+    "sku": "SKU-TORMENTA-DBC6",
+    "name": "LEON DORADO",
+    "category": "tormenta",
+    "glow": "rgba(164, 148, 68, 0.7)",
+    "image": "/catalog/colecciones/leon_dorado_jpeg.png",
+    "description": "Diseño LEON DORADO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-31",
+    "sku": "SKU-ETER-7F21",
+    "name": "LEON MORADO",
+    "category": "agua",
+    "glow": "rgba(29, 31, 172, 0.7)",
+    "image": "/catalog/colecciones/leon_morado_jpeg.png",
+    "description": "Diseño LEON MORADO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-32",
+    "sku": "SKU-FUEGO-F9C9",
+    "name": "NARANJA VERDE",
+    "category": "fuego",
+    "glow": "rgba(196, 68, 4, 0.7)",
+    "image": "/catalog/colecciones/naranja_verde_jpeg.png",
+    "description": "Diseño NARANJA VERDE de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-33",
+    "sku": "SKU-ETER-E1A7",
+    "name": "ONE PIECE",
+    "category": "eter",
+    "glow": "rgba(128, 128, 128, 0.7)",
+    "image": "/catalog/colecciones/one_piece_jpeg.png",
+    "description": "Diseño ONE PIECE de la colección ETER. Elegancia minimalista y atemporal. Un diseño de alto contraste con corte aerodinámico que transmite seriedad, autoridad y un nivel premium en el terreno de juego."
+  },
+  {
+    "id": "um-34",
+    "sku": "SKU-FUEGO-9D3E",
+    "name": "ROJO #",
+    "category": "fuego",
+    "glow": "rgba(220, 36, 44, 0.7)",
+    "image": "/catalog/colecciones/rojo___jpeg.png",
+    "description": "Diseño ROJO # de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-35",
+    "sku": "SKU-ETER-663A",
+    "name": "TELARAÑA",
+    "category": "fuego",
+    "glow": "rgba(208, 48, 52, 0.7)",
+    "image": "/catalog/colecciones/telara_a_jpeg.png",
+    "description": "Diseño TELARAÑA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-36",
+    "sku": "SKU-TIERRA-7A7E",
+    "name": "VERDE NEON V",
+    "category": "agua",
+    "glow": "rgba(4, 4, 212, 0.7)",
+    "image": "/catalog/colecciones/verde_neon_v_jpeg.png",
+    "description": "Diseño VERDE NEON V de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-37",
+    "sku": "SKU-AGUA-01F3",
+    "name": "BLANCO RAYA AZUL",
+    "category": "agua",
+    "glow": "rgba(24, 76, 148, 0.7)",
+    "image": "/catalog/colecciones/blanco_raya_azul_jpeg.png",
+    "description": "Diseño BLANCO RAYA AZUL de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-38",
+    "sku": "SKU-ETER-1FCD",
+    "name": "CITY ROMBOS",
+    "category": "agua",
+    "glow": "rgba(72, 171, 201, 0.7)",
+    "image": "/catalog/colecciones/city_rombos_jpeg.png",
+    "description": "Diseño CITY ROMBOS de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-39",
+    "sku": "SKU-TIERRA-2754",
+    "name": "CUADRO GRISES VERDE",
+    "category": "agua",
+    "glow": "rgba(52, 180, 176, 0.7)",
+    "image": "/catalog/colecciones/cuadro_grises_verde_jpeg.png",
+    "description": "Diseño CUADRO GRISES VERDE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-40",
+    "sku": "SKU-AGUA-599A",
+    "name": "degrade azul",
+    "category": "agua",
+    "glow": "rgba(51, 68, 121, 0.7)",
+    "image": "/catalog/colecciones/degrade_azul_jpeg.png",
+    "description": "Diseño degrade azul de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-41",
+    "sku": "SKU-TIERRA-EE5D",
+    "name": "DRAGON VERDE GRIS",
+    "category": "agua",
+    "glow": "rgba(47, 164, 154, 0.7)",
+    "image": "/catalog/colecciones/dragon_verde_gris_jpeg.png",
+    "description": "Diseño DRAGON VERDE GRIS de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-42",
+    "sku": "SKU-ETER-9419",
+    "name": "leon rayos",
+    "category": "agua",
+    "glow": "rgba(53, 76, 202, 0.7)",
+    "image": "/catalog/colecciones/leon_rayos_jpeg.png",
+    "description": "Diseño leon rayos de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-43",
+    "sku": "SKU-AGUA-E36E",
+    "name": "MANCHAS GRISES AZUL OSCURO",
+    "category": "agua",
+    "glow": "rgba(56, 52, 203, 0.7)",
+    "image": "/catalog/colecciones/manchas_grises_azul_oscuro_jpeg.png",
+    "description": "Diseño MANCHAS GRISES AZUL OSCURO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-44",
+    "sku": "SKU-ETER-6116",
+    "name": "MANCHONES PINTURA",
+    "category": "agua",
+    "glow": "rgba(4, 140, 202, 0.7)",
+    "image": "/catalog/colecciones/manchones_pintura_jpeg.png",
+    "description": "Diseño MANCHONES PINTURA de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-45",
+    "sku": "SKU-FUEGO-3ABB",
+    "name": "NARANJA",
+    "category": "fuego",
+    "glow": "rgba(204, 92, 6, 0.7)",
+    "image": "/catalog/colecciones/naranja_jpeg.png",
+    "description": "Diseño NARANJA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-46",
+    "sku": "SKU-ETER-8509",
+    "name": "NEGRO BRASIL",
+    "category": "tormenta",
+    "glow": "rgba(164, 176, 29, 0.7)",
+    "image": "/catalog/colecciones/negro_brasil_jpeg.png",
+    "description": "Diseño NEGRO BRASIL de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-47",
+    "sku": "SKU-TORMENTA-9DB9",
+    "name": "NEGRO DORADO PSG",
+    "category": "tormenta",
+    "glow": "rgba(148, 132, 28, 0.7)",
+    "image": "/catalog/colecciones/negro_dorado_psg_jpeg.png",
+    "description": "Diseño NEGRO DORADO PSG de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-48",
+    "sku": "SKU-FUEGO-8938",
+    "name": "PANTERA ROSA",
+    "category": "tormenta",
+    "glow": "rgba(212, 148, 12, 0.7)",
+    "image": "/catalog/colecciones/pantera_rosa_jpeg.png",
+    "description": "Diseño PANTERA ROSA de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-49",
+    "sku": "SKU-TIERRA-80F1",
+    "name": "RAYAS VERDE NEGRO",
+    "category": "agua",
+    "glow": "rgba(84, 176, 184, 0.7)",
+    "image": "/catalog/colecciones/rayas_verde_negro_jpeg.png",
+    "description": "Diseño RAYAS VERDE NEGRO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-50",
+    "sku": "SKU-FUEGO-AABF",
+    "name": "ROJO BLANCO",
+    "category": "fuego",
+    "glow": "rgba(180, 7, 7, 0.7)",
+    "image": "/catalog/colecciones/rojo_blanco_jpeg.png",
+    "description": "Diseño ROJO BLANCO de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-51",
+    "sku": "SKU-FUEGO-4DCB",
+    "name": "SERPIENTE NEGRA ROSA",
+    "category": "fuego",
+    "glow": "rgba(204, 53, 131, 0.7)",
+    "image": "/catalog/colecciones/serpiente_negra_rosa_jpeg.png",
+    "description": "Diseño SERPIENTE NEGRA ROSA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-52",
+    "sku": "SKU-TIERRA-F730",
+    "name": "TRAMA RAYAS VERDE DORADO",
+    "category": "tormenta",
+    "glow": "rgba(204, 156, 8, 0.7)",
+    "image": "/catalog/colecciones/trama_rayas_verde_dorado_jpeg.png",
+    "description": "Diseño TRAMA RAYAS VERDE DORADO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-53",
+    "sku": "SKU-TIERRA-15A5",
+    "name": "VERDE BLANCO",
+    "category": "tierra",
+    "glow": "rgba(97, 160, 49, 0.7)",
+    "image": "/catalog/colecciones/verde_blanco_jpeg.png",
+    "description": "Diseño VERDE BLANCO de la colección TIERRA. Texturas sólidas y colores firmes. Este uniforme de la colección Tierra garantiza resistencia extrema ante tirones y roces, manteniendo la elegancia táctica de tu equipo."
+  },
+  {
+    "id": "um-54",
+    "sku": "SKU-TIERRA-E146",
+    "name": "VERDE LINEAS",
+    "category": "tormenta",
+    "glow": "rgba(156, 161, 24, 0.7)",
+    "image": "/catalog/colecciones/verde_lineas_jpeg.png",
+    "description": "Diseño VERDE LINEAS de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-55",
+    "sku": "SKU-ETER-DC4E",
+    "name": "ADIDAS",
+    "category": "tormenta",
+    "glow": "rgba(204, 192, 4, 0.7)",
+    "image": "/catalog/colecciones/adidas_jpeg.png",
+    "description": "Diseño ADIDAS de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-56",
+    "sku": "SKU-AGUA-0DEA",
+    "name": "azul blanco negro",
+    "category": "agua",
+    "glow": "rgba(17, 150, 200, 0.7)",
+    "image": "/catalog/colecciones/azul_blanco_negro_jpeg.png",
+    "description": "Diseño azul blanco negro de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-57",
+    "sku": "SKU-ETER-EEDA",
+    "name": "BARCELONA",
+    "category": "agua",
+    "glow": "rgba(5, 161, 180, 0.7)",
+    "image": "/catalog/colecciones/barcelona_jpeg.png",
+    "description": "Diseño BARCELONA de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-58",
+    "sku": "SKU-ETER-828E",
+    "name": "bolos",
+    "category": "tormenta",
+    "glow": "rgba(146, 128, 60, 0.7)",
+    "image": "/catalog/colecciones/bolos_jpeg.png",
+    "description": "Diseño bolos de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-59",
+    "sku": "SKU-FUEGO-7FAF",
+    "name": "DRAGON ROJO",
+    "category": "fuego",
+    "glow": "rgba(192, 40, 41, 0.7)",
+    "image": "/catalog/colecciones/dragon_rojo_jpeg.png",
+    "description": "Diseño DRAGON ROJO de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-60",
+    "sku": "SKU-TIERRA-2C9E",
+    "name": "FLORES NEGRAS VERDES",
+    "category": "agua",
+    "glow": "rgba(10, 185, 185, 0.7)",
+    "image": "/catalog/colecciones/flores_negras_verdes_jpeg.png",
+    "description": "Diseño FLORES NEGRAS VERDES de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-61",
+    "sku": "SKU-FUEGO-D7CC",
+    "name": "FUCCIA NEGRO AMARILLO",
+    "category": "fuego",
+    "glow": "rgba(189, 10, 99, 0.7)",
+    "image": "/catalog/colecciones/fuccia_negro_amarillo_jpeg.png",
+    "description": "Diseño FUCCIA NEGRO AMARILLO de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-62",
+    "sku": "SKU-ETER-7F66",
+    "name": "LINEAS DIAGONALES",
+    "category": "agua",
+    "glow": "rgba(10, 98, 159, 0.7)",
+    "image": "/catalog/colecciones/lineas_diagonales_jpeg.png",
+    "description": "Diseño LINEAS DIAGONALES de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-63",
+    "sku": "SKU-FUEGO-EB53",
+    "name": "nabchas rojo negro",
+    "category": "fuego",
+    "glow": "rgba(202, 19, 23, 0.7)",
+    "image": "/catalog/colecciones/nabchas_rojo_negro_jpeg.png",
+    "description": "Diseño nabchas rojo negro de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-64",
+    "sku": "SKU-ETER-3451",
+    "name": "NEGRO MORADO MANCHAS",
+    "category": "agua",
+    "glow": "rgba(117, 32, 223, 0.7)",
+    "image": "/catalog/colecciones/negro_morado_manchas_jpeg.png",
+    "description": "Diseño NEGRO MORADO MANCHAS de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-65",
+    "sku": "SKU-ETER-6850",
+    "name": "PANTERA",
+    "category": "agua",
+    "glow": "rgba(20, 124, 172, 0.7)",
+    "image": "/catalog/colecciones/pantera_jpeg.png",
+    "description": "Diseño PANTERA de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-66",
+    "sku": "SKU-FUEGO-541D",
+    "name": "serpiente rosada",
+    "category": "fuego",
+    "glow": "rgba(196, 52, 132, 0.7)",
+    "image": "/catalog/colecciones/serpiente_rosada_jpeg.png",
+    "description": "Diseño serpiente rosada de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-67",
+    "sku": "SKU-AGUA-862F",
+    "name": "ALEMANIA BLANCO AZUL MORADO",
+    "category": "fuego",
+    "glow": "rgba(172, 28, 100, 0.7)",
+    "image": "/catalog/colecciones/alemania_blanco_azul_morado_jpeg.png",
+    "description": "Diseño ALEMANIA BLANCO AZUL MORADO de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-68",
+    "sku": "SKU-AGUA-E5EA",
+    "name": "AZUL BLANCO TRAMA",
+    "category": "agua",
+    "glow": "rgba(68, 140, 156, 0.7)",
+    "image": "/catalog/colecciones/azul_blanco_trama_jpeg.png",
+    "description": "Diseño AZUL BLANCO TRAMA de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-69",
+    "sku": "SKU-AGUA-D970",
+    "name": "AZUL FUCSIA MANCHONES",
+    "category": "fuego",
+    "glow": "rgba(200, 14, 118, 0.7)",
+    "image": "/catalog/colecciones/azul_fucsia_manchones_jpeg.png",
+    "description": "Diseño AZUL FUCSIA MANCHONES de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-70",
+    "sku": "SKU-AGUA-222C",
+    "name": "BEIGE AZUL",
+    "category": "agua",
+    "glow": "rgba(18, 18, 237, 0.7)",
+    "image": "/catalog/colecciones/beige_azul_jpeg.png",
+    "description": "Diseño BEIGE AZUL de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-71",
+    "sku": "SKU-TORMENTA-BF51",
+    "name": "BOCA NEGRO DORADO",
+    "category": "tormenta",
+    "glow": "rgba(143, 114, 42, 0.7)",
+    "image": "/catalog/colecciones/boca_negro_dorado_jpeg.png",
+    "description": "Diseño BOCA NEGRO DORADO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-72",
+    "sku": "SKU-TIERRA-2DED",
+    "name": "CUADROS GRISES VERDE",
+    "category": "agua",
+    "glow": "rgba(52, 180, 176, 0.7)",
+    "image": "/catalog/colecciones/cuadros_grises_verde_jpeg.png",
+    "description": "Diseño CUADROS GRISES VERDE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-73",
+    "sku": "SKU-AGUA-429F",
+    "name": "GOKU AZUL MORADO",
+    "category": "agua",
+    "glow": "rgba(5, 132, 194, 0.7)",
+    "image": "/catalog/colecciones/goku_azul_morado_jpeg.png",
+    "description": "Diseño GOKU AZUL MORADO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-74",
+    "sku": "SKU-TORMENTA-5F98",
+    "name": "JAPON CARA HUMO DORADO",
+    "category": "tormenta",
+    "glow": "rgba(205, 151, 30, 0.7)",
+    "image": "/catalog/colecciones/japon_cara_humo_dorado_jpeg.png",
+    "description": "Diseño JAPON CARA HUMO DORADO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-75",
+    "sku": "SKU-ETER-3098",
+    "name": "LEON BEIGE",
+    "category": "agua",
+    "glow": "rgba(64, 64, 191, 0.7)",
+    "image": "/catalog/colecciones/LEON BEIGE.jpeg",
+    "description": "Diseño LEON BEIGE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-76",
+    "sku": "SKU-ETER-DB41",
+    "name": "LINEAS DIAGONALES",
+    "category": "agua",
+    "glow": "rgba(39, 137, 198, 0.7)",
+    "image": "/catalog/colecciones/LINEAS DIAGONALES.jpeg",
+    "description": "Diseño LINEAS DIAGONALES de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-77",
+    "sku": "SKU-ETER-9845",
+    "name": "LINEAS NEGRAS BLANCO ARABE",
+    "category": "eter",
+    "glow": "rgba(135, 120, 129, 0.7)",
+    "image": "/catalog/colecciones/LINEAS NEGRAS BLANCO ARABE.jpeg",
+    "description": "Diseño LINEAS NEGRAS BLANCO ARABE de la colección ETER. Elegancia minimalista y atemporal. Un diseño de alto contraste con corte aerodinámico que transmite seriedad, autoridad y un nivel premium en el terreno de juego."
+  },
+  {
+    "id": "um-78",
+    "sku": "SKU-ETER-F7DE",
+    "name": "MORADO NEGRO MANCHAS",
+    "category": "agua",
+    "glow": "rgba(100, 53, 152, 0.7)",
+    "image": "/catalog/colecciones/MORADO NEGRO MANCHAS.jpeg",
+    "description": "Diseño MORADO NEGRO MANCHAS de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-79",
+    "sku": "SKU-ETER-0D10",
+    "name": "NEGRO BLANCO PUNTOS",
+    "category": "eter",
+    "glow": "rgba(135, 135, 120, 0.7)",
+    "image": "/catalog/colecciones/NEGRO BLANCO PUNTOS.jpeg",
+    "description": "Diseño NEGRO BLANCO PUNTOS de la colección ETER. Elegancia minimalista y atemporal. Un diseño de alto contraste con corte aerodinámico que transmite seriedad, autoridad y un nivel premium en el terreno de juego."
+  },
+  {
+    "id": "um-80",
+    "sku": "SKU-TORMENTA-371D",
+    "name": "NEGRO GRIS AMARILLO",
+    "category": "tormenta",
+    "glow": "rgba(244, 234, 20, 0.7)",
+    "image": "/catalog/colecciones/NEGRO GRIS AMARILLO.jpeg",
+    "description": "Diseño NEGRO GRIS AMARILLO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-81",
+    "sku": "SKU-ETER-7638",
+    "name": "ONE PIECE",
+    "category": "eter",
+    "glow": "rgba(135, 120, 133, 0.7)",
+    "image": "/catalog/colecciones/ONE PIECE.jpeg",
+    "description": "Diseño ONE PIECE de la colección ETER. Elegancia minimalista y atemporal. Un diseño de alto contraste con corte aerodinámico que transmite seriedad, autoridad y un nivel premium en el terreno de juego."
+  },
+  {
+    "id": "um-82",
+    "sku": "SKU-TIERRA-3E76",
+    "name": "PUNTOS DEGRADE BLANCO VERDE",
+    "category": "agua",
+    "glow": "rgba(10, 171, 95, 0.7)",
+    "image": "/catalog/colecciones/PUNTOS DEGRADE BLANCO VERDE.jpeg",
+    "description": "Diseño PUNTOS DEGRADE BLANCO VERDE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-83",
+    "sku": "SKU-AGUA-BD0F",
+    "name": "AZUL OSCURO INDEPENDIENTE",
+    "category": "agua",
+    "glow": "rgba(30, 157, 180, 0.7)",
+    "image": "/catalog/colecciones/AZUL OSCURO INDEPENDIENTE.jpeg",
+    "description": "Diseño AZUL OSCURO INDEPENDIENTE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-84",
+    "sku": "SKU-AGUA-A034",
+    "name": "BLANCO AZUL GOKU",
+    "category": "agua",
+    "glow": "rgba(17, 110, 242, 0.7)",
+    "image": "/catalog/colecciones/BLANCO AZUL GOKU.jpeg",
+    "description": "Diseño BLANCO AZUL GOKU de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-85",
+    "sku": "SKU-ETER-735D",
+    "name": "BLANCO FUCSIA GUERRERO",
+    "category": "fuego",
+    "glow": "rgba(230, 52, 148, 0.7)",
+    "image": "/catalog/colecciones/BLANCO FUCSIA GUERRERO.jpeg",
+    "description": "Diseño BLANCO FUCSIA GUERRERO de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-86",
+    "sku": "SKU-ETER-5278",
+    "name": "FRANCIA NEGRO",
+    "category": "agua",
+    "glow": "rgba(64, 64, 191, 0.7)",
+    "image": "/catalog/colecciones/FRANCIA NEGRO.jpeg",
+    "description": "Diseño FRANCIA NEGRO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-87",
+    "sku": "SKU-ETER-55F2",
+    "name": "MAESTRO ROSHI",
+    "category": "fuego",
+    "glow": "rgba(247, 4, 4, 0.7)",
+    "image": "/catalog/colecciones/MAESTRO ROSHI.jpeg",
+    "description": "Diseño MAESTRO ROSHI de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-88",
+    "sku": "SKU-ETER-8827",
+    "name": "MANCHESTER UNITEDD",
+    "category": "agua",
+    "glow": "rgba(18, 109, 240, 0.7)",
+    "image": "/catalog/colecciones/MANCHESTER UNITEDD.jpeg",
+    "description": "Diseño MANCHESTER UNITEDD de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-89",
+    "sku": "SKU-TORMENTA-32E7",
+    "name": "NEGRO AMARILLO",
+    "category": "tormenta",
+    "glow": "rgba(227, 188, 50, 0.7)",
+    "image": "/catalog/colecciones/NEGRO AMARILLO.jpeg",
+    "description": "Diseño NEGRO AMARILLO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-90",
+    "sku": "SKU-AGUA-0F39",
+    "name": "NEGRO AZUL GOTRENX FASE",
+    "category": "agua",
+    "glow": "rgba(91, 245, 246, 0.7)",
+    "image": "/catalog/colecciones/NEGRO AZUL GOTRENX FASE.jpeg",
+    "description": "Diseño NEGRO AZUL GOTRENX FASE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-91",
+    "sku": "SKU-ETER-8442",
+    "name": "NEGRO FUCSIA PANTERA",
+    "category": "fuego",
+    "glow": "rgba(227, 82, 136, 0.7)",
+    "image": "/catalog/colecciones/NEGRO FUCSIA PANTERA.jpeg",
+    "description": "Diseño NEGRO FUCSIA PANTERA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-92",
+    "sku": "SKU-TIERRA-4FB8",
+    "name": "VERDE BLANCO UNION META",
+    "category": "tierra",
+    "glow": "rgba(28, 131, 28, 0.7)",
+    "image": "/catalog/colecciones/VERDE BLANCO UNION META.jpeg",
+    "description": "Diseño VERDE BLANCO UNION META de la colección TIERRA. Texturas sólidas y colores firmes. Este uniforme de la colección Tierra garantiza resistencia extrema ante tirones y roces, manteniendo la elegancia táctica de tu equipo."
+  },
+  {
+    "id": "um-93",
+    "sku": "SKU-ETER-7B0B",
+    "name": "EGIPTO NEGRO",
+    "category": "tormenta",
+    "glow": "rgba(244, 168, 16, 0.7)",
+    "image": "/catalog/colecciones/EGIPTO NEGRO.jpeg",
+    "description": "Diseño EGIPTO NEGRO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-94",
+    "sku": "SKU-ETER-2CBC",
+    "name": "NEGRO BLANCO",
+    "category": "agua",
+    "glow": "rgba(43, 43, 212, 0.7)",
+    "image": "/catalog/colecciones/NEGRO BLANCO.jpeg",
+    "description": "Diseño NEGRO BLANCO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-95",
+    "sku": "SKU-FUEGO-4D21",
+    "name": "ROJO NEGRO BELGICA",
+    "category": "fuego",
+    "glow": "rgba(248, 5, 5, 0.7)",
+    "image": "/catalog/colecciones/ROJO NEGRO BELGICA.jpeg",
+    "description": "Diseño ROJO NEGRO BELGICA de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-96",
+    "sku": "SKU-TORMENTA-7443",
+    "name": "VOLEIBOL BLANCO AMARILLO",
+    "category": "tormenta",
+    "glow": "rgba(234, 167, 37, 0.7)",
+    "image": "/catalog/colecciones/VOLEIBOL BLANCO AMARILLO.jpeg",
+    "description": "Diseño VOLEIBOL BLANCO AMARILLO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-97",
+    "sku": "SKU-ETER-D816",
+    "name": "WhatsApp Image 2026-06-03 at 3.34.30 PM",
+    "category": "fuego",
+    "glow": "rgba(233, 34, 71, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-03 at 3.34.30 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-03 at 3.34.30 PM de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-98",
+    "sku": "SKU-ETER-76BE",
+    "name": "WhatsApp Image 2026-06-16 at 2.15.44 PM",
+    "category": "agua",
+    "glow": "rgba(50, 100, 205, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-16 at 2.15.44 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-16 at 2.15.44 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-99",
+    "sku": "SKU-ETER-59D2",
+    "name": "WhatsApp Image 2026-06-16 at 2.15.51 PM",
+    "category": "agua",
+    "glow": "rgba(64, 191, 191, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-16 at 2.15.51 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-16 at 2.15.51 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-100",
+    "sku": "SKU-ETER-5707",
+    "name": "WhatsApp Image 2026-06-16 at 2.16.54 PM",
+    "category": "fuego",
+    "glow": "rgba(243, 5, 5, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-16 at 2.16.54 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-16 at 2.16.54 PM de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-101",
+    "sku": "SKU-ETER-8219",
+    "name": "WhatsApp Image 2026-06-16 at 2.17.05 PM",
+    "category": "agua",
+    "glow": "rgba(38, 188, 217, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-16 at 2.17.05 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-16 at 2.17.05 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-102",
+    "sku": "SKU-ETER-FE16",
+    "name": "WhatsApp Image 2026-06-16 at 2.20.15 PM",
+    "category": "agua",
+    "glow": "rgba(52, 140, 204, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-16 at 2.20.15 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-16 at 2.20.15 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-103",
+    "sku": "SKU-ETER-C93C",
+    "name": "GUERREROS",
+    "category": "tormenta",
+    "glow": "rgba(198, 144, 52, 0.7)",
+    "image": "/catalog/colecciones/GUERREROS.jpeg",
+    "description": "Diseño GUERREROS de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-104",
+    "sku": "SKU-TORMENTA-C0E9",
+    "name": "NEGRO DORADO",
+    "category": "tormenta",
+    "glow": "rgba(218, 180, 53, 0.7)",
+    "image": "/catalog/colecciones/NEGRO DORADO.jpeg",
+    "description": "Diseño NEGRO DORADO de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-105",
+    "sku": "SKU-ETER-804E",
+    "name": "WhatsApp Image 2026-06-03 at 3.34.55 PM",
+    "category": "agua",
+    "glow": "rgba(80, 135, 176, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-03 at 3.34.55 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-03 at 3.34.55 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-106",
+    "sku": "SKU-ETER-1F4B",
+    "name": "WhatsApp Image 2026-06-04 at 8.37.54 PM",
+    "category": "agua",
+    "glow": "rgba(75, 19, 166, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-04 at 8.37.54 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-04 at 8.37.54 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-107",
+    "sku": "SKU-ETER-C7A6",
+    "name": "WhatsApp Image 2026-06-04 at 8.37.55 PM",
+    "category": "agua",
+    "glow": "rgba(50, 159, 170, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-04 at 8.37.55 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-04 at 8.37.55 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-108",
+    "sku": "SKU-ETER-56F9",
+    "name": "WhatsApp Image 2026-06-26 at 11.45.21 PM",
+    "category": "fuego",
+    "glow": "rgba(233, 51, 129, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-26 at 11.45.21 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-26 at 11.45.21 PM de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-109",
+    "sku": "SKU-ETER-104E",
+    "name": "WhatsApp Image 2026-06-26 at 11.45.35 PM",
+    "category": "agua",
+    "glow": "rgba(92, 52, 163, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-26 at 11.45.35 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-26 at 11.45.35 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-110",
+    "sku": "SKU-ETER-ECEE",
+    "name": "WhatsApp Image 2026-06-26 at 11.45.50 PM",
+    "category": "tormenta",
+    "glow": "rgba(154, 122, 52, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-26 at 11.45.50 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-26 at 11.45.50 PM de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-111",
+    "sku": "SKU-ETER-EBE5",
+    "name": "WhatsApp Image 2026-06-26 at 11.45.54 PM",
+    "category": "fuego",
+    "glow": "rgba(245, 5, 5, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-06-26 at 11.45.54 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-06-26 at 11.45.54 PM de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-112",
+    "sku": "SKU-ETER-F037",
+    "name": "WhatsApp Image 2026-07-04 at 11.28.43 AM",
+    "category": "agua",
+    "glow": "rgba(35, 132, 188, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-07-04 at 11.28.43 AM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-07-04 at 11.28.43 AM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-113",
+    "sku": "SKU-ETER-09AC",
+    "name": "WhatsApp Image 2026-07-04 at 11.28.42 AM",
+    "category": "agua",
+    "glow": "rgba(92, 52, 164, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-07-04 at 11.28.42 AM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-07-04 at 11.28.42 AM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-114",
+    "sku": "SKU-ETER-540F",
+    "name": "WhatsApp Image 2026-07-04 at 11.28.43 AM",
+    "category": "agua",
+    "glow": "rgba(35, 132, 188, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-07-04 at 11.28.43 AM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-07-04 at 11.28.43 AM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-115",
+    "sku": "SKU-ETER-5EF0",
+    "name": "WhatsApp Image 2026-07-07 at 10.53.56 PM",
+    "category": "agua",
+    "glow": "rgba(68, 156, 164, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-07-07 at 10.53.56 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-07-07 at 10.53.56 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-116",
+    "sku": "SKU-ETER-D5C9",
+    "name": "WhatsApp Image 2026-07-07 at 9.40.16 PM",
+    "category": "agua",
+    "glow": "rgba(92, 52, 163, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-07-07 at 9.40.16 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-07-07 at 9.40.16 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-117",
+    "sku": "SKU-ETER-7E04",
+    "name": "WhatsApp Image 2026-07-11 at 11.08.18 AM",
+    "category": "agua",
+    "glow": "rgba(142, 43, 204, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2026-07-11 at 11.08.18 AM.jpeg",
+    "description": "Diseño WhatsApp Image 2026-07-11 at 11.08.18 AM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-118",
+    "sku": "SKU-ETER-CFE8",
+    "name": "AGUAMARINA",
+    "category": "agua",
+    "glow": "rgba(37, 107, 118, 0.7)",
+    "image": "/catalog/colecciones/AGUAMARINA.jpeg",
+    "description": "Diseño AGUAMARINA de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-119",
+    "sku": "SKU-AGUA-B027",
+    "name": "AZUL NEGRO",
+    "category": "agua",
+    "glow": "rgba(6, 6, 241, 0.7)",
+    "image": "/catalog/colecciones/AZUL NEGRO.jpeg",
+    "description": "Diseño AZUL NEGRO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-120",
+    "sku": "SKU-ETER-9D52",
+    "name": "CITY",
+    "category": "agua",
+    "glow": "rgba(51, 102, 204, 0.7)",
+    "image": "/catalog/colecciones/CITY.jpeg",
+    "description": "Diseño CITY de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-121",
+    "sku": "SKU-ETER-74BA",
+    "name": "COLORES",
+    "category": "tormenta",
+    "glow": "rgba(244, 242, 7, 0.7)",
+    "image": "/catalog/colecciones/COLORES.jpeg",
+    "description": "Diseño COLORES de la colección TORMENTA. Impacto visual instantáneo. Con colores eléctricos y vibrantes, esta indumentaria está diseñada para deslumbrar bajo los reflectores y potenciar la energía del equipo."
+  },
+  {
+    "id": "um-122",
+    "sku": "SKU-ETER-5D6F",
+    "name": "DRAGON JAPON",
+    "category": "fuego",
+    "glow": "rgba(211, 89, 113, 0.7)",
+    "image": "/catalog/colecciones/DRAGON JAPON.jpeg",
+    "description": "Diseño DRAGON JAPON de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-123",
+    "sku": "SKU-ETER-D13E",
+    "name": "LOBO MORADO",
+    "category": "agua",
+    "glow": "rgba(68, 68, 148, 0.7)",
+    "image": "/catalog/colecciones/LOBO MORADO.jpeg",
+    "description": "Diseño LOBO MORADO de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-124",
+    "sku": "SKU-ETER-577E",
+    "name": "negro rayas rojas",
+    "category": "fuego",
+    "glow": "rgba(231, 51, 53, 0.7)",
+    "image": "/catalog/colecciones/negro rayas rojas.jpeg",
+    "description": "Diseño negro rayas rojas de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-125",
+    "sku": "SKU-FUEGO-080E",
+    "name": "ROJO VIRGEN",
+    "category": "fuego",
+    "glow": "rgba(245, 6, 6, 0.7)",
+    "image": "/catalog/colecciones/ROJO VIRGEN.jpeg",
+    "description": "Diseño ROJO VIRGEN de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-126",
+    "sku": "SKU-ETER-215C",
+    "name": "SERPIENTE",
+    "category": "agua",
+    "glow": "rgba(241, 5, 241, 0.7)",
+    "image": "/catalog/colecciones/SERPIENTE.jpeg",
+    "description": "Diseño SERPIENTE de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-127",
+    "sku": "SKU-AGUA-4E1A",
+    "name": "TRIANGULOS AZUL",
+    "category": "tierra",
+    "glow": "rgba(198, 244, 103, 0.7)",
+    "image": "/catalog/colecciones/TRIANGULOS AZUL.jpeg",
+    "description": "Diseño TRIANGULOS AZUL de la colección TIERRA. Texturas sólidas y colores firmes. Este uniforme de la colección Tierra garantiza resistencia extrema ante tirones y roces, manteniendo la elegancia táctica de tu equipo."
+  },
+  {
+    "id": "um-128",
+    "sku": "SKU-ETER-92D2",
+    "name": "WhatsApp Image 2025-12-05 at 8.42.12 PM - copia",
+    "category": "fuego",
+    "glow": "rgba(238, 129, 50, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-05 at 8.42.12 PM - copia.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-05 at 8.42.12 PM - copia de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-129",
+    "sku": "SKU-ETER-8137",
+    "name": "WhatsApp Image 2025-12-05 at 9.00.22 PM",
+    "category": "fuego",
+    "glow": "rgba(120, 46, 60, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-05 at 9.00.22 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-05 at 9.00.22 PM de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-130",
+    "sku": "SKU-ETER-5966",
+    "name": "WhatsApp Image 2025-12-05 at 9.10.11 PM",
+    "category": "tierra",
+    "glow": "rgba(74, 163, 116, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-05 at 9.10.11 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-05 at 9.10.11 PM de la colección TIERRA. Texturas sólidas y colores firmes. Este uniforme de la colección Tierra garantiza resistencia extrema ante tirones y roces, manteniendo la elegancia táctica de tu equipo."
+  },
+  {
+    "id": "um-131",
+    "sku": "SKU-ETER-B6C2",
+    "name": "WhatsApp Image 2025-12-06 at 1.24.11 PM (1)",
+    "category": "fuego",
+    "glow": "rgba(251, 14, 14, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-06 at 1.24.11 PM (1).jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-06 at 1.24.11 PM (1) de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-132",
+    "sku": "SKU-ETER-C638",
+    "name": "WhatsApp Image 2025-12-06 at 1.24.11 PM (2) - copia - copia",
+    "category": "fuego",
+    "glow": "rgba(248, 4, 4, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-06 at 1.24.11 PM (2) - copia - copia.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-06 at 1.24.11 PM (2) - copia - copia de la colección FUEGO. Fabricado con telas de alto rendimiento antitranspirante y costuras reforzadas. Ideal para equipos que buscan destacar en la cancha con un estilo agresivo, cálido y profesional."
+  },
+  {
+    "id": "um-133",
+    "sku": "SKU-ETER-9DE0",
+    "name": "WhatsApp Image 2025-12-06 at 1.24.11 PM (3)",
+    "category": "agua",
+    "glow": "rgba(36, 175, 180, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-06 at 1.24.11 PM (3).jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-06 at 1.24.11 PM (3) de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-134",
+    "sku": "SKU-ETER-9E4A",
+    "name": "WhatsApp Image 2025-12-06 at 1.24.11 PM",
+    "category": "agua",
+    "glow": "rgba(60, 116, 156, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-06 at 1.24.11 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-06 at 1.24.11 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-135",
+    "sku": "SKU-ETER-6ABC",
+    "name": "WhatsApp Image 2025-12-09 at 4.12.55 PM ,,",
+    "category": "agua",
+    "glow": "rgba(23, 228, 235, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-09 at 4.12.55 PM ,,.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-09 at 4.12.55 PM ,, de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-136",
+    "sku": "SKU-ETER-3E0C",
+    "name": "WhatsApp Image 2025-12-09 at 4.12.55 PM..",
+    "category": "agua",
+    "glow": "rgba(19, 157, 185, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-09 at 4.12.55 PM...jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-09 at 4.12.55 PM.. de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  },
+  {
+    "id": "um-137",
+    "sku": "SKU-ETER-1E09",
+    "name": "WhatsApp Image 2025-12-09 at 4.12.55 PM",
+    "category": "agua",
+    "glow": "rgba(240, 7, 246, 0.7)",
+    "image": "/catalog/colecciones/WhatsApp Image 2025-12-09 at 4.12.55 PM.jpeg",
+    "description": "Diseño WhatsApp Image 2025-12-09 at 4.12.55 PM de la colección AGUA. Diseño fresco y dinámico de la colección Agua. Su tecnología de microfibra ultraligera permite máxima movilidad y ventilación para un rendimiento superior en cada partido."
+  }
+]
