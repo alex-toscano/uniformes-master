@@ -175,23 +175,90 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
 
   const handleCopyForWhatsApp = () => {
     if (!order) return
-    let text = `*DETALLE DEL PEDIDO:*\n\n`
+    let text = `*COTIZACIÓN DE PEDIDO*\n\n`
     text += `Cliente: ${order.customers?.school_or_club || order.customers?.name}\n`
-    if (order.sku_reference) text += `Diseño SKU: ${order.sku_reference}\n`
+    text += `Diseño SKU: ${order.sku_reference || 'EXTERNO'}\n`
     text += `Total prendas: ${items.length}\n\n`
     
+    text += `*DETALLE DEL PEDIDO:*\n\n`
+    
     items.forEach((item, idx) => {
-      text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type} - $${item.calculated_price.toLocaleString('es-CO')}\n\n`
+      text += `${idx + 1}. #${item.player_number} | ${item.player_name?.toUpperCase() || 'SIN NOMBRE'} | Talla ${item.size} | ${item.product_type} - $${item.calculated_price.toLocaleString('es-CO')}\n\n`
     })
     
-    text += `\n*VALOR TOTAL:* $${order.total_price.toLocaleString('es-CO')}\n`
-    if (order.advance_payment > 0) {
-      text += `Abono: $${order.advance_payment.toLocaleString('es-CO')}\n`
-      text += `Saldo Pendiente: $${(order.total_price - order.advance_payment).toLocaleString('es-CO')}\n`
-    }
+    text += `*VALOR TOTAL:* $${order.total_price.toLocaleString('es-CO')}\n`
     
     navigator.clipboard.writeText(text)
     alert('✅ Pedido copiado al portapapeles. ¡Abre WhatsApp y pégalo!')
+  }
+
+  const handleDownloadPDF = async () => {
+    if (!order) return
+    
+    const { default: jsPDF } = await import('jspdf')
+    const { default: autoTable } = await import('jspdf-autotable')
+    
+    const doc = new jsPDF()
+
+    try {
+      const response = await fetch('/logo.png')
+      const blob = await response.blob()
+      const reader = new FileReader()
+      reader.readAsDataURL(blob)
+      await new Promise(resolve => {
+        reader.onloadend = () => {
+          if (reader.result) {
+            doc.addImage(reader.result as string, 'PNG', 14, 15, 30, 30)
+          }
+          resolve(true)
+        }
+      })
+    } catch (e) {
+      console.log('No logo found, skipping.')
+    }
+
+    doc.setFontSize(22)
+    doc.text('ORDEN DE PEDIDO', 105, 25, { align: 'center' })
+    
+    doc.setFontSize(10)
+    doc.text('Uniformes Master', 105, 33, { align: 'center' })
+    doc.text('Teléfono: 3012815448', 105, 38, { align: 'center' })
+    doc.text('Dirección: Calle 61 a sur #97b-12', 105, 43, { align: 'center' })
+
+    doc.setFontSize(12)
+    doc.text(`Cliente: ${order.customers?.name?.toUpperCase()}`, 14, 60)
+    if (order.customers?.school_or_club) {
+      doc.text(`Escuela / Club: ${order.customers?.school_or_club.toUpperCase()}`, 14, 67)
+    }
+    doc.text(`Diseño SKU: ${order.sku_reference || 'EXTERNO'}`, 14, 74)
+    doc.text(`Total prendas: ${items.length}`, 14, 81)
+
+    const tableData = items.map((item, idx) => [
+      (idx + 1).toString(),
+      `#${item.player_number}`,
+      item.player_name?.toUpperCase() || 'SIN NOMBRE',
+      `Talla ${item.size}`,
+      item.product_type,
+      `$${item.calculated_price.toLocaleString('es-CO')}`
+    ])
+
+    autoTable(doc, {
+      startY: 90,
+      head: [['N°', 'Número', 'Nombre', 'Talla', 'Tipo', 'Precio']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillColor: [212, 255, 0], textColor: [0, 0, 0] } // Volt Green color for header
+    })
+
+    // @ts-ignore
+    const finalY = doc.lastAutoTable.finalY || 90
+    
+    doc.setFontSize(14)
+    doc.setFont("helvetica", "bold")
+    doc.text(`VALOR TOTAL: $${order.total_price.toLocaleString('es-CO')}`, 14, finalY + 15)
+
+    // Save PDF
+    doc.save(`Orden_Pedido_${order.customers?.name || 'Cliente'}.pdf`)
   }
 
   return (
@@ -199,8 +266,9 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
       <div className="modal-content advanced-modal">
         <div className="modal-header">
           <h2>Detalle de Pedido</h2>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            {!loading && <button onClick={handleCopyForWhatsApp} className="btn-secondary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}><span style={{ color: '#25D366', fontSize: '1rem' }}>💬</span> Copiar a WhatsApp</button>}
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            {!loading && <button onClick={handleCopyForWhatsApp} className="btn-secondary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}><span style={{ color: '#25D366', fontSize: '1rem' }}>💬</span> Whatsapp</button>}
+            {!loading && <button onClick={handleDownloadPDF} className="btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.4rem 0.8rem', fontSize: '0.8rem', background: 'var(--brand-primary)', color: 'black' }}>📄 Descargar PDF</button>}
             {!loading && <button onClick={handleDeleteOrder} className="btn-remove" style={{ border: '1px solid #ff5555' }}>🗑️ Eliminar</button>}
             <button onClick={onClose} className="btn-close">×</button>
           </div>
