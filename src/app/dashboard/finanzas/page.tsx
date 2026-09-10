@@ -401,6 +401,48 @@ export default function FinanzasDashboard() {
     }
   }
 
+  const handleDeleteEmployee = async (id: string, name: string) => {
+    const confirmDelete = window.confirm(
+      `⚠️ ¿Estás seguro de que deseas ELIMINAR al colaborador "${name}"?\n\nEsta acción eliminará el colaborador de la lista de nómina. Los pagos ya registrados en egresos se mantendrán en el historial contable.`
+    )
+    if (!confirmDelete) return
+
+    try {
+      // Desvincular de egresos existentes para evitar errores de clave foránea
+      await supabase.from('expenses').update({ employee_id: null }).eq('employee_id', id)
+      
+      const { error } = await supabase.from('employees').delete().eq('id', id)
+      if (!error) {
+        alert(`Colaborador "${name}" eliminado correctamente.`)
+        loadSuppliersAndEmployees()
+      } else {
+        alert(`No se pudo eliminar: ${error.message}`)
+      }
+    } catch (err: any) {
+      alert(`Error al eliminar: ${err?.message || 'Error inesperado'}`)
+    }
+  }
+
+  const handleDeleteSupplier = async (id: string, name: string) => {
+    const confirmDelete = window.confirm(
+      `⚠️ ¿Estás seguro de que deseas ELIMINAR al proveedor "${name}"?\n\nLos egresos previamente registrados seguirán apareciendo en el balance.`
+    )
+    if (!confirmDelete) return
+
+    try {
+      await supabase.from('expenses').update({ supplier_id: null }).eq('supplier_id', id)
+      const { error } = await supabase.from('suppliers').delete().eq('id', id)
+      if (!error) {
+        alert(`Proveedor "${name}" eliminado correctamente.`)
+        loadSuppliersAndEmployees()
+      } else {
+        alert(`No se pudo eliminar: ${error.message}`)
+      }
+    } catch (err: any) {
+      alert(`Error al eliminar: ${err?.message || 'Error inesperado'}`)
+    }
+  }
+
   // Helper para sumar lo pagado a un proveedor o empleado
   const getTotalPaidTo = (type: 'supplier' | 'employee', id: string) => {
     return expenses
@@ -874,10 +916,11 @@ export default function FinanzasDashboard() {
                   <th>Servicio / Insumo</th>
                   <th>Teléfono de Contacto</th>
                   <th className="text-right">Total Acumulado Pagado</th>
+                  <th className="text-right" style={{ width: '110px' }}>Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {suppliers.length === 0 && <tr><td colSpan={4} className="text-center">No hay proveedores registrados.</td></tr>}
+                {suppliers.length === 0 && <tr><td colSpan={5} className="text-center">No hay proveedores registrados.</td></tr>}
                 {suppliers.map(s => (
                   <tr key={s.id}>
                     <td><strong>{s.name}</strong></td>
@@ -885,6 +928,15 @@ export default function FinanzasDashboard() {
                     <td>{s.phone || '-'}</td>
                     <td className="text-right text-primary font-black" style={{ fontSize: '1.05rem' }}>
                       ${getTotalPaidTo('supplier', s.id).toLocaleString('es-CO')}
+                    </td>
+                    <td className="text-right">
+                      <button 
+                        onClick={() => handleDeleteSupplier(s.id, s.name)}
+                        className="btn-delete-item"
+                        title={`Eliminar proveedor ${s.name}`}
+                      >
+                        🗑️ Eliminar
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -912,17 +964,29 @@ export default function FinanzasDashboard() {
                   <th>Especialidad / Cargo</th>
                   <th>Teléfono</th>
                   <th className="text-right">Total Pagado Acumulado</th>
+                  <th className="text-right" style={{ width: '110px' }}>Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {employees.length === 0 && <tr><td colSpan={4} className="text-center">No hay colaboradores registrados.</td></tr>}
+                {employees.length === 0 && <tr><td colSpan={5} className="text-center">No hay colaboradores registrados.</td></tr>}
                 {employees.map(e => (
                   <tr key={e.id}>
                     <td><strong>{e.name}</strong></td>
-                    <td>{e.role}</td>
+                    <td>
+                      <span className="role-chip">{e.role}</span>
+                    </td>
                     <td>{e.phone || '-'}</td>
                     <td className="text-right text-primary font-black" style={{ fontSize: '1.05rem' }}>
                       ${getTotalPaidTo('employee', e.id).toLocaleString('es-CO')}
+                    </td>
+                    <td className="text-right">
+                      <button 
+                        onClick={() => handleDeleteEmployee(e.id, e.name)}
+                        className="btn-delete-item"
+                        title={`Eliminar colaborador ${e.name}`}
+                      >
+                        🗑️ Eliminar
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -1635,6 +1699,39 @@ export default function FinanzasDashboard() {
           margin: 0 auto;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        .btn-delete-item {
+          background: rgba(239, 68, 68, 0.12);
+          color: #f87171;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          padding: 0.4rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          white-space: nowrap;
+        }
+        .btn-delete-item:hover {
+          background: #ef4444;
+          color: white;
+          border-color: #ef4444;
+          transform: scale(1.02);
+        }
+
+        .role-chip {
+          background: rgba(255, 255, 255, 0.08);
+          color: #e5e7eb;
+          padding: 0.25rem 0.6rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          display: inline-block;
+        }
 
         @media (max-width: 900px) {
           .health-bar-card {

@@ -31,11 +31,11 @@ const ROLES_CONFIG: Record<string, { label: string; badgeColor: string; bg: stri
     desc: 'Bocetos, arte gráfico, patronaje y aprobación de diseños.'
   },
   produccion: {
-    label: 'Producción / Taller',
+    label: 'Producción / Costura / Taller',
     badgeColor: '#f97316',
     bg: 'rgba(249, 115, 22, 0.12)',
     icon: '✂️',
-    desc: 'Corte, confección, ensamblado y avance de estados en taller.'
+    desc: 'Costura, corte, confección, ensamblado y avance de estados en taller.'
   },
   admin: {
     label: 'Administrador (Gerente)',
@@ -445,7 +445,7 @@ export default function SuperAdminDashboard() {
             <option value="all">Todos los cargos</option>
             <option value="vendedor">💼 Vendedor / Comercial</option>
             <option value="disenadora">🎨 Diseñadora / Arte</option>
-            <option value="produccion">✂️ Producción / Taller</option>
+            <option value="produccion">✂️ Producción / Costura / Taller</option>
             <option value="admin">🛡️ Administrador (Gerente)</option>
             <option value="super_admin">👑 Super Administrador</option>
           </select>
@@ -653,9 +653,9 @@ export default function SuperAdminDashboard() {
                           <button
                             onClick={() => handleDeleteUser(user)}
                             className="btn-action btn-delete"
-                            title="Eliminar usuario definitivamente"
+                            title="Eliminar colaborador definitivamente"
                           >
-                            🗑️
+                            🗑️ Eliminar
                           </button>
                         )}
                       </div>
@@ -730,7 +730,7 @@ export default function SuperAdminDashboard() {
                 >
                   <option value="vendedor">💼 Vendedor / Comercial (Ventas y Clientes)</option>
                   <option value="disenadora">🎨 Diseñadora / Arte (Bocetos y Diseños)</option>
-                  <option value="produccion">✂️ Producción / Taller (Corte y Confección)</option>
+                  <option value="produccion">✂️ Producción / Costura / Taller (Corte, Costura y Confección)</option>
                   <option value="admin">🛡️ Administrador (Gestión y Finanzas)</option>
                   <option value="super_admin">👑 Super Administrador (Control Total)</option>
                 </select>
@@ -795,7 +795,7 @@ export default function SuperAdminDashboard() {
                 >
                   <option value="vendedor">💼 Vendedor / Comercial</option>
                   <option value="disenadora">🎨 Diseñadora / Arte</option>
-                  <option value="produccion">✂️ Producción / Taller</option>
+                  <option value="produccion">✂️ Producción / Costura / Taller</option>
                   <option value="admin">🛡️ Administrador (Gerente)</option>
                   <option value="super_admin">👑 Super Administrador</option>
                 </select>
@@ -1400,14 +1400,24 @@ export default function SuperAdminDashboard() {
         }
 
         .btn-delete {
-          background: transparent;
-          color: rgba(255, 255, 255, 0.4);
-          border: none;
-          padding: 0.45rem 0.6rem;
+          background: rgba(239, 68, 68, 0.15);
+          color: #f87171;
+          border: 1px solid rgba(239, 68, 68, 0.35);
+          padding: 0.45rem 0.85rem;
+          border-radius: 5px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
         }
         .btn-delete:hover {
-          color: #ef4444;
-          background: rgba(239, 68, 68, 0.1);
+          background: #ef4444;
+          color: white;
+          border-color: #ef4444;
+          box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
         }
 
         .empty-state {
