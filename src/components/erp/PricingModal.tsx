@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { toast, confirmModal } from '@/context/NotificationContext'
+import { formatThousands, parseThousands } from '@/utils/formatters'
 
 type PricingRule = {
   id?: string
@@ -49,24 +50,23 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
   }
 
   const handlePriceChange = (product_type: string, size_category: string, rawValue: string) => {
-    const numeric = rawValue === '' ? 0 : parseFloat(rawValue)
-    const validPrice = isNaN(numeric) ? 0 : Math.max(0, numeric)
+    const numeric = parseThousands(rawValue)
 
     setPricing(prev => {
       // Filtrar únicamente el registro exacto de este producto y categoría para no tocar los demás
       const others = prev.filter(
         p => !(p.product_type === product_type && p.size_category === size_category)
       )
-      if (rawValue !== '' && validPrice > 0) {
-        return [...others, { customer_id: customerId, product_type, size_category, price: validPrice }]
+      if (rawValue.trim() !== '' && numeric > 0) {
+        return [...others, { customer_id: customerId, product_type, size_category, price: numeric }]
       }
       return others
     })
   }
 
-  const getPrice = (product_type: string, size_category: string): number | string => {
+  const getPrice = (product_type: string, size_category: string): string => {
     const item = pricing.find(p => p.product_type === product_type && p.size_category === size_category)
-    return item && item.price > 0 ? item.price : ''
+    return item && item.price > 0 ? formatThousands(item.price) : ''
   }
 
   const fillDefaultPrices = () => {
@@ -190,8 +190,9 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
                           <div className="input-money">
                             <span>$</span>
                             <input 
-                              type="number" 
-                              placeholder={String(getDefaultPrice(prod, cat))}
+                              type="text"
+                              inputMode="numeric"
+                              placeholder={formatThousands(getDefaultPrice(prod, cat))}
                               value={getPrice(prod, cat)}
                               onChange={(e) => handlePriceChange(prod, cat, e.target.value)}
                             />
