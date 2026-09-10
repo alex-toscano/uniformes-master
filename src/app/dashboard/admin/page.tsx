@@ -35,27 +35,51 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          style={{
-            background: 'var(--brand-primary)',
-            color: '#000',
-            fontWeight: 800,
-            padding: '0.85rem 1.6rem',
-            borderRadius: '6px',
-            border: 'none',
-            cursor: 'pointer',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            fontSize: '0.9rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            boxShadow: '0 4px 15px rgba(254, 240, 138, 0.2)'
-          }}
-        >
-          <span style={{ fontSize: '1.2rem', fontWeight: 900 }}>+</span> Nuevo Pedido
-        </button>
+        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <a
+            href="/dashboard/finanzas"
+            style={{
+              background: 'rgba(212, 255, 0, 0.12)',
+              color: 'var(--brand-primary)',
+              fontWeight: 800,
+              padding: '0.85rem 1.4rem',
+              borderRadius: '6px',
+              border: '1px solid rgba(212, 255, 0, 0.3)',
+              textDecoration: 'none',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            💰 Panel Financiero
+          </a>
+
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              background: 'var(--brand-primary)',
+              color: '#000',
+              fontWeight: 800,
+              padding: '0.85rem 1.6rem',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontSize: '0.9rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 4px 15px rgba(254, 240, 138, 0.2)'
+            }}
+          >
+            <span style={{ fontSize: '1.2rem', fontWeight: 900 }}>+</span> Nuevo Pedido
+          </button>
+        </div>
       </div>
 
       <KanbanBoard />
