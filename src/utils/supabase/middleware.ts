@@ -40,15 +40,28 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Verificar si el usuario está bloqueado o suspendido
+  if (user && isDashboardPage && user.banned_until && new Date(user.banned_until) > new Date()) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('error', 'blocked')
+    return NextResponse.redirect(url)
+  }
+
   // Si hay usuario logueado e intenta ir al login o raíz del dashboard, redirigir según su rol
   if (user && (isLoginPage || request.nextUrl.pathname === '/dashboard')) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    let role = 'vendedor'
+    if (user.email === 'superadmin@mcm.com') {
+      role = 'super_admin'
+    } else {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      role = profile?.role || 'vendedor'
+    }
 
-    const role = profile?.role || 'vendedor'
     const url = request.nextUrl.clone()
     
     if (role === 'super_admin') url.pathname = '/dashboard/super-admin'
@@ -60,13 +73,17 @@ export async function updateSession(request: NextRequest) {
 
   // Protección cruzada (RBAC): Un rol menor no puede entrar al dashboard de un rol mayor
   if (user && isDashboardPage) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-      
-    const role = profile?.role || 'vendedor'
+    let role = 'vendedor'
+    if (user.email === 'superadmin@mcm.com') {
+      role = 'super_admin'
+    } else {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      role = profile?.role || 'vendedor'
+    }
     
     if (request.nextUrl.pathname.startsWith('/dashboard/super-admin') && role !== 'super_admin') {
       const url = request.nextUrl.clone(); url.pathname = '/dashboard/admin'; return NextResponse.redirect(url)

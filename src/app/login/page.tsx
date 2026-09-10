@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import InstallPrompt from '@/components/InstallPrompt'
@@ -13,6 +13,15 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('error') === 'blocked') {
+        setError('⛔ Acceso suspendido: Esta cuenta ha sido bloqueada por el Super Administrador.')
+      }
+    }
+  }, [])
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -24,7 +33,15 @@ export default function LoginPage() {
     })
 
     if (authError) {
-      setError('Credenciales inválidas. Verifica tu correo y contraseña.')
+      if (
+        authError.message.toLowerCase().includes('banned') ||
+        authError.message.toLowerCase().includes('disabled') ||
+        authError.message.toLowerCase().includes('deactivated')
+      ) {
+        setError('⛔ Acceso suspendido: Tu cuenta ha sido bloqueada. Contacta al Super Administrador.')
+      } else {
+        setError('Credenciales inválidas. Verifica tu correo y contraseña.')
+      }
       setLoading(false)
       return
     }

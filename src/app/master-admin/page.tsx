@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
@@ -20,7 +20,7 @@ export default function MasterAdminPage() {
   const checkAuth = async () => {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    const superAdmins = ['developer@uniformesmaster.com', 'admin@uniformesmaster.com']
+    const superAdmins = ['superadmin@mcm.com', 'developer@uniformesmaster.com', 'admin@uniformesmaster.com']
     if (!user || !superAdmins.includes(user.email || '')) {
       setAuthError(true)
       return

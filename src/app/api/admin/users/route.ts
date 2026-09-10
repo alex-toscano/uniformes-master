@@ -7,35 +7,130 @@ const supabaseAdmin = createClient(
 )
 
 export async function GET() {
-  const { data, error } = await supabaseAdmin.auth.admin.listUsers()
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ users: data.users })
+  try {
+    const [{ data: authData, error: authError }, { data: profiles, error: profError }] = await Promise.all([
+      supabaseAdmin.auth.admin.listUsers(),
+      supabaseAdmin.from('profiles').select('*')
+    ])
+
+    if (authError) return NextResponse.json({ error: authError.message }, { status: 500 })
+
+    const profilesMap = new Map((profiles || []).map((p: any) => [p.id, p]))
+
+    const users = (authData.users || []).map((u: any) => {
+      const profile = profilesMap.get(u.id)
+      const isBanned = Boolean(u.banned_until && new Date(u.banned_until) > new Date())
+      return {
+        id: u.id,
+        email: u.email,
+        full_name: profile?.full_name || u.user_metadata?.full_name || 'Sin Nombre',
+        role: profile?.role || u.user_metadata?.role || 'vendedor',
+        created_at: u.created_at,
+        last_sign_in_at: u.last_sign_in_at,
+        banned_until: u.banned_until,
+        is_banned: isBanned,
+        user_metadata: u.user_metadata
+      }
+    })
+
+    return NextResponse.json({ users })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const { action, email, password, fullName, role, userId } = await request.json()
+
     if (action === 'create') {
-      const { data, error } = await supabaseAdmin.auth.admin.createUser({
-        email, password, email_confirm: true,
+      if (!email || !password) {
+        return NextResponse.json({ error: 'Email y contraseña son requeridos' }, { status: 400 })
+      }
+
+      const { data: authUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
         user_metadata: { full_name: fullName, role: role || 'vendedor' }
       })
-      if (error) throw error
-      return NextResponse.json({ user: data.user })
-    } 
-    if (action === 'update') {
-      const { data, error } = await supabaseAdmin.auth.admin.updateUserById(
-        userId, { user_metadata: { full_name: fullName, role: role }, ...(password ? { password } : {}) }
-      )
-      if (error) throw error
-      return NextResponse.json({ user: data.user })
+
+      if (createError) throw createError
+
+      if (authUser?.user) {
+        await supabaseAdmin.from('profiles').upsert({
+          id: authUser.user.id,
+          full_name: fullName,
+          role: role || 'vendedor'
+        })
+      }
+
+      return NextResponse.json({ user: authUser.user })
     }
-    if (action === 'delete') {
-      const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
+
+    if (action === 'update') {
+      if (!userId) return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 400 })
+
+      const { data: updatedUser, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+        userId,
+        {
+          user_metadata: { full_name: fullName, role },
+          ...(password ? { password } : {})
+        }
+      )
+      if (updateError) throw updateError
+
+      await supabaseAdmin.from('profiles').upsert({
+        id: userId,
+        full_name: fullName,
+        role: role
+      })
+
+      return NextResponse.json({ user: updatedUser.user })
+    }
+
+    if (action === 'toggle_block') {
+      if (!userId) return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 400 })
+
+      const { data: userRes, error: getError } = await supabaseAdmin.auth.admin.getUserById(userId)
+      if (getError) throw getError
+
+      const isCurrentlyBanned = Boolean(userRes.user?.banned_until && new Date(userRes.user.banned_until) > new Date())
+      const newBanDuration = isCurrentlyBanned ? 'none' : '876600h'
+
+      const { data: updated, error: banError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+        ban_duration: newBanDuration
+      })
+      if (banError) throw banError
+
+      const isNowBanned = !isCurrentlyBanned
+      return NextResponse.json({
+        success: true,
+        is_banned: isNowBanned,
+        message: isNowBanned ? 'Usuario bloqueado exitosamente' : 'Usuario desbloqueado exitosamente'
+      })
+    }
+
+    if (action === 'change_password') {
+      if (!userId || !password) {
+        return NextResponse.json({ error: 'ID de usuario y contraseña son requeridos' }, { status: 400 })
+      }
+      const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, { password })
       if (error) throw error
+      return NextResponse.json({ success: true, message: 'Contraseña actualizada exitosamente' })
+    }
+
+    if (action === 'delete') {
+      if (!userId) return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 400 })
+
+      await supabaseAdmin.from('profiles').delete().eq('id', userId)
+      const { error: delError } = await supabaseAdmin.auth.admin.deleteUser(userId)
+      if (delError) throw delError
+
       return NextResponse.json({ success: true })
     }
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+
+    return NextResponse.json({ error: 'Acción no válida' }, { status: 400 })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }

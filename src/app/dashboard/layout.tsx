@@ -7,17 +7,34 @@ import { useState, useEffect } from 'react'
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
   const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      // TODO: Reemplazar por tu correo real de administrador
-      if (data.user?.email === 'tucorreo@admin.com' || data.user?.email?.includes('admin')) {
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      setUserEmail(data.user.email || '')
+      
+      const isSuper = data.user.email === 'superadmin@mcm.com'
+      if (isSuper) {
+        setIsSuperAdmin(true)
         setIsAdmin(true)
-      } else {
-        // En un caso real, por si lo necesitas forzar, podemos dejarlo en true para que lo veas:
-        setIsAdmin(true) // Temporalmente true para que tú (el developer/dueño) lo puedas ver sin cambiar el código
+        return
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single()
+
+      if (profile?.role === 'super_admin') {
+        setIsSuperAdmin(true)
+        setIsAdmin(true)
+      } else if (profile?.role === 'admin' || data.user.email?.includes('admin')) {
+        setIsAdmin(true)
       }
     })
   }, [])
@@ -33,6 +50,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="nav-mobile-header">
           <div className="nav-brand">
             <span className="font-black text-xl text-white">ERP <span className="text-[var(--brand-primary)]">MASTER</span></span>
+            {isSuperAdmin && <span className="superadmin-badge">SUPER ADMIN</span>}
           </div>
           <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? '✕' : '☰'}
@@ -41,14 +59,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         
         <div className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
           <div className="nav-links">
-            <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero</a>
-            <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
-            {isAdmin && <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>Finanzas</a>}
+            {isSuperAdmin ? (
+              <>
+                <a href="/dashboard/super-admin" className="nav-link super-link" onClick={() => setIsMenuOpen(false)}>
+                  👥 Personal y Accesos
+                </a>
+                <a href="/dashboard/finanzas" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                  📊 Finanzas
+                </a>
+                <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                  📦 Vista Pedidos
+                </a>
+              </>
+            ) : (
+              <>
+                <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero</a>
+                <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
+                {isAdmin && <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>Finanzas</a>}
+              </>
+            )}
           </div>
 
-          <button onClick={handleLogout} className="btn-logout">
-            Cerrar Sesión
-          </button>
+          <div className="user-section">
+            <span className="user-email">{userEmail}</span>
+            <button onClick={handleLogout} className="btn-logout">
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       </nav>
       <main className="dashboard-content">
@@ -93,6 +130,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           padding: 2rem;
           max-width: 1400px;
           margin: 0 auto;
+        }
+        .superadmin-badge {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: #000;
+          font-weight: 900;
+          font-size: 0.65rem;
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+          margin-left: 0.8rem;
+          letter-spacing: 0.5px;
+          vertical-align: middle;
+          text-transform: uppercase;
+        }
+        .super-link {
+          color: #f59e0b !important;
+          border-bottom: 2px solid #f59e0b;
+          padding-bottom: 0.2rem;
+        }
+        .user-section {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+        .user-email {
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 0.85rem;
         }
         .btn-logout {
           background: transparent;
