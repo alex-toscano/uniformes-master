@@ -171,19 +171,30 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     
     setLoading(true)
     try {
-      // 1. Borrar ítems hijos primero por integridad referencial
-      await supabase.from('order_items').delete().eq('order_id', orderId)
-      // 2. Borrar pedido maestro
-      const { error } = await supabase.from('orders').delete().eq('id', orderId)
+      // Usar endpoint administrativo con service role para bypass de RLS
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE'
+      })
+      const result = await res.json()
       
-      if (!error) {
+      if (res.ok && result.success) {
         window.dispatchEvent(new CustomEvent('orders-updated'))
         onOrderDeleted?.(orderId)
         onOrderUpdated?.()
         onClose()
       } else {
-        alert(`Error eliminando el pedido: ${error.message}`)
-        setLoading(false)
+        // Fallback por si acaso
+        await supabase.from('order_items').delete().eq('order_id', orderId)
+        const { error } = await supabase.from('orders').delete().eq('id', orderId)
+        if (!error) {
+          window.dispatchEvent(new CustomEvent('orders-updated'))
+          onOrderDeleted?.(orderId)
+          onOrderUpdated?.()
+          onClose()
+        } else {
+          alert(`Error eliminando el pedido: ${result.error || error.message}`)
+          setLoading(false)
+        }
       }
     } catch (err: any) {
       alert(`Error al eliminar: ${err?.message || 'Error desconocido'}`)
