@@ -12,6 +12,7 @@ interface PersonnelUser {
   last_sign_in_at: string | null
   banned_until: string | null
   is_banned: boolean
+  assigned_password?: string | null
 }
 
 const ROLES_CONFIG: Record<string, { label: string; badgeColor: string; bg: string; icon: string; desc: string }> = {
@@ -60,6 +61,11 @@ export default function SuperAdminDashboard() {
   const [roleFilter, setRoleFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
 
+  // Password visibility & copy
+  const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({})
+  const [showModalPassword, setShowModalPassword] = useState(false)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -86,6 +92,28 @@ export default function SuperAdminDashboard() {
   const showToast = (text: string, type: 'success' | 'error' = 'success') => {
     setToastMessage({ text, type })
     setTimeout(() => setToastMessage(null), 4000)
+  }
+
+  const togglePasswordVisibility = (id: string) => {
+    setVisiblePasswords(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  const copyCredentials = (user: PersonnelUser) => {
+    const pass = user.assigned_password || 'hack316-brian'
+    const text = `Usuario: ${user.email}\nContraseña: ${pass}`
+    navigator.clipboard.writeText(text)
+    showToast(`Credenciales de ${user.full_name} copiadas al portapapeles`)
+    setCopiedId(user.id)
+    setTimeout(() => setCopiedId(null), 2500)
+  }
+
+  const generateRandomPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$'
+    let res = ''
+    for (let i = 0; i < 9; i++) {
+      res += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    setNewPassword(res)
   }
 
   const loadPersonnel = async () => {
@@ -455,6 +483,7 @@ export default function SuperAdminDashboard() {
               <tr>
                 <th>Colaborador</th>
                 <th>Cargo / Rol</th>
+                <th>🔑 Clave de Acceso</th>
                 <th>Estado de Acceso</th>
                 <th>Último Ingreso</th>
                 <th style={{ textAlign: 'right' }}>Acciones de Control</th>
@@ -510,6 +539,46 @@ export default function SuperAdminDashboard() {
                         <span style={{ marginRight: '0.4rem' }}>{roleConfig.icon}</span>
                         {roleConfig.label}
                       </div>
+                    </td>
+
+                    {/* Password Access */}
+                    <td>
+                      {user.assigned_password ? (
+                        <div className="password-cell">
+                          <span className="password-display">
+                            {visiblePasswords[user.id] ? user.assigned_password : '••••••••'}
+                          </span>
+                          <button
+                            type="button"
+                            className="btn-pass-icon"
+                            onClick={() => togglePasswordVisibility(user.id)}
+                            title={visiblePasswords[user.id] ? "Ocultar contraseña" : "Ver contraseña"}
+                          >
+                            {visiblePasswords[user.id] ? "🙈" : "👁️"}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-pass-icon"
+                            onClick={() => copyCredentials(user)}
+                            title="Copiar correo y contraseña"
+                          >
+                            {copiedId === user.id ? "✅" : "📋"}
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setNewPassword('')
+                            setShowPasswordModal(true)
+                          }}
+                          className="btn-assign-quick-pass"
+                          title="Haz clic para asignarle una contraseña"
+                        >
+                          🔑 Asignar Clave
+                        </button>
+                      )}
                     </td>
 
                     {/* Status */}
@@ -774,15 +843,34 @@ export default function SuperAdminDashboard() {
 
             <form onSubmit={handleChangePassword} className="modal-form">
               <div className="form-group">
-                <label>Nueva Contraseña</label>
-                <input
-                  type="password"
-                  required
-                  minLength={6}
-                  placeholder="Mínimo 6 caracteres"
-                  value={newPassword}
-                  onChange={e => setNewPassword(e.target.value)}
-                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <label style={{ margin: 0 }}>Nueva Contraseña</label>
+                  <button 
+                    type="button"
+                    onClick={generateRandomPassword}
+                    className="btn-generate-pass"
+                  >
+                    🎲 Generar Automática
+                  </button>
+                </div>
+                <div className="modal-pass-input-wrap">
+                  <input
+                    type={showModalPassword ? "text" : "password"}
+                    required
+                    minLength={6}
+                    placeholder="Mínimo 6 caracteres"
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="btn-toggle-modal-pass"
+                    onClick={() => setShowModalPassword(!showModalPassword)}
+                    title={showModalPassword ? "Ocultar" : "Mostrar"}
+                  >
+                    {showModalPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
               </div>
 
               <div className="modal-actions">
@@ -1163,6 +1251,97 @@ export default function SuperAdminDashboard() {
         .time-text {
           font-size: 0.85rem;
           color: rgba(255, 255, 255, 0.5);
+        }
+
+        .password-cell {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 0.35rem 0.6rem;
+          border-radius: 6px;
+        }
+
+        .password-display {
+          font-family: monospace;
+          font-size: 0.88rem;
+          letter-spacing: 1px;
+          color: #f3f4f6;
+          font-weight: 600;
+          min-width: 80px;
+        }
+
+        .btn-pass-icon {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          font-size: 0.95rem;
+          padding: 0.15rem 0.25rem;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.15s;
+        }
+        .btn-pass-icon:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-assign-quick-pass {
+          background: rgba(234, 179, 8, 0.12);
+          color: #eab308;
+          border: 1px dashed rgba(234, 179, 8, 0.4);
+          padding: 0.35rem 0.7rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-assign-quick-pass:hover {
+          background: #eab308;
+          color: black;
+          border-style: solid;
+        }
+
+        .btn-generate-pass {
+          background: rgba(56, 189, 248, 0.15);
+          color: #38bdf8;
+          border: 1px solid rgba(56, 189, 248, 0.3);
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-generate-pass:hover {
+          background: #38bdf8;
+          color: black;
+        }
+
+        .modal-pass-input-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+        .modal-pass-input-wrap input {
+          width: 100%;
+          padding-right: 2.8rem !important;
+        }
+        .btn-toggle-modal-pass {
+          position: absolute;
+          right: 0.6rem;
+          background: transparent;
+          border: none;
+          font-size: 1.1rem;
+          cursor: pointer;
+          padding: 0.3rem;
+          color: rgba(255, 255, 255, 0.6);
+        }
+        .btn-toggle-modal-pass:hover {
+          color: white;
         }
 
         .action-buttons-wrap {

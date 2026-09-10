@@ -29,6 +29,7 @@ export async function GET() {
         last_sign_in_at: u.last_sign_in_at,
         banned_until: u.banned_until,
         is_banned: isBanned,
+        assigned_password: u.user_metadata?.assigned_password || null,
         user_metadata: u.user_metadata
       }
     })
@@ -52,7 +53,11 @@ export async function POST(request: Request) {
         email,
         password,
         email_confirm: true,
-        user_metadata: { full_name: fullName, role: role || 'vendedor' }
+        user_metadata: { 
+          full_name: fullName, 
+          role: role || 'vendedor',
+          assigned_password: password
+        }
       })
 
       if (createError) throw createError
@@ -71,10 +76,17 @@ export async function POST(request: Request) {
     if (action === 'update') {
       if (!userId) return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 400 })
 
+      const { data: userRes } = await supabaseAdmin.auth.admin.getUserById(userId)
+
       const { data: updatedUser, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
         userId,
         {
-          user_metadata: { full_name: fullName, role },
+          user_metadata: { 
+            ...userRes?.user?.user_metadata,
+            full_name: fullName, 
+            role,
+            ...(password ? { assigned_password: password } : {})
+          },
           ...(password ? { password } : {})
         }
       )
@@ -115,7 +127,16 @@ export async function POST(request: Request) {
       if (!userId || !password) {
         return NextResponse.json({ error: 'ID de usuario y contraseña son requeridos' }, { status: 400 })
       }
-      const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, { password })
+      const { data: userRes, error: getErr } = await supabaseAdmin.auth.admin.getUserById(userId)
+      if (getErr) throw getErr
+
+      const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+        password,
+        user_metadata: {
+          ...userRes.user?.user_metadata,
+          assigned_password: password
+        }
+      })
       if (error) throw error
       return NextResponse.json({ success: true, message: 'Contraseña actualizada exitosamente' })
     }
@@ -123,11 +144,24 @@ export async function POST(request: Request) {
     if (action === 'delete') {
       if (!userId) return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 400 })
 
+      // 1. Reasignar pedidos y gastos creados por este usuario al Super Admin para evitar violación de Foreign Key en PostgreSQL
+      const { data: { users: allUsers } } = await supabaseAdmin.auth.admin.listUsers()
+      const superAdmin = allUsers.find(u => u.email === 'superadmin@mcm.com')
+      const targetReassignId = superAdmin?.id || null
+
+      if (targetReassignId) {
+        await supabaseAdmin.from('orders').update({ created_by: targetReassignId }).eq('created_by', userId)
+        await supabaseAdmin.from('expenses').update({ created_by: targetReassignId }).eq('created_by', userId)
+      }
+
+      // 2. Eliminar de la tabla profiles
       await supabaseAdmin.from('profiles').delete().eq('id', userId)
+
+      // 3. Eliminar de auth.users
       const { error: delError } = await supabaseAdmin.auth.admin.deleteUser(userId)
       if (delError) throw delError
 
-      return NextResponse.json({ success: true })
+      return NextResponse.json({ success: true, message: 'Usuario eliminado exitosamente' })
     }
 
     return NextResponse.json({ error: 'Acción no válida' }, { status: 400 })
