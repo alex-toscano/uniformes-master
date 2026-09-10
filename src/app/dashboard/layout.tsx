@@ -71,6 +71,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <a href="/dashboard/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>
                   📦 Vista Pedidos
                 </a>
+                <a href="/dashboard/ajustes" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                  ⚙️ Ajustes
+                </a>
               </>
             ) : isAdmin ? (
               <>
@@ -83,11 +86,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>
                   💰 Finanzas
                 </a>
+                <a href="/dashboard/ajustes" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                  ⚙️ Ajustes
+                </a>
               </>
             ) : (
               <>
                 <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero</a>
                 <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
+                <a href="/dashboard/ajustes" className="nav-link" onClick={() => setIsMenuOpen(false)}>⚙️ Ajustes</a>
               </>
             )}
           </div>
