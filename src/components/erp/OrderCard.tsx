@@ -142,7 +142,20 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
             <option value="entregado">Entregado</option>
           </select>
         </div>
-        
+
+        {order.status === 'control_calidad' && (
+          <button 
+            onClick={(e) => {
+              e.stopPropagation()
+              onUpdateStatus(order.id, 'entregado')
+            }}
+            className="btn-mark-delivered"
+            title="Mover a Historial de Entregados"
+          >
+            ✅ Entregar Pedido
+          </button>
+        )}
+
         {onViewDetails && (
           <button onClick={() => onViewDetails(order.id)} className="btn-view-details" style={{ width: '100%' }}>
             👁️ Ver Detalle Completo
@@ -252,6 +265,27 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
           background: var(--brand-primary);
           color: black;
           border-color: var(--brand-primary);
+        }
+        .btn-mark-delivered {
+          width: 100%;
+          background: rgba(16, 185, 129, 0.15);
+          color: #34d399;
+          border: 1px solid rgba(16, 185, 129, 0.4);
+          padding: 0.6rem 0.8rem;
+          border-radius: 4px;
+          font-size: 0.82rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+        }
+        .btn-mark-delivered:hover {
+          background: #10b981;
+          color: #000;
+          box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
         }
         .btn-view-details {
           background: rgba(255,255,255,0.05);

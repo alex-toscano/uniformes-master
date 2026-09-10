@@ -51,6 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="nav-brand">
             <span className="font-black text-xl text-white">ERP <span className="text-[var(--brand-primary)]">MASTER</span></span>
             {isSuperAdmin && <span className="superadmin-badge">SUPER ADMIN</span>}
+            {!isSuperAdmin && isAdmin && <span className="gerente-badge">GERENTE</span>}
           </div>
           <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? '✕' : '☰'}
@@ -67,15 +68,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <a href="/dashboard/finanzas" className="nav-link" onClick={() => setIsMenuOpen(false)}>
                   📊 Finanzas
                 </a>
-                <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                <a href="/dashboard/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>
                   📦 Vista Pedidos
+                </a>
+              </>
+            ) : isAdmin ? (
+              <>
+                <a href="/dashboard/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                  🏭 Producción
+                </a>
+                <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+                  👥 CRM Clientes
+                </a>
+                <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>
+                  💰 Finanzas
                 </a>
               </>
             ) : (
               <>
                 <a href="/dashboard/vendedor" className="nav-link" onClick={() => setIsMenuOpen(false)}>Tablero</a>
                 <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>CRM Clientes</a>
-                {isAdmin && <a href="/dashboard/finanzas" className="nav-link admin-only" onClick={() => setIsMenuOpen(false)}>Finanzas</a>}
               </>
             )}
           </div>
@@ -134,6 +146,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         .superadmin-badge {
           background: linear-gradient(135deg, #f59e0b, #d97706);
           color: #000;
+          font-weight: 900;
+          font-size: 0.65rem;
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+          margin-left: 0.8rem;
+          letter-spacing: 0.5px;
+          vertical-align: middle;
+          text-transform: uppercase;
+        }
+        .gerente-badge {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: #fff;
           font-weight: 900;
           font-size: 0.65rem;
           padding: 0.2rem 0.5rem;
