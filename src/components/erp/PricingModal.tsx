@@ -14,6 +14,18 @@ type PricingRule = {
 const DEFAULT_CATEGORIES = ['Infantil', 'Juvenil', 'Adulto']
 const DEFAULT_PRODUCTS = ['Uniforme', 'Chaqueta', 'Pantaloneta', 'Medias']
 
+const getDefaultPrice = (product_type: string, size_category: string): number => {
+  if (product_type === 'Uniforme') {
+    if (size_category === 'Infantil') return 40000
+    if (size_category === 'Juvenil') return 43000
+    return 45000
+  }
+  if (product_type === 'Chaqueta') return 65000
+  if (product_type === 'Medias') return 12000
+  if (product_type === 'Pantaloneta') return 20000
+  return 35000
+}
+
 export default function PricingModal({ customerId, customerName, onClose }: { customerId: string, customerName: string, onClose: () => void }) {
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
@@ -22,49 +34,98 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
 
   useEffect(() => {
     fetchPricing()
-  }, [])
+  }, [customerId])
 
   const fetchPricing = async () => {
-    const { data } = await supabase.from('customer_pricing').select('*').eq('customer_id', customerId)
-    if (data) {
+    setLoading(true)
+    const { data, error } = await supabase.from('customer_pricing').select('*').eq('customer_id', customerId)
+    if (!error && data) {
       setPricing(data)
+    } else {
+      setPricing([])
     }
     setLoading(false)
   }
 
-  const handlePriceChange = (product_type: string, size_category: string, newPrice: number) => {
-    const existing = pricing.find(p => p.product_type === product_type && p.size_category === size_category)
-    if (existing) {
-      setPricing(pricing.map(p => p.id === existing.id || (p.product_type === product_type && p.size_category === size_category) ? { ...p, price: newPrice } : p))
-    } else {
-      setPricing([...pricing, { customer_id: customerId, product_type, size_category, price: newPrice }])
-    }
+  const handlePriceChange = (product_type: string, size_category: string, rawValue: string) => {
+    const numeric = rawValue === '' ? 0 : parseFloat(rawValue)
+    const validPrice = isNaN(numeric) ? 0 : Math.max(0, numeric)
+
+    setPricing(prev => {
+      // Filtrar únicamente el registro exacto de este producto y categoría para no tocar los demás
+      const others = prev.filter(
+        p => !(p.product_type === product_type && p.size_category === size_category)
+      )
+      if (rawValue !== '' && validPrice > 0) {
+        return [...others, { customer_id: customerId, product_type, size_category, price: validPrice }]
+      }
+      return others
+    })
   }
 
-  const getPrice = (product_type: string, size_category: string) => {
-    const p = pricing.find(p => p.product_type === product_type && p.size_category === size_category)
-    return p ? p.price : ''
+  const getPrice = (product_type: string, size_category: string): number | string => {
+    const item = pricing.find(p => p.product_type === product_type && p.size_category === size_category)
+    return item && item.price > 0 ? item.price : ''
+  }
+
+  const fillDefaultPrices = () => {
+    const defaults: PricingRule[] = []
+    for (const prod of DEFAULT_PRODUCTS) {
+      for (const cat of DEFAULT_CATEGORIES) {
+        defaults.push({
+          customer_id: customerId,
+          product_type: prod,
+          size_category: cat,
+          price: getDefaultPrice(prod, cat)
+        })
+      }
+    }
+    setPricing(defaults)
+  }
+
+  const clearPrices = () => {
+    if (confirm('¿Deseas vaciar los precios personalizados de este cliente? El sistema volverá a usar los precios base predeterminados.')) {
+      setPricing([])
+    }
   }
 
   const savePricing = async () => {
     setSaving(true)
-    
-    // Borramos precios actuales para insertar los nuevos sin duplicar
-    await supabase.from('customer_pricing').delete().eq('customer_id', customerId)
-    
-    const toInsert = pricing.filter(p => p.price > 0).map(p => ({
-      customer_id: customerId,
-      product_type: p.product_type,
-      size_category: p.size_category,
-      price: p.price
-    }))
+    try {
+      // 1. Borramos precios actuales para insertar los nuevos sin duplicados
+      await supabase.from('customer_pricing').delete().eq('customer_id', customerId)
+      
+      // 2. Deduplicar por clave única producto + categoría
+      const uniqueMap = new Map<string, number>()
+      for (const p of pricing) {
+        if (p.price > 0) {
+          uniqueMap.set(`${p.product_type}:::${p.size_category}`, p.price)
+        }
+      }
 
-    if (toInsert.length > 0) {
-      await supabase.from('customer_pricing').insert(toInsert)
+      const toInsert: { customer_id: string; product_type: string; size_category: string; price: number }[] = []
+      uniqueMap.forEach((price, key) => {
+        const [product_type, size_category] = key.split(':::')
+        toInsert.push({
+          customer_id: customerId,
+          product_type,
+          size_category,
+          price
+        })
+      })
+
+      if (toInsert.length > 0) {
+        const { error } = await supabase.from('customer_pricing').insert(toInsert)
+        if (error) throw error
+      }
+
+      alert(`✅ Precios especiales guardados exitosamente para "${customerName}".`)
+      onClose()
+    } catch (err: any) {
+      alert(`Error al guardar precios: ${err.message || 'Error desconocido'}`)
+    } finally {
+      setSaving(false)
     }
-
-    setSaving(false)
-    onClose()
   }
 
   return (
@@ -76,10 +137,32 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
         </div>
         
         <div className="modal-body">
-          <p className="subtitle">Configura los precios para <strong>{customerName}</strong>. La calculadora del ERP usará estos valores automáticamente.</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+            <p className="subtitle" style={{ margin: 0, flex: 1, minWidth: '260px' }}>
+              Configura los precios especiales para <strong>{customerName}</strong>. Cada producto y categoría se guarda de forma totalmente independiente. Si dejas una celda vacía, el ERP usará el precio sugerido en gris.
+            </p>
+            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+              <button 
+                type="button" 
+                onClick={fillDefaultPrices}
+                className="btn-quick-action"
+                title="Cargar los precios sugeridos para editarlos"
+              >
+                ⚡ Cargar Sugeridos
+              </button>
+              <button 
+                type="button" 
+                onClick={clearPrices}
+                className="btn-quick-action btn-clear"
+                title="Limpiar precios personalizados"
+              >
+                🗑️ Limpiar
+              </button>
+            </div>
+          </div>
 
           {loading ? (
-            <div style={{ color: 'white' }}>Cargando precios actuales...</div>
+            <div style={{ color: 'white', padding: '2rem', textAlign: 'center' }}>Cargando precios actuales...</div>
           ) : (
             <div className="pricing-grid">
               <table>
@@ -99,9 +182,9 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
                             <span>$</span>
                             <input 
                               type="number" 
-                              placeholder="Ej: 40000"
+                              placeholder={String(getDefaultPrice(prod, cat))}
                               value={getPrice(prod, cat)}
-                              onChange={(e) => handlePriceChange(prod, cat, parseFloat(e.target.value))}
+                              onChange={(e) => handlePriceChange(prod, cat, e.target.value)}
                             />
                           </div>
                         </td>
@@ -140,8 +223,30 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
         .btn-close { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
         
         .modal-body { padding: 2rem; overflow-y: auto; max-height: 60vh; }
-        .subtitle { color: rgba(255,255,255,0.6); margin-bottom: 2rem; font-size: 0.95rem; line-height: 1.5; }
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.5; }
         
+        .btn-quick-action {
+          background: rgba(255, 255, 255, 0.08);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          padding: 0.45rem 0.8rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+        .btn-quick-action:hover {
+          background: rgba(255, 255, 255, 0.18);
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+        .btn-quick-action.btn-clear:hover {
+          background: rgba(239, 68, 68, 0.2);
+          color: #f87171;
+          border-color: rgba(239, 68, 68, 0.4);
+        }
+
         .pricing-grid table { width: 100%; border-collapse: collapse; min-width: 500px; }
         .pricing-grid th { text-align: left; padding: 1rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .pricing-grid td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); }

@@ -80,9 +80,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <a href="/dashboard/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>
                   🏭 Producción
                 </a>
-                <a href="/dashboard/super-admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-                  👥 Personal y Accesos
-                </a>
                 <a href="/dashboard/clientes" className="nav-link" onClick={() => setIsMenuOpen(false)}>
                   👥 CRM Clientes
                 </a>

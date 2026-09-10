@@ -57,7 +57,7 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
         .from('customer_pricing')
         .select('*')
         .eq('customer_id', orderData.customer_id)
-      if (pricingData) setCustomPricing(pricingData)
+      setCustomPricing(pricingData || [])
     }
 
     // 3. Fetch Items

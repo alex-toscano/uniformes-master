@@ -44,7 +44,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
 
   const loadCustomerPricing = async (customerId: string) => {
     const { data } = await supabase.from('customer_pricing').select('*').eq('customer_id', customerId)
-    if (data) setCustomPricing(data)
+    setCustomPricing(data || [])
   }
 
   const fetchConsecutives = async (customerId: string) => {
@@ -78,7 +78,10 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
       fetchConsecutives(id)
       setIsCreatingCustomer(false)
     } else if (id === 'new') {
+      setCustomPricing([])
       setIsCreatingCustomer(true)
+    } else {
+      setCustomPricing([])
     }
   }
 
