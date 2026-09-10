@@ -5,6 +5,8 @@ import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import FabricReportModal from '@/components/erp/FabricReportModal'
+import { formatThousands, parseThousands } from '@/utils/formatters'
 
 type Supplier = { id: string; name: string; phone: string; service_type: string; created_at: string }
 type Employee = { id: string; name: string; role: string; phone: string; created_at: string }
@@ -54,6 +56,7 @@ export default function FinanzasDashboard() {
   const [selectedOrderForPayment, setSelectedOrderForPayment] = useState<OrderFinancial | null>(null)
   const [newPaymentAmount, setNewPaymentAmount] = useState('')
   const [isUpdatingPayment, setIsUpdatingPayment] = useState(false)
+  const [showFabricReportModal, setShowFabricReportModal] = useState(false)
 
   // Search in Cartera
   const [carteraSearch, setCarteraSearch] = useState('')
@@ -229,7 +232,7 @@ export default function FinanzasDashboard() {
     e.preventDefault()
     if (!selectedOrderForPayment) return
 
-    const amountToAdd = Number(newPaymentAmount)
+    const amountToAdd = parseThousands(newPaymentAmount)
     if (isNaN(amountToAdd) || amountToAdd <= 0) {
       alert('Por favor ingresa un monto válido a abonar.')
       return
@@ -363,7 +366,7 @@ export default function FinanzasDashboard() {
     
     const expenseData: any = {
       category: newExpense.category,
-      amount: Number(newExpense.amount),
+      amount: parseThousands(newExpense.amount),
       description: newExpense.description,
       created_by: user?.id
     }
@@ -493,6 +496,14 @@ export default function FinanzasDashboard() {
             </button>
           </div>
 
+          <button 
+            onClick={() => setShowFabricReportModal(true)} 
+            className="btn-export-pdf" 
+            style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', borderColor: 'rgba(59, 130, 246, 0.3)' }}
+            title="Liquidación y reporte de consumo de telas de proveedores"
+          >
+            🧵 Reporte Telas
+          </button>
           <button onClick={handleExportPDF} className="btn-export-pdf" title="Descargar Balance Ejecutivo en PDF">
             📄 Informe PDF
           </button>
@@ -906,7 +917,16 @@ export default function FinanzasDashboard() {
               <h2>Directorio y Estado de Pagos a Proveedores</h2>
               <p className="section-desc">Control acumulado de compras realizadas a distribuidores de insumos y telas.</p>
             </div>
-            <button onClick={() => setShowSupplierModal(true)} className="btn-secondary">+ Nuevo Proveedor</button>
+            <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button 
+                onClick={() => setShowFabricReportModal(true)} 
+                className="btn-secondary"
+                style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', borderColor: 'rgba(59, 130, 246, 0.3)' }}
+              >
+                🧵 Liquidación de Telas / Proveedor
+              </button>
+              <button onClick={() => setShowSupplierModal(true)} className="btn-secondary">+ Nuevo Proveedor</button>
+            </div>
           </div>
           <div className="table-responsive">
             <table className="data-table">
@@ -1018,13 +1038,13 @@ export default function FinanzasDashboard() {
               <div className="form-group">
                 <label>Monto a Abonar en este momento ($ COP)</label>
                 <input 
-                  type="number" 
+                  type="text" 
+                  inputMode="numeric"
                   required 
-                  min="1" 
                   autoFocus
-                  value={newPaymentAmount} 
-                  onChange={e => setNewPaymentAmount(e.target.value)} 
-                  placeholder="Ej: 50000" 
+                  value={formatThousands(newPaymentAmount)} 
+                  onChange={e => setNewPaymentAmount(formatThousands(e.target.value))} 
+                  placeholder="Ej: 50.000" 
                 />
               </div>
 
@@ -1034,7 +1054,7 @@ export default function FinanzasDashboard() {
                 className="btn-pay-full"
                 onClick={() => {
                   const saldo = (selectedOrderForPayment.total_price || 0) - (selectedOrderForPayment.advance_payment || 0)
-                  setNewPaymentAmount(saldo > 0 ? saldo.toString() : '0')
+                  setNewPaymentAmount(saldo > 0 ? formatThousands(saldo) : '0')
                 }}
               >
                 ⚡ Liquidar Todo el Saldo Pendiente
@@ -1086,7 +1106,14 @@ export default function FinanzasDashboard() {
 
               <div className="form-group">
                 <label>Valor a Egresar ($ COP)</label>
-                <input type="number" required min="1" value={newExpense.amount} onChange={e => setNewExpense({...newExpense, amount: e.target.value})} placeholder="Ej: 50000" />
+                <input 
+                  type="text" 
+                  inputMode="numeric"
+                  required 
+                  value={formatThousands(newExpense.amount)} 
+                  onChange={e => setNewExpense({...newExpense, amount: formatThousands(e.target.value)})} 
+                  placeholder="Ej: 50.000" 
+                />
               </div>
               <div className="form-group">
                 <label>Descripción / Concepto del Gasto</label>
@@ -1150,6 +1177,13 @@ export default function FinanzasDashboard() {
             </form>
           </div>
         </div>
+      )}
+
+      {showFabricReportModal && (
+        <FabricReportModal 
+          isGlobal={true}
+          onClose={() => setShowFabricReportModal(false)}
+        />
       )}
 
       {/* ESTILOS CSS EJECUTIVOS */}

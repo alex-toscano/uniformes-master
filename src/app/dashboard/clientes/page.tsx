@@ -26,10 +26,34 @@ export default function CRMPage() {
   const [pricingCustomer, setPricingCustomer] = useState<{id: string, name: string} | null>(null)
   const [editCustomer, setEditCustomer] = useState<Customer | null>(null)
   const [reportCustomer, setReportCustomer] = useState<{id: string, name: string} | null>(null)
+  const [showGlobalFabricReport, setShowGlobalFabricReport] = useState(false)
+  const [isGerente, setIsGerente] = useState(false)
 
   useEffect(() => {
     fetchCustomers()
+    checkUserRole()
   }, [])
+
+  const checkUserRole = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    if (user.email === 'superadmin@mcm.com') {
+      setIsGerente(true)
+      return
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const role = profile?.role || user.user_metadata?.role || 'vendedor'
+    if (role === 'admin' || role === 'super_admin' || user.email?.includes('admin')) {
+      setIsGerente(true)
+    }
+  }
 
   const fetchCustomers = async () => {
     const { data, error } = await supabase
@@ -59,13 +83,38 @@ export default function CRMPage() {
           <p className="subtitle">Gestiona toda tu base de clientes y visualiza su fidelidad.</p>
         </div>
         
-        <input 
-          type="search" 
-          placeholder="🔍 Buscar por nombre, club o ciudad..." 
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          {isGerente && (
+            <button
+              onClick={() => setShowGlobalFabricReport(true)}
+              style={{
+                background: 'rgba(59, 130, 246, 0.15)',
+                color: '#60a5fa',
+                fontWeight: 800,
+                padding: '0.65rem 1.2rem',
+                borderRadius: '6px',
+                border: '1px solid rgba(59, 130, 246, 0.3)',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}
+            >
+              🧵 Reporte Global de Telas
+            </button>
+          )}
+
+          <input 
+            type="search" 
+            placeholder="🔍 Buscar por nombre, club o ciudad..." 
+            className="search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="metrics-row">
@@ -120,13 +169,16 @@ export default function CRMPage() {
                     >
                       Editar Perfil
                     </button>
-                    <button 
-                      className="btn-edit-prices"
-                      style={{ background: 'rgba(212, 255, 0, 0.1)', color: 'var(--brand-primary)', border: '1px solid var(--brand-primary)' }}
-                      onClick={() => setReportCustomer({ id: c.id, name: c.name })}
-                    >
-                      📊 Reporte Tela
-                    </button>
+                    {isGerente && (
+                      <button 
+                        className="btn-edit-prices"
+                        style={{ background: 'rgba(212, 255, 0, 0.1)', color: 'var(--brand-primary)', border: '1px solid var(--brand-primary)' }}
+                        onClick={() => setReportCustomer({ id: c.id, name: c.name })}
+                        title="Reporte de consumo de tela exclusivo para Gerencia"
+                      >
+                        📊 Reporte Tela
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -139,6 +191,13 @@ export default function CRMPage() {
           </tbody>
         </table>
       </div>
+
+      {showGlobalFabricReport && (
+        <FabricReportModal 
+          isGlobal={true}
+          onClose={() => setShowGlobalFabricReport(false)}
+        />
+      )}
 
       {reportCustomer && (
         <FabricReportModal 

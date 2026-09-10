@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import KanbanBoard from '@/components/erp/KanbanBoard'
 import NewOrderModal from '@/components/erp/NewOrderModal'
+import FabricReportModal from '@/components/erp/FabricReportModal'
 
 export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isFabricReportOpen, setIsFabricReportOpen] = useState(false)
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -36,6 +38,28 @@ export default function AdminDashboard() {
         </div>
 
         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setIsFabricReportOpen(true)}
+            style={{
+              background: 'rgba(59, 130, 246, 0.12)',
+              color: '#60a5fa',
+              fontWeight: 800,
+              padding: '0.85rem 1.4rem',
+              borderRadius: '6px',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            🧵 Reporte de Telas
+          </button>
+
           <a
             href="/dashboard/finanzas"
             style={{
@@ -88,6 +112,13 @@ export default function AdminDashboard() {
         <NewOrderModal 
           onClose={() => setIsModalOpen(false)} 
           onCreated={() => setIsModalOpen(false)} 
+        />
+      )}
+
+      {isFabricReportOpen && (
+        <FabricReportModal 
+          isGlobal={true}
+          onClose={() => setIsFabricReportOpen(false)} 
         />
       )}
     </div>

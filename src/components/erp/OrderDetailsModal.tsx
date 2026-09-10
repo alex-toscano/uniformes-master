@@ -10,9 +10,11 @@ type Pricing = { product_type: string; size_category: string; price: number }
 type OrderDetailsProps = {
   orderId: string
   onClose: () => void
+  onOrderDeleted?: (orderId: string) => void
+  onOrderUpdated?: () => void
 }
 
-export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProps) {
+export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, onOrderUpdated }: OrderDetailsProps) {
   const supabase = createClient()
   
   const [order, setOrder] = useState<any>(null)
@@ -26,6 +28,8 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
   
   // Observaciones y tela
   const [observations, setObservations] = useState('')
+  const [fabricType, setFabricType] = useState('Montelín')
+  const [fabricCustomDesc, setFabricCustomDesc] = useState('')
   const [fabricMeters, setFabricMeters] = useState('')
   const [isSavingMeta, setIsSavingMeta] = useState(false)
   
@@ -49,7 +53,24 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
       
     if (orderData) {
       setOrder(orderData)
-      setObservations(orderData.observations || '')
+      const rawObs = orderData.observations || ''
+      const fabricMatch = rawObs.match(/^\[TELA:\s*([^[\]\n]+)\]\n?/i)
+      if (fabricMatch) {
+        const fullType = fabricMatch[1].trim()
+        if (fullType.toLowerCase().startsWith('otros')) {
+          setFabricType('Otros')
+          const parts = fullType.split(/-(.+)/)
+          setFabricCustomDesc(parts[1]?.trim() || '')
+        } else {
+          setFabricType(fullType)
+          setFabricCustomDesc('')
+        }
+        setObservations(rawObs.replace(/^\[TELA:\s*([^[\]\n]+)\]\n?/i, ''))
+      } else {
+        setFabricType('Montelín')
+        setFabricCustomDesc('')
+        setObservations(rawObs)
+      }
       setFabricMeters(orderData.fabric_meters ? orderData.fabric_meters.toString() : '')
       
       // 2. Fetch Pricing for this customer
@@ -144,31 +165,55 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
   }
 
   const handleDeleteOrder = async () => {
-    if (deleteConfirmText !== 'ELIMINAR') return
+    const sku = order?.sku_reference || 'este pedido'
+    const confirmed = window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el pedido "${sku}"?\n\nEsta acción borrará el pedido maestro y toda su nómina de jugadores en la base de datos. No se puede deshacer.`)
+    if (!confirmed) return
     
     setLoading(true)
-    // Borrar ítems hijos primero por seguridad
-    await supabase.from('order_items').delete().eq('order_id', orderId)
-    // Borrar maestro
-    const { error } = await supabase.from('orders').delete().eq('id', orderId)
-    
-    if (!error) {
-      onClose()
-    } else {
-      alert('Error eliminando el pedido')
+    try {
+      // 1. Borrar ítems hijos primero por integridad referencial
+      await supabase.from('order_items').delete().eq('order_id', orderId)
+      // 2. Borrar pedido maestro
+      const { error } = await supabase.from('orders').delete().eq('id', orderId)
+      
+      if (!error) {
+        window.dispatchEvent(new CustomEvent('orders-updated'))
+        onOrderDeleted?.(orderId)
+        onOrderUpdated?.()
+        onClose()
+      } else {
+        alert(`Error eliminando el pedido: ${error.message}`)
+        setLoading(false)
+      }
+    } catch (err: any) {
+      alert(`Error al eliminar: ${err?.message || 'Error desconocido'}`)
       setLoading(false)
     }
   }
 
   const handleSaveMeta = async () => {
     setIsSavingMeta(true)
+    let fabricTag = ''
+    if (fabricType === 'Otros') {
+      fabricTag = `[TELA: Otros${fabricCustomDesc ? ` - ${fabricCustomDesc.trim()}` : ''}]`
+    } else if (fabricType) {
+      fabricTag = `[TELA: ${fabricType}]`
+    }
+
+    const cleanObs = observations.trim()
+    const fullObservations = fabricTag 
+      ? (cleanObs ? `${fabricTag}\n${cleanObs}` : fabricTag)
+      : cleanObs
+
     const { error } = await supabase.from('orders').update({
-      observations,
+      observations: fullObservations,
       fabric_meters: fabricMeters ? parseFloat(fabricMeters) : 0
     }).eq('id', orderId)
     
     if (!error) {
       alert('Observaciones y consumo de tela guardados')
+      window.dispatchEvent(new CustomEvent('orders-updated'))
+      onOrderUpdated?.()
     } else {
       alert('Error al guardar datos')
     }
@@ -397,6 +442,13 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
                       <strong style={{ color: '#facc15', fontSize: '1.1rem' }}>{order.delivery_date}</strong>
                     </div>
                   )}
+                  <div className="summary-block">
+                    <span className="label">🧵 Tela y Consumo</span>
+                    <strong style={{ color: 'var(--brand-primary)' }}>
+                      {fabricType === 'Otros' ? (fabricCustomDesc ? `Otros (${fabricCustomDesc})` : 'Otros') : fabricType}
+                    </strong>
+                    <span style={{ fontSize: '0.85rem' }}>{fabricMeters ? `${fabricMeters} m consumidos` : 'Pendiente metraje'}</span>
+                  </div>
                   <div className="summary-block highlight">
                     <span className="label">Finanzas</span>
                     <span>Total: <strong>${order?.total_price.toLocaleString('es-CO')}</strong></span>
@@ -408,52 +460,76 @@ export default function OrderDetailsModal({ orderId, onClose }: OrderDetailsProp
 
               {activeTab === 'produccion' && (
                 <div className="observations-section" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                     <div style={{ flex: 2, minWidth: '300px' }}>
                       <label className="label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', display: 'block', marginBottom: '0.5rem' }}>Observaciones / Novedades</label>
                       <textarea 
                         value={observations}
                         onChange={(e) => setObservations(e.target.value)}
                         placeholder="Ej: El dorsal 10 salió manchado, devolver a sublimación..."
-                        style={{ width: '100%', height: '80px', padding: '0.5rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px' }}
+                        style={{ width: '100%', height: '140px', padding: '0.7rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px' }}
                       />
                     </div>
-                    <div style={{ flex: 1, minWidth: '150px' }}>
-                      <label className="label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', display: 'block', marginBottom: '0.5rem' }}>Metros de Tela (Corel)</label>
-                      <input 
-                        type="number" 
-                        step="0.01"
-                        value={fabricMeters}
-                        onChange={(e) => setFabricMeters(e.target.value)}
-                        placeholder="Ej: 200.5"
-                        style={{ width: '100%', padding: '0.5rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', marginBottom: '1rem' }}
-                      />
-                      <button onClick={handleSaveMeta} disabled={isSavingMeta} className="btn-add" style={{ width: '100%' }}>
-                        {isSavingMeta ? 'Guardando...' : 'Guardar Info'}
+                    <div style={{ flex: 1, minWidth: '220px', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                      <div>
+                        <label className="label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Tipo de Tela</label>
+                        <select 
+                          value={fabricType} 
+                          onChange={(e) => setFabricType(e.target.value)}
+                          style={{ width: '100%', padding: '0.6rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px' }}
+                        >
+                          <option value="Montelín">Montelín</option>
+                          <option value="Cerro">Cerro</option>
+                          <option value="Súper Nylon">Súper Nylon</option>
+                          <option value="Otros">Otros (Personalizada)</option>
+                        </select>
+                      </div>
+
+                      {fabricType === 'Otros' && (
+                        <div>
+                          <label className="label" style={{ color: '#facc15', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Descripción de la Tela</label>
+                          <input 
+                            type="text" 
+                            value={fabricCustomDesc}
+                            onChange={(e) => setFabricCustomDesc(e.target.value)}
+                            placeholder="Ej: Lafayette, Microfibra, Antifluido..."
+                            style={{ width: '100%', padding: '0.6rem', background: '#111', color: 'white', border: '1px solid #facc15', borderRadius: '6px' }}
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Metros de Tela (Corel)</label>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          value={fabricMeters}
+                          onChange={(e) => setFabricMeters(e.target.value)}
+                          placeholder="Ej: 200.5"
+                          style={{ width: '100%', padding: '0.6rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px' }}
+                        />
+                      </div>
+
+                      <button onClick={handleSaveMeta} disabled={isSavingMeta} className="btn-add" style={{ width: '100%', marginTop: '0.5rem', padding: '0.7rem' }}>
+                        {isSavingMeta ? 'Guardando...' : '💾 Guardar Info y Tela'}
                       </button>
                     </div>
                   </div>
 
-                  <div className="danger-zone" style={{ border: '1px solid #ff5555', padding: '1rem', borderRadius: '8px', background: 'rgba(255,0,0,0.05)' }}>
-                    <h3 style={{ color: '#ff5555', marginTop: 0 }}>Zona de Peligro</h3>
-                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)' }}>Para eliminar este pedido, escribe la palabra <strong>ELIMINAR</strong> a continuación:</p>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                      <input 
-                        type="text" 
-                        value={deleteConfirmText}
-                        onChange={(e) => setDeleteConfirmText(e.target.value)}
-                        placeholder="ELIMINAR"
-                        style={{ padding: '0.5rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px' }}
-                      />
-                      <button 
-                        onClick={handleDeleteOrder} 
-                        className="btn-remove" 
-                        style={{ opacity: deleteConfirmText === 'ELIMINAR' ? 1 : 0.5 }}
-                        disabled={deleteConfirmText !== 'ELIMINAR'}
-                      >
-                        🗑️ Eliminar Definitivamente
-                      </button>
+                  <div className="danger-zone" style={{ border: '1px solid rgba(255,85,85,0.3)', padding: '1.2rem', borderRadius: '8px', background: 'rgba(255,0,0,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                      <h3 style={{ color: '#ff5555', margin: '0 0 0.3rem 0', fontSize: '1rem' }}>Zona de Peligro</h3>
+                      <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
+                        Eliminar permanentemente este pedido y su nómina de jugadores en la base de datos.
+                      </p>
                     </div>
+                    <button 
+                      onClick={handleDeleteOrder} 
+                      className="btn-remove" 
+                      style={{ padding: '0.6rem 1.2rem', fontWeight: 'bold' }}
+                    >
+                      🗑️ Eliminar Pedido Definitivamente
+                    </button>
                   </div>
                 </div>
               )}

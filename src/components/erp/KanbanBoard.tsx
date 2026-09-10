@@ -51,6 +51,11 @@ export default function KanbanBoard() {
   useEffect(() => {
     fetchOrders()
     
+    const handleSync = () => {
+      fetchOrders()
+    }
+    window.addEventListener('orders-updated', handleSync)
+
     // Configurar realtime para mantener sincronizados todos los turnos
     const channel = supabase.channel('schema-db-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
@@ -59,6 +64,7 @@ export default function KanbanBoard() {
       .subscribe()
 
     return () => {
+      window.removeEventListener('orders-updated', handleSync)
       supabase.removeChannel(channel)
     }
   }, [])
@@ -84,8 +90,13 @@ export default function KanbanBoard() {
   const activeOrders = orders.filter(o => o.status !== 'entregado')
   const deliveredOrders = orders.filter(o => o.status === 'entregado')
 
+  const getCleanObservations = (obs?: string) => {
+    if (!obs) return ''
+    return obs.replace(/^\[TELA:\s*([^[\]\n]+)\]\n?/i, '').trim()
+  }
+
   const productionOrdersWithObs = activeOrders.filter(
-    o => o.status === 'produccion' && o.observations && o.observations.trim() !== ''
+    o => o.status === 'produccion' && getCleanObservations(o.observations) !== ''
   )
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -179,7 +190,7 @@ export default function KanbanBoard() {
               <ul>
                 {productionOrdersWithObs.map(o => (
                   <li key={o.id}>
-                    <strong>{o.sku_reference || 'Sin SKU'} ({o.customers?.school_or_club || o.customers?.name}):</strong> {o.observations}
+                    <strong>{o.sku_reference || 'Sin SKU'} ({o.customers?.school_or_club || o.customers?.name}):</strong> {getCleanObservations(o.observations)}
                   </li>
                 ))}
               </ul>
@@ -384,6 +395,11 @@ export default function KanbanBoard() {
         <OrderDetailsModal 
           orderId={selectedOrderId} 
           onClose={() => setSelectedOrderId(null)} 
+          onOrderDeleted={(deletedId) => {
+            setOrders(prev => prev.filter(o => o.id !== deletedId))
+            setSelectedOrderId(null)
+          }}
+          onOrderUpdated={fetchOrders}
         />
       )}
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import catalogData from '@/data/catalogData.json'
+import { formatThousands, parseThousands } from '@/utils/formatters'
 
 type Customer = { id: string; name: string; school_or_club: string; city: string }
 type OrderItem = { id: string; player_name: string; player_number: string; size: string; product_type: string; price: number }
@@ -23,6 +24,12 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   const [skuReference, setSkuReference] = useState('')
   const [advancePayment, setAdvancePayment] = useState(0)
   const [deliveryDate, setDeliveryDate] = useState('')
+  
+  // Tela y Observaciones Iniciales
+  const [fabricType, setFabricType] = useState('Montelín')
+  const [fabricCustomDesc, setFabricCustomDesc] = useState('')
+  const [fabricMeters, setFabricMeters] = useState('')
+  const [initialObservations, setInitialObservations] = useState('')
   
   // Lista de Jugadores (Roster)
   const [items, setItems] = useState<OrderItem[]>([])
@@ -229,6 +236,18 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
       finalCustomerId = cData.id
     }
 
+    let fabricTag = ''
+    if (fabricType === 'Otros') {
+      fabricTag = `[TELA: Otros${fabricCustomDesc ? ` - ${fabricCustomDesc.trim()}` : ''}]`
+    } else if (fabricType) {
+      fabricTag = `[TELA: ${fabricType}]`
+    }
+
+    const cleanObs = initialObservations.trim()
+    const fullObservations = fabricTag
+      ? (cleanObs ? `${fabricTag}\n${cleanObs}` : fabricTag)
+      : cleanObs
+
     // Crear el Pedido Maestro
     const { data: orderData, error: orderError } = await supabase.from('orders').insert([{
       customer_id: finalCustomerId,
@@ -237,7 +256,9 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
       total_price: getTotalPrice(),
       advance_payment: advancePayment,
       delivery_date: deliveryDate || null,
-      created_by: user?.id
+      created_by: user?.id,
+      observations: fullObservations,
+      fabric_meters: fabricMeters ? parseFloat(fabricMeters) : 0
     }]).select().single()
 
     if (orderError) { setError('Error creando pedido maestro'); setLoading(false); return }
@@ -256,6 +277,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
 
     setLoading(false)
     if (!itemsError) {
+      window.dispatchEvent(new CustomEvent('orders-updated'))
       onCreated()
       onClose()
     } else {
@@ -461,27 +483,95 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                   </div>
                   <div className="f-row advance">
                     <label>Abono Cliente:</label>
-                    <input 
-                      type="number" 
-                      min="0"
-                      value={advancePayment || ''} 
-                      onChange={e => setAdvancePayment(Number(e.target.value))}
-                      placeholder="Ej: 500000"
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', background: '#111', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '0 0.5rem' }}>
+                      <span style={{ color: 'var(--brand-primary)', fontWeight: 'bold' }}>$</span>
+                      <input 
+                        type="text" 
+                        inputMode="numeric"
+                        value={formatThousands(advancePayment || '')} 
+                        onChange={e => setAdvancePayment(parseThousands(e.target.value))}
+                        placeholder="0"
+                        style={{ border: 'none', background: 'transparent', outline: 'none', color: 'white', padding: '0.5rem', width: '100%', fontSize: '1rem', fontWeight: 'bold' }}
+                      />
+                    </div>
                   </div>
                   <div className="f-row balance">
                     <span>Saldo Pendiente:</span>
                     <strong className="text-red">${(getTotalPrice() - advancePayment).toLocaleString('es-CO')}</strong>
                   </div>
-                  <div className="f-row" style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
-                    <label style={{ color: '#facc15', fontWeight: 'bold' }}>📅 Fecha de Entrega Prometida:</label>
-                    <input 
-                      type="date" 
-                      required
-                      value={deliveryDate} 
-                      onChange={e => setDeliveryDate(e.target.value)}
-                      style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(250,204,21,0.5)', padding: '0.5rem', color: 'white', borderRadius: '4px', outline: 'none' }}
-                    />
+
+                  {/* Configuración de Tela y Entrega */}
+                  <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <div>
+                      <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>
+                        🧵 Tipo de Tela:
+                      </label>
+                      <select 
+                        value={fabricType} 
+                        onChange={e => setFabricType(e.target.value)}
+                        style={{ width: '100%', padding: '0.5rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px' }}
+                      >
+                        <option value="Montelín">Montelín</option>
+                        <option value="Cerro">Cerro</option>
+                        <option value="Súper Nylon">Súper Nylon</option>
+                        <option value="Otros">Otros (Personalizada)</option>
+                      </select>
+                    </div>
+
+                    {fabricType === 'Otros' && (
+                      <div>
+                        <label style={{ color: '#facc15', fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>
+                          Descripción de la Tela:
+                        </label>
+                        <input 
+                          type="text" 
+                          value={fabricCustomDesc}
+                          onChange={e => setFabricCustomDesc(e.target.value)}
+                          placeholder="Ej: Lafayette, Antifluido, Microfibra..."
+                          style={{ width: '100%', padding: '0.5rem', background: '#111', color: 'white', border: '1px solid #facc15', borderRadius: '4px' }}
+                        />
+                      </div>
+                    )}
+
+                    <div>
+                      <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>
+                        Metros de Tela Estimados (Corel):
+                      </label>
+                      <input 
+                        type="number" 
+                        step="0.01"
+                        value={fabricMeters}
+                        onChange={e => setFabricMeters(e.target.value)}
+                        placeholder="Ej: 25.5 (opcional)"
+                        style={{ width: '100%', padding: '0.5rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>
+                        Novedades u Observaciones Iniciales:
+                      </label>
+                      <input 
+                        type="text" 
+                        value={initialObservations}
+                        onChange={e => setInitialObservations(e.target.value)}
+                        placeholder="Ej: Cuello en V, corte ceñido..."
+                        style={{ width: '100%', padding: '0.5rem', background: '#111', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ color: '#facc15', fontWeight: 'bold', fontSize: '0.85rem', display: 'block', marginBottom: '0.3rem' }}>
+                        📅 Fecha de Entrega Prometida:
+                      </label>
+                      <input 
+                        type="date" 
+                        required
+                        value={deliveryDate} 
+                        onChange={e => setDeliveryDate(e.target.value)}
+                        style={{ width: '100%', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(250,204,21,0.5)', padding: '0.5rem', color: 'white', borderRadius: '4px', outline: 'none' }}
+                      />
+                    </div>
                   </div>
                 </div>
 

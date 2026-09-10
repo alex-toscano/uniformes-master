@@ -94,6 +94,10 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
 
   const deliveryStatus = getDeliveryStatus()
 
+  const fabricMatch = (order.observations || '').match(/^\[TELA:\s*([^[\]\n]+)\]/i)
+  const fabricTag = fabricMatch ? fabricMatch[1].trim() : null
+  const cleanObservations = (order.observations || '').replace(/^\[TELA:\s*([^[\]\n]+)\]\n?/i, '').trim()
+
   return (
     <div 
       className={`order-card ${deliveryStatus ? deliveryStatus.class : ''}`}
@@ -115,6 +119,35 @@ export default function OrderCard({ order, onUpdateStatus, onViewDetails }: { or
       <h3 className="school-name">{order.customers?.school_or_club || 'Sin Club'}</h3>
       <p className="client-name">{order.customers?.name} • {order.customers?.city}</p>
       
+      {(fabricTag || (order.fabric_meters && order.fabric_meters > 0)) && (
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', margin: '0.3rem 0 0.5rem 0', flexWrap: 'wrap' }}>
+          {fabricTag && (
+            <span style={{ 
+              background: 'rgba(59, 130, 246, 0.15)', 
+              color: '#60a5fa', 
+              border: '1px solid rgba(59, 130, 246, 0.3)', 
+              padding: '0.15rem 0.45rem', 
+              borderRadius: '4px', 
+              fontSize: '0.72rem', 
+              fontWeight: 800 
+            }}>
+              🧵 {fabricTag}
+            </span>
+          )}
+          {order.fabric_meters ? (
+            <span style={{ color: 'var(--brand-primary)', fontSize: '0.75rem', fontWeight: 800 }}>
+              {order.fabric_meters} m
+            </span>
+          ) : null}
+        </div>
+      )}
+
+      {cleanObservations && (
+        <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderLeft: '2px solid var(--brand-primary)', padding: '0.3rem 0.5rem', borderRadius: '0 4px 4px 0', fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', margin: '0.3rem 0 0.5rem 0' }}>
+          ⚠️ {cleanObservations}
+        </div>
+      )}
+
       <div className="finance">
         <div className="finance-item">
           <span>Total:</span>
