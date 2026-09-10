@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { toast, confirmModal } from '@/context/NotificationContext'
 
 export default function MasterAdminPage() {
   const [users, setUsers] = useState<any[]>([])
@@ -51,28 +52,46 @@ export default function MasterAdminPage() {
         body: JSON.stringify(payload)
       })
       if (res.ok) {
+        toast.success(`Usuario ${editingUser ? 'actualizado' : 'creado'} correctamente.`)
         setShowModal(false)
         setEditingUser(null)
         loadUsers()
-      } else { alert('Error al guardar el usuario.') }
-    } catch (e) { alert('Error de conexión.') }
+      } else {
+        toast.error('Error al guardar el usuario.')
+      }
+    } catch (e) {
+      toast.error('Error de conexión con el servidor.')
+    }
     setLoading(false)
   }
 
   const handleDelete = async (id: string, email: string) => {
-    if (confirm(`¿Estás seguro de que quieres eliminar a ${email}?`)) {
-      setLoading(true)
-      try {
-        const res = await fetch('/api/admin/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'delete', userId: id })
-        })
-        if (res.ok) loadUsers()
-        else alert('No se pudo eliminar.')
-      } catch(e) { alert('Error de red.') }
-      setLoading(false)
+    const confirmed = await confirmModal({
+      title: 'Eliminar Usuario',
+      message: `¿Estás seguro de que quieres eliminar a ${email}?`,
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    })
+    if (!confirmed) return
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', userId: id })
+      })
+      if (res.ok) {
+        toast.success(`Usuario "${email}" eliminado correctamente.`)
+        loadUsers()
+      } else {
+        toast.error('No se pudo eliminar el usuario.')
+      }
+    } catch(e) {
+      toast.error('Error de red al eliminar.')
     }
+    setLoading(false)
   }
 
   if (authError) {

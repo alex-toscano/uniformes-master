@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { toast, confirmModal } from '@/context/NotificationContext'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
@@ -154,19 +155,34 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
   }
 
   const handleDeleteItem = async (itemId: string) => {
-    if (!confirm('¿Seguro que deseas eliminar esta prenda del pedido?')) return
+    const confirmed = await confirmModal({
+      title: 'Eliminar Prenda',
+      message: '¿Seguro que deseas eliminar esta prenda del pedido?',
+      confirmText: 'Sí, eliminar',
+      type: 'danger'
+    })
+    if (!confirmed) return
 
     const { error } = await supabase.from('order_items').delete().eq('id', itemId)
     if (!error) {
       const newList = items.filter(i => i.id !== itemId)
       setItems(newList)
       await syncOrderTotal(newList)
+      toast.success('Prenda eliminada del pedido')
+    } else {
+      toast.error(`Error al eliminar prenda: ${error.message}`)
     }
   }
 
   const handleDeleteOrder = async () => {
     const sku = order?.sku_reference || 'este pedido'
-    const confirmed = window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el pedido "${sku}"?\n\nEsta acción borrará el pedido maestro y toda su nómina de jugadores en la base de datos. No se puede deshacer.`)
+    const confirmed = await confirmModal({
+      title: 'Eliminar Pedido',
+      message: `¿Estás seguro de que deseas eliminar permanentemente el pedido "${sku}"?\n\nEsta acción borrará el pedido maestro y toda su nómina de jugadores en la base de datos. No se puede deshacer.`,
+      confirmText: 'Sí, eliminar definitivamente',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    })
     if (!confirmed) return
     
     setLoading(true)
@@ -178,6 +194,7 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
       const result = await res.json()
       
       if (res.ok && result.success) {
+        toast.success(`Pedido "${sku}" eliminado correctamente.`)
         window.dispatchEvent(new CustomEvent('orders-updated'))
         onOrderDeleted?.(orderId)
         onOrderUpdated?.()
@@ -187,17 +204,18 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
         await supabase.from('order_items').delete().eq('order_id', orderId)
         const { error } = await supabase.from('orders').delete().eq('id', orderId)
         if (!error) {
+          toast.success(`Pedido "${sku}" eliminado correctamente.`)
           window.dispatchEvent(new CustomEvent('orders-updated'))
           onOrderDeleted?.(orderId)
           onOrderUpdated?.()
           onClose()
         } else {
-          alert(`Error eliminando el pedido: ${result.error || error.message}`)
+          toast.error(`Error eliminando el pedido: ${result.error || error.message}`)
           setLoading(false)
         }
       }
     } catch (err: any) {
-      alert(`Error al eliminar: ${err?.message || 'Error desconocido'}`)
+      toast.error(`Error al eliminar: ${err?.message || 'Error desconocido'}`)
       setLoading(false)
     }
   }
@@ -222,11 +240,11 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     }).eq('id', orderId)
     
     if (!error) {
-      alert('Observaciones y consumo de tela guardados')
+      toast.success('Observaciones y consumo de tela guardados')
       window.dispatchEvent(new CustomEvent('orders-updated'))
       onOrderUpdated?.()
     } else {
-      alert('Error al guardar datos')
+      toast.error('Error al guardar datos')
     }
     setIsSavingMeta(false)
   }
@@ -247,7 +265,7 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     text += `*VALOR TOTAL:* $${order.total_price.toLocaleString('es-CO')}\n`
     
     navigator.clipboard.writeText(text)
-    alert('✅ Pedido copiado al portapapeles. ¡Abre WhatsApp y pégalo!')
+    toast.success('Pedido copiado al portapapeles. ¡Abre WhatsApp y pégalo!')
   }
 
   const handleDownloadPDF = async () => {

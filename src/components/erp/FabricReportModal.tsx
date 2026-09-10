@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { formatThousands, parseThousands } from '@/utils/formatters'
+import { toast } from '@/context/NotificationContext'
 
 type Order = {
   id: string
@@ -210,7 +211,7 @@ export default function FabricReportModal({ customerId, customerName, isGlobal =
     text += `Total Prendas Fabricadas: ${totalGarments} uds\n`
 
     navigator.clipboard.writeText(text)
-    alert('✅ Resumen de telas y liquidación copiado al portapapeles para WhatsApp')
+    toast.success('Resumen de telas y liquidación copiado al portapapeles para WhatsApp')
   }
 
   return (

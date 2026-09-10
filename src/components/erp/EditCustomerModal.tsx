@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { toast } from '@/context/NotificationContext'
 
 type Customer = {
   id: string
@@ -40,10 +41,11 @@ export default function EditCustomerModal({ customer, onClose, onUpdated }: { cu
       
     setSaving(false)
     if (!error) {
+      toast.success(`Cliente "${formData.name}" actualizado correctamente.`)
       onUpdated()
       onClose()
     } else {
-      alert('Error al guardar los cambios.')
+      toast.error(`Error al guardar los cambios: ${error.message || 'Error desconocido'}`)
     }
   }
 

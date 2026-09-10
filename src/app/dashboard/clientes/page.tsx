@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import PricingModal from '@/components/erp/PricingModal'
 import EditCustomerModal from '@/components/erp/EditCustomerModal'
 import FabricReportModal from '@/components/erp/FabricReportModal'
+import CreateCustomerModal from '@/components/erp/CreateCustomerModal'
 
 type Customer = {
   id: string
@@ -23,6 +24,7 @@ export default function CRMPage() {
   const [search, setSearch] = useState('')
   const supabase = createClient()
   
+  const [showCreateCustomer, setShowCreateCustomer] = useState(false)
   const [pricingCustomer, setPricingCustomer] = useState<{id: string, name: string} | null>(null)
   const [editCustomer, setEditCustomer] = useState<Customer | null>(null)
   const [reportCustomer, setReportCustomer] = useState<{id: string, name: string} | null>(null)
@@ -84,6 +86,20 @@ export default function CRMPage() {
         </div>
         
         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setShowCreateCustomer(true)}
+            className="btn-primary"
+            style={{
+              padding: '0.65rem 1.25rem',
+              fontSize: '0.85rem',
+              fontWeight: 900,
+              letterSpacing: '0.5px',
+              borderRadius: '6px'
+            }}
+          >
+            + Nuevo Cliente
+          </button>
+
           {isGerente && (
             <button
               onClick={() => setShowGlobalFabricReport(true)}
@@ -212,6 +228,13 @@ export default function CRMPage() {
           customerId={pricingCustomer.id}
           customerName={pricingCustomer.name}
           onClose={() => setPricingCustomer(null)}
+        />
+      )}
+
+      {showCreateCustomer && (
+        <CreateCustomerModal
+          onClose={() => setShowCreateCustomer(false)}
+          onCreated={fetchCustomers}
         />
       )}
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { toast, confirmModal } from '@/context/NotificationContext'
 
 interface PersonnelUser {
   id: string
@@ -207,16 +208,22 @@ export default function SuperAdminDashboard() {
   // Toggle Block (Ban / Unban)
   const handleToggleBlock = async (user: PersonnelUser) => {
     if (user.id === currentUserId) {
-      alert('No puedes bloquear tu propia cuenta de Super Administrador.')
+      toast.error('No puedes bloquear tu propia cuenta de Super Administrador.')
       return
     }
 
     const isBlocking = !user.is_banned
     const confirmText = isBlocking
-      ? `¿Estás seguro de BLOQUEAR el acceso a ${user.full_name || user.email}?\n\nEl colaborador no podrá ingresar al ERP ni consultar datos del negocio (ideal para bajas o renuncias).`
+      ? `¿Estás seguro de BLOQUEAR el acceso a ${user.full_name || user.email}?\n\nEl colaborador no podrá ingresar al ERP ni consultar datos del negocio.`
       : `¿Deseas REACTIVAR el acceso a ${user.full_name || user.email}?`
 
-    if (!confirm(confirmText)) return
+    const confirmed = await confirmModal({
+      title: isBlocking ? 'Bloquear Acceso' : 'Reactivar Acceso',
+      message: confirmText,
+      confirmText: isBlocking ? 'Sí, bloquear' : 'Sí, reactivar',
+      type: isBlocking ? 'warning' : 'primary'
+    })
+    if (!confirmed) return
 
     setActionLoading(true)
     try {
@@ -274,12 +281,19 @@ export default function SuperAdminDashboard() {
   // Delete User
   const handleDeleteUser = async (user: PersonnelUser) => {
     if (user.id === currentUserId) {
-      alert('No puedes eliminar tu propia cuenta de Super Administrador.')
+      toast.error('No puedes eliminar tu propia cuenta de Super Administrador.')
       return
     }
 
-    const confirmText = `⚠️ ATENCIÓN: ¿Seguro que deseas ELIMINAR DEFINITIVAMENTE la cuenta de ${user.full_name} (${user.email})?\n\nSi solo renunció o se fue, te recomendamos usar la opción "Bloquear Acceso" en lugar de eliminar.`
-    if (!confirm(confirmText)) return
+    const confirmText = `¿Seguro que deseas ELIMINAR DEFINITIVAMENTE la cuenta de ${user.full_name} (${user.email})?\n\nEsta acción no se puede deshacer. Si solo renunció, es recomendable usar "Bloquear Acceso".`
+    const confirmed = await confirmModal({
+      title: 'Eliminar Usuario',
+      message: confirmText,
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    })
+    if (!confirmed) return
 
     setActionLoading(true)
     try {

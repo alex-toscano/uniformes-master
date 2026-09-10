@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import OrderCard, { Order } from './OrderCard'
 import OrderDetailsModal from './OrderDetailsModal'
+import { toast, confirmModal } from '@/context/NotificationContext'
 
 const ACTIVE_COLUMNS = [
   { id: 'cotizacion', label: 'Cotización', icon: '📋' },
@@ -369,9 +370,16 @@ export default function KanbanBoard() {
                             </button>
 
                             <button 
-                              onClick={() => {
-                                if (confirm(`¿Regresar el pedido ${order.sku_reference} al tablero activo de Control de Calidad?`)) {
+                              onClick={async () => {
+                                const confirmed = await confirmModal({
+                                  title: 'Devolver Pedido',
+                                  message: `¿Regresar el pedido ${order.sku_reference || ''} al tablero activo de Control de Calidad?`,
+                                  confirmText: 'Sí, regresar pedido',
+                                  type: 'primary'
+                                })
+                                if (confirmed) {
                                   updateOrderStatus(order.id, 'control_calidad')
+                                  toast.success(`Pedido ${order.sku_reference || ''} devuelto a Control de Calidad.`)
                                 }
                               }}
                               className="btn-delivered-restore"

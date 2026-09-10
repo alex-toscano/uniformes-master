@@ -7,6 +7,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import FabricReportModal from '@/components/erp/FabricReportModal'
 import { formatThousands, parseThousands } from '@/utils/formatters'
+import { toast, confirmModal } from '@/context/NotificationContext'
 
 type Supplier = { id: string; name: string; phone: string; service_type: string; created_at: string }
 type Employee = { id: string; name: string; role: string; phone: string; created_at: string }
@@ -234,7 +235,7 @@ export default function FinanzasDashboard() {
 
     const amountToAdd = parseThousands(newPaymentAmount)
     if (isNaN(amountToAdd) || amountToAdd <= 0) {
-      alert('Por favor ingresa un monto válido a abonar.')
+      toast.warning('Por favor ingresa un monto válido a abonar.')
       return
     }
 
@@ -242,7 +243,14 @@ export default function FinanzasDashboard() {
     const newTotalAdvance = currentAdvance + amountToAdd
 
     if (newTotalAdvance > selectedOrderForPayment.total_price) {
-      if (!confirm(`El abono total ($${newTotalAdvance.toLocaleString('es-CO')}) supera el valor del pedido ($${selectedOrderForPayment.total_price.toLocaleString('es-CO')}). ¿Deseas continuar?`)) {
+      const confirmed = await confirmModal({
+        title: 'Monto de Abono Superior',
+        message: `El abono total ($${newTotalAdvance.toLocaleString('es-CO')}) supera el valor total del pedido ($${selectedOrderForPayment.total_price.toLocaleString('es-CO')}). ¿Deseas continuar?`,
+        confirmText: 'Sí, continuar',
+        cancelText: 'Cancelar',
+        type: 'warning'
+      })
+      if (!confirmed) {
         return
       }
     }
@@ -256,12 +264,13 @@ export default function FinanzasDashboard() {
     setIsUpdatingPayment(false)
 
     if (!error) {
+      toast.success(`Abono de $${amountToAdd.toLocaleString('es-CO')} registrado exitosamente.`)
       setShowPaymentModal(false)
       setSelectedOrderForPayment(null)
       setNewPaymentAmount('')
       loadFinancialData()
     } else {
-      alert('Error actualizando el abono del pedido.')
+      toast.error('Error actualizando el abono del pedido.')
     }
   }
 
@@ -376,11 +385,12 @@ export default function FinanzasDashboard() {
 
     const { error } = await supabase.from('expenses').insert([expenseData])
     if (!error) {
+      toast.success('Gasto registrado exitosamente.')
       setShowExpenseModal(false)
       setNewExpense({ category: 'Telas e Insumos', amount: '', description: '', supplier_id: '', employee_id: '' })
       loadFinancialData()
     } else {
-      alert('Error registrando el gasto. Verifica la base de datos.')
+      toast.error('Error registrando el gasto. Verifica la base de datos.')
     }
   }
 
@@ -388,9 +398,12 @@ export default function FinanzasDashboard() {
     e.preventDefault()
     const { error } = await supabase.from('suppliers').insert([newSupplier])
     if (!error) {
+      toast.success(`Proveedor "${newSupplier.name}" registrado exitosamente.`)
       setShowSupplierModal(false)
       setNewSupplier({ name: '', phone: '', service_type: '' })
       loadSuppliersAndEmployees()
+    } else {
+      toast.error(`Error al registrar proveedor: ${error.message}`)
     }
   }
 
@@ -398,16 +411,23 @@ export default function FinanzasDashboard() {
     e.preventDefault()
     const { error } = await supabase.from('employees').insert([newEmployee])
     if (!error) {
+      toast.success(`Colaborador "${newEmployee.name}" registrado exitosamente.`)
       setShowEmployeeModal(false)
       setNewEmployee({ name: '', phone: '', role: '' })
       loadSuppliersAndEmployees()
+    } else {
+      toast.error(`Error al registrar colaborador: ${error.message}`)
     }
   }
 
   const handleDeleteEmployee = async (id: string, name: string) => {
-    const confirmDelete = window.confirm(
-      `⚠️ ¿Estás seguro de que deseas ELIMINAR al colaborador "${name}"?\n\nEsta acción eliminará el colaborador de la lista de nómina. Los pagos ya registrados en egresos se mantendrán en el historial contable.`
-    )
+    const confirmDelete = await confirmModal({
+      title: 'Eliminar Colaborador',
+      message: `¿Estás seguro de que deseas ELIMINAR al colaborador "${name}"?\n\nEsta acción eliminará el colaborador de la lista de nómina. Los pagos ya registrados en egresos se mantendrán en el historial contable.`,
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    })
     if (!confirmDelete) return
 
     try {
@@ -416,33 +436,37 @@ export default function FinanzasDashboard() {
       
       const { error } = await supabase.from('employees').delete().eq('id', id)
       if (!error) {
-        alert(`Colaborador "${name}" eliminado correctamente.`)
+        toast.success(`Colaborador "${name}" eliminado correctamente.`)
         loadSuppliersAndEmployees()
       } else {
-        alert(`No se pudo eliminar: ${error.message}`)
+        toast.error(`No se pudo eliminar: ${error.message}`)
       }
     } catch (err: any) {
-      alert(`Error al eliminar: ${err?.message || 'Error inesperado'}`)
+      toast.error(`Error al eliminar: ${err?.message || 'Error inesperado'}`)
     }
   }
 
   const handleDeleteSupplier = async (id: string, name: string) => {
-    const confirmDelete = window.confirm(
-      `⚠️ ¿Estás seguro de que deseas ELIMINAR al proveedor "${name}"?\n\nLos egresos previamente registrados seguirán apareciendo en el balance.`
-    )
+    const confirmDelete = await confirmModal({
+      title: 'Eliminar Proveedor',
+      message: `¿Estás seguro de que deseas ELIMINAR al proveedor "${name}"?\n\nLos egresos previamente registrados seguirán apareciendo en el balance.`,
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    })
     if (!confirmDelete) return
 
     try {
       await supabase.from('expenses').update({ supplier_id: null }).eq('supplier_id', id)
       const { error } = await supabase.from('suppliers').delete().eq('id', id)
       if (!error) {
-        alert(`Proveedor "${name}" eliminado correctamente.`)
+        toast.success(`Proveedor "${name}" eliminado correctamente.`)
         loadSuppliersAndEmployees()
       } else {
-        alert(`No se pudo eliminar: ${error.message}`)
+        toast.error(`No se pudo eliminar: ${error.message}`)
       }
     } catch (err: any) {
-      alert(`Error al eliminar: ${err?.message || 'Error inesperado'}`)
+      toast.error(`Error al eliminar: ${err?.message || 'Error inesperado'}`)
     }
   }
 

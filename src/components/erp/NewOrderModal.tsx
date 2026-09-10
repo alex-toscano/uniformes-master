@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import catalogData from '@/data/catalogData.json'
 import { formatThousands, parseThousands } from '@/utils/formatters'
+import { toast, promptModal } from '@/context/NotificationContext'
 
 type Customer = { id: string; name: string; school_or_club: string; city: string }
 type OrderItem = { id: string; player_name: string; player_number: string; size: string; product_type: string; price: number }
@@ -149,8 +150,15 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     return maxOverall === 0 ? (parseInt(newItem.number) || 1) : maxOverall + 1
   }
 
-  const handleAutoGenerate = () => {
-    const qtyStr = window.prompt('¿Cuántos números consecutivos quieres generar?', '10')
+  const handleAutoGenerate = async () => {
+    const qtyStr = await promptModal({
+      title: 'Generar Números Consecutivos',
+      message: '¿Cuántos números consecutivos quieres generar para la nómina?',
+      defaultValue: '10',
+      inputType: 'number',
+      confirmText: 'Generar',
+      cancelText: 'Cancelar'
+    })
     if (!qtyStr) return
     const count = parseInt(qtyStr)
     if (isNaN(count) || count <= 0) return
@@ -172,6 +180,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     
     setItems(prev => [...prev, ...generated])
     setNewItem(prev => ({ ...prev, number: String(startNum + count) }))
+    toast.success(`Se generaron ${count} números consecutivos.`)
   }
 
   const removeItem = (id: string) => {
@@ -203,7 +212,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     }
     
     navigator.clipboard.writeText(text)
-    alert('✅ Cotización copiada al portapapeles. ¡Abre WhatsApp y pégala!')
+    toast.success('Cotización copiada al portapapeles. ¡Abre WhatsApp y pégala!')
   }
 
   const getTotalPrice = () => items.reduce((acc, curr) => acc + curr.price, 0)

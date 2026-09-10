@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { toast, confirmModal } from '@/context/NotificationContext'
 
 type PricingRule = {
   id?: string
@@ -83,9 +84,17 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
     setPricing(defaults)
   }
 
-  const clearPrices = () => {
-    if (confirm('¿Deseas vaciar los precios personalizados de este cliente? El sistema volverá a usar los precios base predeterminados.')) {
+  const clearPrices = async () => {
+    const confirmed = await confirmModal({
+      title: 'Vaciar Precios Especiales',
+      message: '¿Deseas vaciar los precios personalizados de este cliente? El sistema volverá a usar los precios base predeterminados.',
+      confirmText: 'Sí, restablecer base',
+      cancelText: 'Cancelar',
+      type: 'warning'
+    })
+    if (confirmed) {
       setPricing([])
+      toast.info('Precios personalizados vaciados. Se usarán los precios base.')
     }
   }
 
@@ -119,10 +128,10 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
         if (error) throw error
       }
 
-      alert(`✅ Precios especiales guardados exitosamente para "${customerName}".`)
+      toast.success(`Precios especiales guardados exitosamente para "${customerName}".`)
       onClose()
     } catch (err: any) {
-      alert(`Error al guardar precios: ${err.message || 'Error desconocido'}`)
+      toast.error(`Error al guardar precios: ${err.message || 'Error desconocido'}`)
     } finally {
       setSaving(false)
     }
