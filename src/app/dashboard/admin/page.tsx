@@ -4,10 +4,12 @@ import { useState } from 'react'
 import KanbanBoard from '@/components/erp/KanbanBoard'
 import NewOrderModal from '@/components/erp/NewOrderModal'
 import FabricReportModal from '@/components/erp/FabricReportModal'
+import ProductCatalogModal from '@/components/erp/ProductCatalogModal'
 
 export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isFabricReportOpen, setIsFabricReportOpen] = useState(false)
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false)
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -82,6 +84,28 @@ export default function AdminDashboard() {
             💰 Panel Financiero
           </a>
 
+          <button
+            onClick={() => setIsCatalogOpen(true)}
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              color: '#fff',
+              fontWeight: 800,
+              padding: '0.85rem 1.4rem',
+              borderRadius: '6px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            🏷️ Catálogo y Precios
+          </button>
+
           <button 
             onClick={() => setIsModalOpen(true)}
             style={{
@@ -119,6 +143,12 @@ export default function AdminDashboard() {
         <FabricReportModal 
           isGlobal={true}
           onClose={() => setIsFabricReportOpen(false)} 
+        />
+      )}
+
+      {isCatalogOpen && (
+        <ProductCatalogModal
+          onClose={() => setIsCatalogOpen(false)}
         />
       )}
     </div>

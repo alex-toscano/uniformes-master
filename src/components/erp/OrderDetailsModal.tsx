@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import { toast, confirmModal } from '@/context/NotificationContext'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { BaseProduct, fetchBaseProducts, getBasePrice, extractPlayerNameAndObs, formatPlayerItem } from '@/utils/productCatalog'
 
 type Pricing = { product_type: string; size_category: string; price: number }
 
@@ -21,10 +22,12 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
   const [order, setOrder] = useState<any>(null)
   const [items, setItems] = useState<any[]>([])
   const [customPricing, setCustomPricing] = useState<Pricing[]>([])
+  const [baseProducts, setBaseProducts] = useState<BaseProduct[]>([])
+  const [pantalonetaType, setPantalonetaType] = useState<'Licrada' | 'Impermeable'>('Licrada')
   const [loading, setLoading] = useState(true)
 
   // Nuevo item temporal
-  const [newItem, setNewItem] = useState({ name: '', number: '', size: 'M', type: 'Uniforme' })
+  const [newItem, setNewItem] = useState({ name: '', number: '', size: 'M', type: 'Uniforme', observations: '' })
   const [isAdding, setIsAdding] = useState(false)
   
   // Observaciones y tela
@@ -82,7 +85,11 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
       setCustomPricing(pricingData || [])
     }
 
-    // 3. Fetch Items
+    // 3. Fetch Base Catalog
+    const baseProds = await fetchBaseProducts(supabase)
+    setBaseProducts(baseProds)
+
+    // 4. Fetch Items
     const { data: itemsData } = await supabase
       .from('order_items')
       .select('*')
@@ -100,18 +107,9 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     else if (['12','14','16'].includes(size)) sizeCategory = 'Juvenil'
     
     const custom = customPricing.find(p => p.product_type === type && p.size_category === sizeCategory)
-    if (custom) return custom.price
+    if (custom && custom.price > 0) return custom.price
 
-    if (type === 'Uniforme') {
-      if (sizeCategory === 'Infantil') return 40000
-      if (sizeCategory === 'Juvenil') return 43000
-      return 45000 
-    }
-    if (type === 'Chaqueta') return 65000
-    if (type === 'Medias') return 12000
-    if (type === 'Pantaloneta') return 20000
-    
-    return 35000
+    return getBasePrice(baseProducts, type, sizeCategory)
   }
 
   const syncOrderTotal = async (newItemsList: any[]) => {
@@ -131,14 +129,26 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     if (!newItem.name || !newItem.size) return
     setIsAdding(true)
 
-    const price = calculatePrice(newItem.size, newItem.type)
+    let finalType = newItem.type
+    let finalObs = newItem.observations ? newItem.observations.trim() : ''
+
+    if (newItem.type === 'Pantaloneta') {
+      finalType = `Pantaloneta ${pantalonetaType}`
+    } else if (newItem.type === 'Uniforme') {
+      const pNote = `Pantaloneta ${pantalonetaType}`
+      if (!finalObs.toLowerCase().includes('licrada') && !finalObs.toLowerCase().includes('impermeable')) {
+        finalObs = finalObs ? `${finalObs} • ${pNote}` : pNote
+      }
+    }
+
+    const price = calculatePrice(newItem.size, finalType)
     
     const itemToInsert = {
       order_id: orderId,
-      player_name: newItem.name,
+      player_name: formatPlayerItem(newItem.name, finalObs),
       player_number: newItem.number,
       size: newItem.size,
-      product_type: newItem.type,
+      product_type: finalType,
       calculated_price: price
     }
 
@@ -148,7 +158,11 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
       const newList = [...items, data]
       setItems(newList)
       await syncOrderTotal(newList)
-      setNewItem({ name: '', number: '', size: newItem.size, type: newItem.type })
+      const nextNum = parseInt(newItem.number) ? String(parseInt(newItem.number) + 1) : ''
+      setNewItem({ name: '', number: nextNum, size: newItem.size, type: newItem.type, observations: '' })
+      toast.success('Prenda agregada al pedido')
+    } else if (error) {
+      toast.error(`Error agregando prenda: ${error.message}`)
     }
     
     setIsAdding(false)
@@ -259,13 +273,19 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     text += `*DETALLE DEL PEDIDO:*\n\n`
     
     items.forEach((item, idx) => {
-      text += `${idx + 1}. #${item.player_number} | ${item.player_name?.toUpperCase() || 'SIN NOMBRE'} | Talla ${item.size} | ${item.product_type} - $${item.calculated_price.toLocaleString('es-CO')}\n\n`
+      const parsed = extractPlayerNameAndObs(item.player_name)
+      const obsPart = parsed.observations ? ` [Obs: ${parsed.observations}]` : ''
+      text += `${idx + 1}. #${item.player_number} | ${parsed.name?.toUpperCase() || 'SIN NOMBRE'} | Talla ${item.size} | ${item.product_type}${obsPart} - $${item.calculated_price.toLocaleString('es-CO')}\n\n`
     })
     
-    text += `*VALOR TOTAL:* $${order.total_price.toLocaleString('es-CO')}\n`
+    text += `\n*VALOR TOTAL:* $${order.total_price.toLocaleString('es-CO')}\n`
+    if (order.advance_payment > 0) {
+      text += `Abono: $${order.advance_payment.toLocaleString('es-CO')}\n`
+      text += `Saldo Pendiente: $${(order.total_price - order.advance_payment).toLocaleString('es-CO')}\n`
+    }
     
     navigator.clipboard.writeText(text)
-    toast.success('Pedido copiado al portapapeles. ¡Abre WhatsApp y pégalo!')
+    toast.success('Pedido copiado al portapapeles. ¡Abre WhatsApp y pégala!')
   }
 
   const handleDownloadPDF = async () => {
@@ -358,18 +378,22 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
     doc.text(`${today}`, 110, 88)
 
     // --- TABLA DE ITEMS ---
-    const tableData = items.map((item, idx) => [
-      (idx + 1).toString(),
-      `#${item.player_number}`,
-      item.player_name?.toUpperCase() || 'SIN NOMBRE',
-      `Talla ${item.size}`,
-      item.product_type,
-      `$${item.calculated_price.toLocaleString('es-CO')}`
-    ])
+    const tableData = items.map((item, idx) => {
+      const parsed = extractPlayerNameAndObs(item.player_name)
+      return [
+        (idx + 1).toString(),
+        `#${item.player_number}`,
+        parsed.name?.toUpperCase() || 'SIN NOMBRE',
+        parsed.observations || '-',
+        `Talla ${item.size}`,
+        item.product_type,
+        `$${item.calculated_price.toLocaleString('es-CO')}`
+      ]
+    })
 
     autoTable(doc, {
       startY: 105,
-      head: [['N°', 'NÚMERO', 'NOMBRE', 'TALLA', 'TIPO', 'PRECIO']],
+      head: [['N°', 'NÚMERO', 'NOMBRE', 'OBSERVACIONES', 'TALLA', 'TIPO', 'PRECIO']],
       body: tableData,
       theme: 'plain',
       headStyles: { 
@@ -380,9 +404,9 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
         cellPadding: 4
       },
       bodyStyles: {
-        fontSize: 9,
+        fontSize: 8,
         textColor: [0, 0, 0],
-        cellPadding: 4
+        cellPadding: 3
       },
       alternateRowStyles: {
         fillColor: [249, 250, 251] // #f9fafb
@@ -578,23 +602,49 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
                       <input 
                         type="text" 
                         placeholder="Número" 
-                        style={{ width: '80px' }}
+                        style={{ width: '70px' }}
                         value={newItem.number} 
                         onChange={e => setNewItem({...newItem, number: e.target.value})}
                       />
-                      <select value={newItem.size} onChange={e => setNewItem({...newItem, size: e.target.value})}>
+                      <select value={newItem.size} onChange={e => setNewItem({...newItem, size: e.target.value})} style={{ width: '85px' }}>
                         <optgroup label="Infantil"><option>4</option><option>6</option><option>8</option><option>10</option></optgroup>
                         <optgroup label="Juvenil"><option>12</option><option>14</option><option>16</option></optgroup>
                         <optgroup label="Adulto"><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></optgroup>
                       </select>
                       <select value={newItem.type} onChange={e => setNewItem({...newItem, type: e.target.value})}>
-                        <option>Uniforme</option>
-                        <option>Chaqueta</option>
-                        <option>Medias</option>
-                        <option>Pantaloneta</option>
+                        {baseProducts.length > 0 ? (
+                          baseProducts.map(p => (
+                            <option key={p.name} value={p.name}>{p.name}</option>
+                          ))
+                        ) : (
+                          <>
+                            <option>Uniforme</option>
+                            <option>Chaqueta</option>
+                            <option>Medias</option>
+                            <option>Pantaloneta</option>
+                          </>
+                        )}
                       </select>
+                      {(newItem.type === 'Uniforme' || newItem.type.toLowerCase().includes('pantaloneta')) && (
+                        <select 
+                          value={pantalonetaType} 
+                          onChange={e => setPantalonetaType(e.target.value as 'Licrada' | 'Impermeable')}
+                          style={{ border: '1px solid #d4ff00', color: '#d4ff00', fontWeight: 'bold' }}
+                          title="Tipo de Pantaloneta"
+                        >
+                          <option value="Licrada">Pant. Licrada</option>
+                          <option value="Impermeable">Pant. Impermeable</option>
+                        </select>
+                      )}
+                      <input 
+                        type="text" 
+                        placeholder="Observaciones (ej. Manga larga, Cuello V)" 
+                        value={newItem.observations} 
+                        onChange={e => setNewItem({...newItem, observations: e.target.value})}
+                        style={{ flex: 1.5, minWidth: '160px' }}
+                      />
                       <button type="submit" className="btn-add" disabled={isAdding}>
-                        {isAdding ? '...' : 'Añadir'}
+                        {isAdding ? '...' : '+ Añadir'}
                       </button>
                     </form>
                   </div>
@@ -607,23 +657,34 @@ export default function OrderDetailsModal({ orderId, onClose, onOrderDeleted, on
                           <th>#</th>
                           <th>Talla</th>
                           <th>Item</th>
+                          <th>Observaciones</th>
                           <th>Precio</th>
                           <th>Acción</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {items.map(item => (
-                          <tr key={item.id}>
-                            <td data-label="Jugador">{item.player_name}</td>
-                            <td data-label="#">{item.player_number}</td>
-                            <td data-label="Talla">{item.size}</td>
-                            <td data-label="Item">{item.product_type}</td>
-                            <td data-label="Precio" className="text-primary">${item.calculated_price.toLocaleString('es-CO')}</td>
-                            <td data-label="Acción">
-                              <button onClick={() => handleDeleteItem(item.id)} className="btn-remove">Eliminar</button>
-                            </td>
-                          </tr>
-                        ))}
+                        {items.map(item => {
+                          const parsed = extractPlayerNameAndObs(item.player_name)
+                          return (
+                            <tr key={item.id}>
+                              <td data-label="Jugador">{parsed.name || 'SIN NOMBRE'}</td>
+                              <td data-label="#">{item.player_number}</td>
+                              <td data-label="Talla">{item.size}</td>
+                              <td data-label="Item">{item.product_type}</td>
+                              <td data-label="Observaciones">
+                                {parsed.observations ? (
+                                  <span style={{ color: '#d4ff00', fontSize: '0.85rem', fontWeight: 'bold' }}>{parsed.observations}</span>
+                                ) : (
+                                  <span style={{ color: 'rgba(255,255,255,0.3)' }}>-</span>
+                                )}
+                              </td>
+                              <td data-label="Precio" className="text-primary">${item.calculated_price.toLocaleString('es-CO')}</td>
+                              <td data-label="Acción">
+                                <button onClick={() => handleDeleteItem(item.id)} className="btn-remove">Eliminar</button>
+                              </td>
+                            </tr>
+                          )
+                        })}
                       </tbody>
                     </table>
                   </div>

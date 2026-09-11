@@ -4,6 +4,13 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { toast, confirmModal } from '@/context/NotificationContext'
 import { formatThousands, parseThousands } from '@/utils/formatters'
+import {
+  BaseProduct,
+  fetchBaseProducts,
+  getBasePrice,
+  DEFAULT_CATEGORIES
+} from '@/utils/productCatalog'
+import ProductCatalogModal from '@/components/erp/ProductCatalogModal'
 
 type PricingRule = {
   id?: string
@@ -13,30 +20,45 @@ type PricingRule = {
   price: number
 }
 
-const DEFAULT_CATEGORIES = ['Infantil', 'Juvenil', 'Adulto']
-const DEFAULT_PRODUCTS = ['Uniforme', 'Chaqueta', 'Pantaloneta', 'Medias']
-
-const getDefaultPrice = (product_type: string, size_category: string): number => {
-  if (product_type === 'Uniforme') {
-    if (size_category === 'Infantil') return 40000
-    if (size_category === 'Juvenil') return 43000
-    return 45000
-  }
-  if (product_type === 'Chaqueta') return 65000
-  if (product_type === 'Medias') return 12000
-  if (product_type === 'Pantaloneta') return 20000
-  return 35000
-}
-
 export default function PricingModal({ customerId, customerName, onClose }: { customerId: string, customerName: string, onClose: () => void }) {
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [pricing, setPricing] = useState<PricingRule[]>([])
+  const [baseProducts, setBaseProducts] = useState<BaseProduct[]>([])
+  const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false)
+  const [isGerente, setIsGerente] = useState(false)
 
   useEffect(() => {
     fetchPricing()
+    loadBaseCatalog()
+    checkUserRole()
+
+    const handleCatalogUpdated = () => {
+      loadBaseCatalog()
+    }
+    window.addEventListener('catalog-updated', handleCatalogUpdated)
+    return () => window.removeEventListener('catalog-updated', handleCatalogUpdated)
   }, [customerId])
+
+  const checkUserRole = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    if (user.email === 'superadmin@mcm.com') {
+      setIsGerente(true)
+      return
+    }
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    const role = profile?.role || user.user_metadata?.role || 'vendedor'
+    if (role === 'admin' || role === 'super_admin' || user.email?.includes('admin')) {
+      setIsGerente(true)
+    }
+  }
+
+  const loadBaseCatalog = async () => {
+    const list = await fetchBaseProducts(supabase)
+    setBaseProducts(list)
+  }
 
   const fetchPricing = async () => {
     setLoading(true)
@@ -71,13 +93,13 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
 
   const fillDefaultPrices = () => {
     const defaults: PricingRule[] = []
-    for (const prod of DEFAULT_PRODUCTS) {
+    for (const prod of baseProducts) {
       for (const cat of DEFAULT_CATEGORIES) {
         defaults.push({
           customer_id: customerId,
-          product_type: prod,
+          product_type: prod.name,
           size_category: cat,
-          price: getDefaultPrice(prod, cat)
+          price: getBasePrice(baseProducts, prod.name, cat)
         })
       }
     }
@@ -151,6 +173,17 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
               Configura los precios especiales para <strong>{customerName}</strong>. Cada producto y categoría se guarda de forma totalmente independiente. Si dejas una celda vacía, el ERP usará el precio sugerido en gris.
             </p>
             <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+              {isGerente && (
+                <button 
+                  type="button" 
+                  onClick={() => setIsCatalogModalOpen(true)}
+                  className="btn-quick-action"
+                  style={{ background: 'rgba(212, 255, 0, 0.12)', color: 'var(--brand-primary)', borderColor: 'rgba(212, 255, 0, 0.3)' }}
+                  title="Crear, modificar o eliminar prendas del catálogo maestro"
+                >
+                  ⚙️ Gestionar Catálogo Base
+                </button>
+              )}
               <button 
                 type="button" 
                 onClick={fillDefaultPrices}
@@ -177,30 +210,37 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
               <table>
                 <thead>
                   <tr>
-                    <th>Producto</th>
+                    <th>Producto / Prenda</th>
                     {DEFAULT_CATEGORIES.map(cat => <th key={cat}>{cat}</th>)}
                   </tr>
                 </thead>
                 <tbody>
-                  {DEFAULT_PRODUCTS.map(prod => (
-                    <tr key={prod}>
-                      <td className="product-name">{prod}</td>
+                  {baseProducts.map(prod => (
+                    <tr key={prod.name}>
+                      <td className="product-name">{prod.name}</td>
                       {DEFAULT_CATEGORIES.map(cat => (
-                        <td key={`${prod}-${cat}`}>
+                        <td key={`${prod.name}-${cat}`}>
                           <div className="input-money">
                             <span>$</span>
                             <input 
                               type="text"
                               inputMode="numeric"
-                              placeholder={formatThousands(getDefaultPrice(prod, cat))}
-                              value={getPrice(prod, cat)}
-                              onChange={(e) => handlePriceChange(prod, cat, e.target.value)}
+                              placeholder={formatThousands(getBasePrice(baseProducts, prod.name, cat))}
+                              value={getPrice(prod.name, cat)}
+                              onChange={(e) => handlePriceChange(prod.name, cat, e.target.value)}
                             />
                           </div>
                         </td>
                       ))}
                     </tr>
                   ))}
+                  {baseProducts.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.5)' }}>
+                        No hay prendas configuradas en el catálogo.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -213,6 +253,12 @@ export default function PricingModal({ customerId, customerName, onClose }: { cu
             {saving ? 'Guardando...' : 'Guardar Precios'}
           </button>
         </div>
+
+        {isCatalogModalOpen && (
+          <ProductCatalogModal
+            onClose={() => setIsCatalogModalOpen(false)}
+          />
+        )}
       </div>
 
       <style>{`

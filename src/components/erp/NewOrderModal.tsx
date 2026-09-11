@@ -5,9 +5,10 @@ import { createClient } from '@/utils/supabase/client'
 import catalogData from '@/data/catalogData.json'
 import { formatThousands, parseThousands } from '@/utils/formatters'
 import { toast, promptModal } from '@/context/NotificationContext'
+import { BaseProduct, fetchBaseProducts, getBasePrice, formatPlayerItem } from '@/utils/productCatalog'
 
 type Customer = { id: string; name: string; school_or_club: string; city: string }
-type OrderItem = { id: string; player_name: string; player_number: string; size: string; product_type: string; price: number }
+type OrderItem = { id: string; player_name: string; player_number: string; size: string; product_type: string; price: number; observations?: string }
 type Pricing = { product_type: string; size_category: string; price: number }
 
 export default function NewOrderModal({ onClose, onCreated }: { onClose: () => void, onCreated: () => void }) {
@@ -20,6 +21,10 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   const [customers, setCustomers] = useState<Customer[]>([])
   const [selectedCustomerId, setSelectedCustomerId] = useState('')
   const [customPricing, setCustomPricing] = useState<Pricing[]>([])
+  
+  // Catálogo maestro de prendas y precios
+  const [baseProducts, setBaseProducts] = useState<BaseProduct[]>([])
+  const [pantalonetaType, setPantalonetaType] = useState<'Licrada' | 'Impermeable'>('Licrada')
   
   // Catálogo y Pedido General
   const [skuReference, setSkuReference] = useState('')
@@ -37,13 +42,28 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   const [lastConsecutive, setLastConsecutive] = useState<number | null>(null)
   
   // Formularios temporales
-  const [newItem, setNewItem] = useState({ name: '', number: '', size: 'M', type: 'Uniforme' })
+  const [newItem, setNewItem] = useState({ name: '', number: '', size: 'M', type: 'Uniforme', observations: '' })
   const [newCustomer, setNewCustomer] = useState({ name: '', club: '', city: '' })
   const [isCreatingCustomer, setIsCreatingCustomer] = useState(false)
 
   useEffect(() => {
     fetchCustomers()
+    loadBaseCatalog()
+
+    const handleCatalogUpdated = () => {
+      loadBaseCatalog()
+    }
+    window.addEventListener('catalog-updated', handleCatalogUpdated)
+    return () => window.removeEventListener('catalog-updated', handleCatalogUpdated)
   }, [])
+
+  const loadBaseCatalog = async () => {
+    const list = await fetchBaseProducts(supabase)
+    setBaseProducts(list)
+    if (list.length > 0 && !list.some(p => p.name === newItem.type)) {
+      setNewItem(prev => ({ ...prev, type: list[0].name }))
+    }
+  }
 
   const fetchCustomers = async () => {
     const { data } = await supabase.from('customers').select('*').order('name', { ascending: true })
@@ -99,35 +119,39 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     if (['4','6','8','10'].includes(size)) sizeCategory = 'Infantil'
     else if (['12','14','16'].includes(size)) sizeCategory = 'Juvenil'
     
-    // Buscar precio personalizado
+    // 1. Buscar precio personalizado específico del cliente
     const custom = customPricing.find(p => p.product_type === type && p.size_category === sizeCategory)
-    if (custom) return custom.price
+    if (custom && custom.price > 0) return custom.price
 
-    // Precios por defecto (Fallback)
-    if (type === 'Uniforme') {
-      if (sizeCategory === 'Infantil') return 40000
-      if (sizeCategory === 'Juvenil') return 43000
-      return 45000 // Adulto
-    }
-    if (type === 'Chaqueta') return 65000
-    if (type === 'Medias') return 12000
-    if (type === 'Pantaloneta') return 20000
-    
-    return 35000
+    // 2. Precios del catálogo base del Gerente
+    return getBasePrice(baseProducts, type, sizeCategory)
   }
 
   const handleAddItem = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newItem.name || !newItem.size) return
+
+    let finalType = newItem.type
+    let finalObs = newItem.observations ? newItem.observations.trim() : ''
+
+    if (newItem.type === 'Pantaloneta') {
+      finalType = `Pantaloneta ${pantalonetaType}`
+    } else if (newItem.type === 'Uniforme') {
+      const pNote = `Pantaloneta ${pantalonetaType}`
+      if (!finalObs.toLowerCase().includes('licrada') && !finalObs.toLowerCase().includes('impermeable')) {
+        finalObs = finalObs ? `${finalObs} • ${pNote}` : pNote
+      }
+    }
     
-    const price = calculatePrice(newItem.size, newItem.type)
+    const price = calculatePrice(newItem.size, finalType)
     
     setItems([...items, {
       id: Math.random().toString(),
       player_name: newItem.name,
       player_number: newItem.number,
       size: newItem.size,
-      product_type: newItem.type,
+      product_type: finalType,
+      observations: finalObs,
       price
     }])
     
@@ -135,7 +159,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     const nextNum = parseInt(newItem.number) ? String(parseInt(newItem.number) + 1) : ''
     
     // Resetear formulario rápido
-    setNewItem({ name: '', number: nextNum, size: newItem.size, type: newItem.type })
+    setNewItem({ name: '', number: nextNum, size: newItem.size, type: newItem.type, observations: '' })
     
     // Enfocar automáticamente el input de nombre para cargar rápido (como en excel)
     document.getElementById('fast_name_input')?.focus()
@@ -164,16 +188,29 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     if (isNaN(count) || count <= 0) return
 
     const startNum = getNextConsecutive()
+
+    let finalType = newItem.type
+    let autoObs = newItem.observations ? newItem.observations.trim() : ''
+
+    if (newItem.type === 'Pantaloneta') {
+      finalType = `Pantaloneta ${pantalonetaType}`
+    } else if (newItem.type === 'Uniforme') {
+      const pNote = `Pantaloneta ${pantalonetaType}`
+      if (!autoObs.toLowerCase().includes('licrada') && !autoObs.toLowerCase().includes('impermeable')) {
+        autoObs = autoObs ? `${autoObs} • ${pNote}` : pNote
+      }
+    }
     
     const generated: OrderItem[] = []
     for(let i=0; i<count; i++) {
-      const price = calculatePrice(newItem.size, newItem.type)
+      const price = calculatePrice(newItem.size, finalType)
       generated.push({
         id: Math.random().toString(),
         player_name: '',
         player_number: String(startNum + i),
         size: newItem.size,
-        product_type: newItem.type,
+        product_type: finalType,
+        observations: autoObs,
         price
       })
     }
@@ -202,7 +239,8 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
     
     text += `*DETALLE DEL PEDIDO:*\n\n`
     items.forEach((item, idx) => {
-      text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type} - $${item.price.toLocaleString('es-CO')}\n\n`
+      const obsPart = item.observations ? ` [Obs: ${item.observations}]` : ''
+      text += `${idx + 1}. #${item.player_number} | ${item.player_name || 'Sin nombre'} | Talla ${item.size} | ${item.product_type}${obsPart} - $${item.price.toLocaleString('es-CO')}\n\n`
     })
     
     text += `\n*VALOR TOTAL:* $${getTotalPrice().toLocaleString('es-CO')}\n`
@@ -272,10 +310,10 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
 
     if (orderError) { setError('Error creando pedido maestro'); setLoading(false); return }
 
-    // Guardar la Nómina (Roster)
+    // Guardar la Nómina (Roster) con observaciones formateadas
     const itemsToInsert = items.map(i => ({
       order_id: orderData.id,
-      player_name: i.player_name,
+      player_name: formatPlayerItem(i.player_name, i.observations),
       player_number: i.player_number,
       size: i.size,
       product_type: i.product_type,
@@ -396,11 +434,11 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                   <input 
                     type="text" 
                     placeholder="Número" 
-                    style={{ width: '80px' }}
+                    style={{ width: '70px' }}
                     value={newItem.number} 
                     onChange={e => setNewItem({...newItem, number: e.target.value})}
                   />
-                  <select value={newItem.size} onChange={e => setNewItem({...newItem, size: e.target.value})}>
+                  <select value={newItem.size} onChange={e => setNewItem({...newItem, size: e.target.value})} style={{ width: '85px' }}>
                     <optgroup label="Infantil">
                       <option>4</option><option>6</option><option>8</option><option>10</option>
                     </optgroup>
@@ -412,13 +450,39 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                     </optgroup>
                   </select>
                   <select value={newItem.type} onChange={e => setNewItem({...newItem, type: e.target.value})}>
-                    <option>Uniforme</option>
-                    <option>Chaqueta</option>
-                    <option>Medias</option>
-                    <option>Pantaloneta</option>
+                    {baseProducts.length > 0 ? (
+                      baseProducts.map(p => (
+                        <option key={p.name} value={p.name}>{p.name}</option>
+                      ))
+                    ) : (
+                      <>
+                        <option>Uniforme</option>
+                        <option>Chaqueta</option>
+                        <option>Medias</option>
+                        <option>Pantaloneta</option>
+                      </>
+                    )}
                   </select>
+                  {(newItem.type === 'Uniforme' || newItem.type.toLowerCase().includes('pantaloneta')) && (
+                    <select 
+                      value={pantalonetaType} 
+                      onChange={e => setPantalonetaType(e.target.value as 'Licrada' | 'Impermeable')}
+                      style={{ border: '1px solid #d4ff00', color: '#d4ff00', fontWeight: 'bold' }}
+                      title="Tipo de Pantaloneta"
+                    >
+                      <option value="Licrada">Pant. Licrada</option>
+                      <option value="Impermeable">Pant. Impermeable</option>
+                    </select>
+                  )}
+                  <input 
+                    type="text" 
+                    placeholder="Observaciones (ej. Manga larga, Cuello V)" 
+                    value={newItem.observations} 
+                    onChange={e => setNewItem({...newItem, observations: e.target.value})}
+                    style={{ flex: 1.5, minWidth: '160px' }}
+                  />
                   <button type="submit" className="btn-add" title="Agregar uno manual">+</button>
-                  <button type="button" onClick={handleAutoGenerate} className="btn-secondary" style={{ padding: '0 1rem', fontSize: '0.85rem' }} title="Autocompletar varios consecutivos">⚡ Generar</button>
+                  <button type="button" onClick={handleAutoGenerate} className="btn-secondary" style={{ padding: '0 0.8rem', fontSize: '0.85rem' }} title="Autocompletar varios consecutivos">⚡ Generar</button>
                 </form>
 
                 <div className="roster-table-container">
@@ -429,6 +493,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                         <th>#</th>
                         <th>Talla</th>
                         <th>Item</th>
+                        <th>Observaciones</th>
                         <th>Precio</th>
                         <th></th>
                       </tr>
@@ -468,7 +533,40 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
                               <optgroup label="Adulto"><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></optgroup>
                             </select>
                           </td>
-                          <td>{item.product_type}</td>
+                          <td>
+                            <select
+                              value={item.product_type}
+                              onChange={e => {
+                                const newType = e.target.value;
+                                const newPrice = calculatePrice(item.size, newType);
+                                setItems(items.map(i => i.id === item.id ? { ...i, product_type: newType, price: newPrice } : i));
+                              }}
+                              className="inline-edit"
+                            >
+                              {baseProducts.length > 0 ? (
+                                baseProducts.map(p => (
+                                  <option key={p.name} value={p.name}>{p.name}</option>
+                                ))
+                              ) : (
+                                <>
+                                  <option>Uniforme</option>
+                                  <option>Chaqueta</option>
+                                  <option>Medias</option>
+                                  <option>Pantaloneta Licrada</option>
+                                  <option>Pantaloneta Impermeable</option>
+                                </>
+                              )}
+                            </select>
+                          </td>
+                          <td>
+                            <input 
+                              type="text" 
+                              value={item.observations || ''} 
+                              onChange={e => updateItem(item.id, 'observations', e.target.value)}
+                              className="inline-edit"
+                              placeholder="Observación..."
+                            />
+                          </td>
                           <td className="text-primary">${item.price.toLocaleString('es-CO')}</td>
                           <td><button onClick={() => removeItem(item.id)} className="btn-remove">×</button></td>
                         </tr>
