@@ -5,11 +5,13 @@ import KanbanBoard from '@/components/erp/KanbanBoard'
 import NewOrderModal from '@/components/erp/NewOrderModal'
 import FabricReportModal from '@/components/erp/FabricReportModal'
 import ProductCatalogModal from '@/components/erp/ProductCatalogModal'
+import DesignUploadModal from '@/components/erp/DesignUploadModal'
 
 export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isFabricReportOpen, setIsFabricReportOpen] = useState(false)
   const [isCatalogOpen, setIsCatalogOpen] = useState(false)
+  const [isDesignModalOpen, setIsDesignModalOpen] = useState(false)
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -106,6 +108,28 @@ export default function AdminDashboard() {
             🏷️ Catálogo y Precios
           </button>
 
+          <button
+            onClick={() => setIsDesignModalOpen(true)}
+            style={{
+              background: 'linear-gradient(135deg, rgba(212, 255, 0, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%)',
+              color: '#facc15',
+              fontWeight: 800,
+              padding: '0.85rem 1.4rem',
+              borderRadius: '6px',
+              border: '1px solid rgba(250, 204, 21, 0.4)',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            ✨ Nuevos Diseños
+          </button>
+
           <button 
             onClick={() => setIsModalOpen(true)}
             style={{
@@ -149,6 +173,12 @@ export default function AdminDashboard() {
       {isCatalogOpen && (
         <ProductCatalogModal
           onClose={() => setIsCatalogOpen(false)}
+        />
+      )}
+
+      {isDesignModalOpen && (
+        <DesignUploadModal
+          onClose={() => setIsDesignModalOpen(false)}
         />
       )}
     </div>

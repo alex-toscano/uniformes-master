@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 const CATEGORIES = [
@@ -14,11 +14,32 @@ const CATEGORIES = [
 
 import catalogData from '../data/catalogData.json';
 
-// Usar los datos generados por el script
-const mockUniforms = catalogData;
-
 export default function CatalogGrid() {
+  const [uniforms, setUniforms] = useState<any[]>(catalogData);
   const [activeCategory, setActiveCategory] = useState('todos');
+
+  useEffect(() => {
+    const loadDynamicDesigns = async () => {
+      try {
+        const res = await fetch('/api/catalog/designs')
+        if (res.ok) {
+          const dynamicDesigns = await res.json()
+          if (Array.isArray(dynamicDesigns) && dynamicDesigns.length > 0) {
+            const dynSkus = new Set(dynamicDesigns.map((d: any) => d.sku))
+            const filteredBase = catalogData.filter((d: any) => !dynSkus.has(d.sku))
+            setUniforms([...dynamicDesigns, ...filteredBase])
+          }
+        }
+      } catch (e) {
+        console.error('Error fetching dynamic designs:', e)
+      }
+    }
+
+    loadDynamicDesigns()
+    const handleUpdate = () => loadDynamicDesigns()
+    window.addEventListener('catalog-designs-updated', handleUpdate)
+    return () => window.removeEventListener('catalog-designs-updated', handleUpdate)
+  }, []);
   const [selectedUniform, setSelectedUniform] = useState<any>(null);
   const [zoomLensPos, setZoomLensPos] = useState({ x: 0, y: 0 });
   const [isZooming, setIsZooming] = useState(false);
@@ -100,7 +121,7 @@ export default function CatalogGrid() {
     setShowLeadForm(false);
   };
 
-  const filteredUniforms = mockUniforms.filter(u => 
+  const filteredUniforms = uniforms.filter(u => 
     activeCategory === 'todos' ? true : u.category === activeCategory
   );
 

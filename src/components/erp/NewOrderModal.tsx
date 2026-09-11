@@ -28,6 +28,7 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   
   // Catálogo y Pedido General
   const [skuReference, setSkuReference] = useState('')
+  const [allDesigns, setAllDesigns] = useState<any[]>(catalogData)
   const [advancePayment, setAdvancePayment] = useState(0)
   const [deliveryDate, setDeliveryDate] = useState('')
   
@@ -49,13 +50,34 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
   useEffect(() => {
     fetchCustomers()
     loadBaseCatalog()
+    loadDesigns()
 
     const handleCatalogUpdated = () => {
       loadBaseCatalog()
     }
+    const handleDesignsUpdated = () => {
+      loadDesigns()
+    }
     window.addEventListener('catalog-updated', handleCatalogUpdated)
-    return () => window.removeEventListener('catalog-updated', handleCatalogUpdated)
+    window.addEventListener('catalog-designs-updated', handleDesignsUpdated)
+    return () => {
+      window.removeEventListener('catalog-updated', handleCatalogUpdated)
+      window.removeEventListener('catalog-designs-updated', handleDesignsUpdated)
+    }
   }, [])
+
+  const loadDesigns = async () => {
+    try {
+      const res = await fetch('/api/catalog/designs')
+      if (res.ok) {
+        const dyn = await res.json()
+        if (Array.isArray(dyn) && dyn.length > 0) {
+          const dynSkus = new Set(dyn.map((d: any) => d.sku))
+          setAllDesigns([...dyn, ...catalogData.filter((d: any) => !dynSkus.has(d.sku))])
+        }
+      }
+    } catch {}
+  }
 
   const loadBaseCatalog = async () => {
     const list = await fetchBaseProducts(supabase)
@@ -255,8 +277,8 @@ export default function NewOrderModal({ onClose, onCreated }: { onClose: () => v
 
   const getTotalPrice = () => items.reduce((acc, curr) => acc + curr.price, 0)
 
-  // Encontrar imagen del SKU en el catálogo
-  const uniformData = catalogData.find(u => u.sku.toUpperCase() === skuReference.toUpperCase())
+  // Encontrar imagen del SKU en el catálogo (estático o dinámico)
+  const uniformData = allDesigns.find(u => u.sku.toUpperCase() === skuReference.toUpperCase())
   const catalogImage = uniformData?.image || null
 
   const handleSubmitFinal = async () => {
